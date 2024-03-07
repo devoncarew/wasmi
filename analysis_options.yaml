@@ -1,0 +1,10 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    - avoid_dynamic_calls
+
+analyzer:
+  exclude:
+    - samples/large/**
+    - spec/**
