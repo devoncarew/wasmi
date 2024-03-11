@@ -4,8 +4,8 @@
 // ignore_for_file: non_constant_identifier_names, unused_element, unused_label
 // ignore_for_file: unused_local_variable
 
-import 'package:wasmi/runtime.dart';
-import 'package:wasmi/runtime_vm.dart';
+import 'package:wasmi/old/runtime.dart';
+import 'package:wasmi/old/runtime_vm.dart';
 
 /// A class representing the symbols imported from the 'host' module.
 abstract class HostImports {

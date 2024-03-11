@@ -6,7 +6,7 @@
 
 import 'dart:typed_data';
 
-import 'package:wasmi/runtime.dart';
+import 'package:wasmi/old/runtime.dart';
 
 /// A class representing the symbols imported from the 'env' module.
 abstract class EnvImports {

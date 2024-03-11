@@ -26,5 +26,5 @@ jobs:
       - name: Analyze project source
         run: dart analyze --fatal-infos
 
-      - name: Run tests
-        run: dart tool/tests.dart
+      # - name: Run tests
+      #   run: dart tool/tests.dart

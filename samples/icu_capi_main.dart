@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:wasmi/runtime.dart';
+import 'package:wasmi/old/runtime.dart';
 
 import 'icu_capi.dart';
 
