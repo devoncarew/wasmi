@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:wasmi/runtime.dart';
+import 'package:wasmi/old/runtime.dart';
 
 import 'mandelbrot.dart';
 

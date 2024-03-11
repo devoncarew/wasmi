@@ -3,7 +3,7 @@
 import 'dart:math' as math;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:wasmi/runtime.dart';
+import 'package:wasmi/old/runtime.dart';
 
 import '../samples/mandelbrot.dart' as m;
 

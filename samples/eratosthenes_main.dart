@@ -1,4 +1,4 @@
-import 'package:wasmi/runtime.dart';
+import 'package:wasmi/old/runtime.dart';
 
 import 'eratosthenes.dart';
 

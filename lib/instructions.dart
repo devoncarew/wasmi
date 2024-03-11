@@ -1,12 +1,11 @@
 // ignore_for_file: camel_case_types
 
 import 'package:code_builder/code_builder.dart';
-import 'package:collection/collection.dart';
-import 'package:wasmi/ast.dart';
 
-import 'compiler.dart' hide ValueType;
-import 'compiler.dart' as compiler show BlockType, FunctionType, ValueType;
-import 'src/utils.dart';
+import 'exec.dart';
+import 'loader.dart';
+import 'types.dart';
+import 'utils.dart';
 
 class Instr {
   final Instruction instruction;
@@ -26,49 +25,16 @@ class Instr {
 
   bool get isBlockEnd => instruction is Instruction_End;
 
-  Code generateToStatement(DefinedFunction function) {
-    return instruction.generateToStatement(this, function);
-  }
-
   @override
-  String toString() {
-    return instruction.toString();
-  }
+  String toString() => '$instruction ${args.join(', ')}';
 }
 
 class Instruction_Unreachable extends Instruction {
   Instruction_Unreachable() : super('unreachable', 0x00, '');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    function.scope.unreachable = true;
-
-    if (instr.args.isNotEmpty) {
-      var error = instr.args[0] as String;
-      return literalString('unreachable ($error)').thrown.statement;
-    } else {
-      return refer('Trap')
-          .call([literalString('unreachable')])
-          .thrown
-          .statement;
-    }
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.unreachable = true;
-
-    super.generateToVm(instr, functionBuilder);
-  }
 }
 
 class Instruction_Nop extends Instruction {
   Instruction_Nop() : super('nop', 0x01, '');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    return Code('      /* nop */');
-  }
 }
 
 class Instruction_Block extends Instruction {
@@ -76,278 +42,36 @@ class Instruction_Block extends Instruction {
 
   // the immediate is either 0x40, a valuetype, or a positive 33bit integer
   Instruction_Block() : super('block', blockOpcode, '(i32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var blocktype = BlockFunctionType.from(instr.args[0] as int, function);
-
-    function.enterBlock(compiler.BlockType.$block, blocktype);
-
-    var description = blocktype.describe;
-    if (description.isNotEmpty) description = '// $description\n';
-
-    var label = function.currentBlockLabel;
-    return Code('$label: $description{');
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var blocktype = BlockFunctionType.from(
-        instr.args[0] as int, functionBuilder.definedFunction);
-
-    functionBuilder.enterBlock(compiler.BlockType.$block, blocktype);
-
-    if (blocktype.returnItems != 0) {
-      functionBuilder.generateBlockReturnVar(blocktype,
-          description: blocktype.describe);
-    }
-
-    var label = functionBuilder.currentBlockLabel;
-    functionBuilder.addStatement(Code('$label: {'));
-  }
 }
 
 class Instruction_Loop extends Instruction {
   static const loopOpcode = 0x03;
 
   Instruction_Loop() : super('loop', loopOpcode, '(i32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var blocktype = BlockFunctionType.from(instr.args[0] as int, function);
-
-    function.enterBlock(compiler.BlockType.$loop, blocktype);
-
-    var description = blocktype.describe;
-    if (description.isNotEmpty) description = '// $description\n';
-
-    var label = function.currentBlockLabel;
-    return Code('\n$label: ${description}for (;;) {');
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var blocktype = BlockFunctionType.from(
-        instr.args[0] as int, functionBuilder.definedFunction);
-
-    functionBuilder.enterBlock(compiler.BlockType.$loop, blocktype);
-
-    if (blocktype.returnItems != 0) {
-      functionBuilder.generateBlockReturnVar(blocktype,
-          description: blocktype.describe);
-    }
-
-    var label = functionBuilder.currentBlockLabel;
-    functionBuilder.addStatement(Code('\n$label: for (;;) {'));
-  }
 }
 
 class Instruction_If extends Instruction {
   static const ifOpcode = 0x04;
 
   Instruction_If() : super('if', ifOpcode, '(i32) i32');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var blocktype = BlockFunctionType.from(instr.args[0] as int, function);
-
-    // pop off the expr to eval
-    function.scope.updateStackDepth(-1, name);
-
-    function.enterBlock(compiler.BlockType.$if, blocktype);
-
-    var description = blocktype.describe;
-    if (description.isNotEmpty) description = '// $description\n';
-
-    var label = function.currentBlockLabel;
-    return Code('$label: ${description}if (frame.pop() != 0) {');
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var blocktype = BlockFunctionType.from(
-        instr.args[0] as int, functionBuilder.definedFunction);
-
-    // pop off the expr to eval
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    functionBuilder.enterBlock(compiler.BlockType.$if, blocktype);
-
-    if (blocktype.returnItems != 0) {
-      functionBuilder.generateBlockReturnVar(blocktype,
-          description: blocktype.describe);
-    }
-
-    var label = functionBuilder.currentBlockLabel;
-    var ref = functionBuilder.popRef();
-    functionBuilder.addStatement(Code('$label: if (${ref.expr} != 0) {'));
-  }
 }
 
 class Instruction_Else extends Instruction {
   Instruction_Else() : super('else', 0x05, '');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    // todo: end scope / start a new scope
-
-    var oldScope = function.scope;
-    var blockType = function.exitBlock();
-    function.enterBlock(blockType!, oldScope.blockType!);
-    function.scope.blockReturnName = oldScope.blockReturnName;
-
-    return Code('} else {\n');
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var blockEndCode = functionBuilder.blockReturn(shouldPopRef: true);
-    if (blockEndCode != null) {
-      functionBuilder.addStatement(blockEndCode);
-    }
-
-    var oldScope = functionBuilder.scope;
-    var blockType = functionBuilder.exitBlock();
-    functionBuilder.enterBlock(blockType!, oldScope.blockType!);
-    functionBuilder.scope.blockReturnName = oldScope.blockReturnName;
-
-    functionBuilder.addStatement(Code('} else {\n'));
-  }
 }
 
 class Instruction_End extends Instruction {
   static const endOpcode = 0x0B;
 
   Instruction_End() : super('end', endOpcode, '');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var frame = refer('frame');
-
-    var oldScope = function.scope;
-    var oldNesting = function.exitBlock();
-
-    // update the stack - push on the block results
-    function.scope.updateStackDepth(
-        oldScope.blockReturnCount - oldScope.blockParamCount, name);
-
-    if (oldNesting != null && oldNesting.loopType) {
-      return Code('break;\n}');
-    } else if (oldNesting != null) {
-      return Code('}');
-    } else {
-      if (function.returnsVoid) {
-        return Code('');
-      } else if (function.returnsTuple) {
-        var arity = function.functionType.resultType.length;
-        return Code('return Tuple$arity.from(frame.stack);');
-      } else {
-        return frame.property('pop').call([]).returned.statement;
-      }
-    }
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    // todo: this should be true...
-    var blockEndCode = functionBuilder.blockReturn(shouldPopRef: false);
-    if (blockEndCode != null) {
-      functionBuilder.addStatement(blockEndCode);
-      functionBuilder.pushRef(Ref(functionBuilder.scope.blockReturnName!));
-    }
-
-    var oldScope = functionBuilder.scope;
-    var oldNesting = functionBuilder.exitBlock();
-
-    // update the stack - push on the block results
-    functionBuilder.scope.updateStackDepth(
-        oldScope.blockReturnCount - oldScope.blockParamCount, name);
-
-    var function = functionBuilder.definedFunction;
-
-    if (oldNesting != null && oldNesting.loopType) {
-      functionBuilder.addStatement(Code('break;\n}'));
-    } else if (oldNesting != null) {
-      functionBuilder.addStatement(Code('}'));
-    } else {
-      var functype = functionBuilder.functionType;
-
-      if (function.returnsVoid || oldScope.unreachable) {
-        return functionBuilder.addStatement(Code(''));
-      } else if (function.returnsTuple) {
-        var arity = functype.resultType.length;
-        var refs = functionBuilder.popN(arity);
-        functionBuilder.addStatement(Code('return Tuple$arity('
-            '${refs.reversed.map((ref) => ref.toString()).join(', ')});'));
-      } else {
-        return functionBuilder.addStatement(
-            refer(functionBuilder.popRef().expr).returned.statement);
-      }
-    }
-  }
 }
 
 class Instruction_Br extends Instruction {
   Instruction_Br() : super('br', 0x0C, '(u32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    function.scope.unreachable = true;
-
-    var immediate = instr.args[0] as int;
-    var label = function.labelNameFromIndex(immediate);
-    var scope = function.scopeForIndex(immediate);
-    var blockKind = function.blockNestingFromIndex(immediate);
-    return blockKind.generateBranchFor(
-        function.functionType, label, scope, function.scope,
-        name: 'br');
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.unreachable = true;
-
-    var function = functionBuilder.definedFunction;
-    var immediate = instr.args[0] as int;
-    var label = functionBuilder.labelNameFromIndex(immediate);
-    var scope = functionBuilder.scopeForIndex(immediate);
-    var blockKind = functionBuilder.blockNestingFromIndex(immediate);
-    functionBuilder.addStatement(blockKind.generateBranchForVm(
-        functionBuilder, label, scope, function.scope,
-        name: 'br'));
-  }
 }
 
 class Instruction_BrIf extends Instruction {
   Instruction_BrIf() : super('br_if', 0x0D, '(u32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var label = function.labelNameFromIndex(immediate);
-    var scope = function.scopeForIndex(immediate);
-    var blockKind = function.blockNestingFromIndex(immediate);
-
-    function.scope.updateStackDepth(-1, name);
-
-    return blockKind.generateBranchFor(
-        function.functionType, label, scope, function.scope,
-        name: 'br_if', popCondition: true);
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var label = functionBuilder.labelNameFromIndex(immediate);
-    var scope = functionBuilder.scopeForIndex(immediate);
-    var blockKind = functionBuilder.blockNestingFromIndex(immediate);
-
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    functionBuilder.addStatement(blockKind.generateBranchForVm(
-        functionBuilder, label, scope, functionBuilder.scope,
-        name: 'br_if', popCondition: true));
-  }
 }
 
 class Instruction_BrTable extends Instruction {
@@ -363,183 +87,68 @@ class Instruction_BrTable extends Instruction {
     int defaultLabel = r.leb128_u();
     return Instr(this, [labels, defaultLabel]);
   }
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    function.scope.unreachable = true;
-
-    var labelIndexes = instr.args[0] as List<int>;
-    var defaultIndex = instr.args[1] as int;
-
-    var varName = function.scope.nextTempName;
-
-    function.scope.updateStackDepth(-1, name);
-
-    var switchStatement = StringBuffer('switch ($varName) {');
-    for (int i = 0; i < labelIndexes.length; i++) {
-      var labelIndex = labelIndexes[i];
-      var label = function.labelNameFromIndex(labelIndex);
-      var scope = function.scopeForIndex(labelIndex);
-      var blockKind = function.blockNestingFromIndex(labelIndex);
-      var code = blockKind.generateBranchFor(
-          function.functionType, label, scope, function.scope);
-
-      switchStatement.writeln('case $i:');
-      switchStatement.writeln(code.toString());
-    }
-    {
-      var label = function.labelNameFromIndex(defaultIndex);
-      var scope = function.scopeForIndex(defaultIndex);
-      var blockKind = function.blockNestingFromIndex(defaultIndex);
-      var code = blockKind.generateBranchFor(
-          function.functionType, label, scope, function.scope);
-
-      switchStatement.writeln('default:');
-      switchStatement.writeln(code.toString());
-    }
-    switchStatement.writeln('}');
-
-    return Block.of([
-      declareVar(varName).assign(CodeExpression(Code('frame.pop()'))).statement,
-      Code(switchStatement.toString()),
-    ]);
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.unreachable = true;
-
-    var labelIndexes = instr.args[0] as List<int>;
-    var defaultIndex = instr.args[1] as int;
-
-    var ref = functionBuilder.popRef();
-
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    var switchStatement = StringBuffer('switch ($ref) {');
-    for (int i = 0; i < labelIndexes.length; i++) {
-      var labelIndex = labelIndexes[i];
-      var label = functionBuilder.labelNameFromIndex(labelIndex);
-      var scope = functionBuilder.scopeForIndex(labelIndex);
-      var blockKind = functionBuilder.blockNestingFromIndex(labelIndex);
-      var code = blockKind.generateBranchForVm(
-          functionBuilder, label, scope, functionBuilder.scope);
-
-      switchStatement.writeln('case $i:');
-      switchStatement.writeln(code.toString());
-    }
-    {
-      var label = functionBuilder.labelNameFromIndex(defaultIndex);
-      var scope = functionBuilder.scopeForIndex(defaultIndex);
-      var blockKind = functionBuilder.blockNestingFromIndex(defaultIndex);
-      var code = blockKind.generateBranchForVm(
-          functionBuilder, label, scope, functionBuilder.scope);
-
-      switchStatement.writeln('default:');
-      switchStatement.writeln(code.toString());
-    }
-    switchStatement.writeln('}');
-
-    // todo: Block.of()?
-    functionBuilder.addStatement(Code(switchStatement.toString()));
-  }
 }
 
 class Instruction_Return extends Instruction {
   Instruction_Return() : super('return', 0x0F, '');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    function.scope.unreachable = true;
-
-    var frame = refer('frame');
-
-    if (function.returnsVoid) {
-      return Code('return;');
-    } else if (function.returnsTuple) {
-      var arity = function.functionType.resultType.length;
-      return Code('return Tuple$arity.from(frame.stack);');
-    } else {
-      return frame.property('pop').call([]).returned.statement;
-    }
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.unreachable = true;
-
-    var functype = functionBuilder.functionType;
-
-    if (functype.returnsVoid) {
-      functionBuilder.addStatement(Code('return;'));
-    } else if (functype.returnsTuple) {
-      var arity = functype.resultType.length;
-      var refs = functionBuilder.popN(arity);
-      functionBuilder.addStatement(Code('return Tuple$arity('
-          '${refs.reversed.map((ref) => ref.toString()).join(', ')});'));
-    } else {
-      var ref = functionBuilder.popRef();
-      functionBuilder.addStatement(refer(ref.expr).returned.statement);
-    }
-  }
 }
 
-class BlockFunctionType {
-  compiler.ValueType? valueType;
-  compiler.FunctionType? functionType;
+// class BlockFunctionType {
+//   compiler.ValueType? valueType;
+//   compiler.FunctionType? functionType;
 
-  BlockFunctionType.from(int code, DefinedFunction function) {
-    if (code == -0x40) {
-      // no block type
-    } else if (code < 0) {
-      valueType = compiler.ValueType.fromCode(code & 0x7F);
-    } else {
-      functionType = function.module.functionTypes[code];
-    }
-  }
+//   BlockFunctionType.from(int code, DefinedFunction function) {
+//     if (code == -0x40) {
+//       // no block type
+//     } else if (code < 0) {
+//       valueType = compiler.ValueType.fromCode(code & 0x7F);
+//     } else {
+//       functionType = function.module.functionTypes[code];
+//     }
+//   }
 
-  int get paramItems {
-    if (valueType != null) return 0;
-    if (functionType != null) return functionType!.parameterTypes.length;
-    return 0;
-  }
+//   int get paramItems {
+//     if (valueType != null) return 0;
+//     if (functionType != null) return functionType!.parameterTypes.length;
+//     return 0;
+//   }
 
-  int get returnItems {
-    if (valueType != null) return 1;
-    if (functionType != null) return functionType!.resultType.length;
-    return 0;
-  }
+//   int get returnItems {
+//     if (valueType != null) return 1;
+//     if (functionType != null) return functionType!.resultType.length;
+//     return 0;
+//   }
 
-  String get tupleTypeName {
-    var retItems = functionType!.resultType;
-    return 'Tuple${retItems.length}<${retItems.map((t) => t.typeName).join(', ')}>';
-  }
+//   String get tupleTypeName {
+//     var retItems = functionType!.resultType;
+//     return 'Tuple${retItems.length}<${retItems.map((t) => t.typeName).join(', ')}>';
+//   }
 
-  compiler.ValueType? get firstReturnType {
-    if (valueType != null) {
-      return valueType;
-    } else if (functionType != null) {
-      var types = functionType!.resultType;
-      return types.firstOrNull;
-    } else {
-      return null;
-    }
-  }
+//   compiler.ValueType? get firstReturnType {
+//     if (valueType != null) {
+//       return valueType;
+//     } else if (functionType != null) {
+//       var types = functionType!.resultType;
+//       return types.firstOrNull;
+//     } else {
+//       return null;
+//     }
+//   }
 
-  bool get isPrimitive {
-    return returnItems == 1 ? !firstReturnType!.refType : false;
-  }
+//   bool get isPrimitive {
+//     return returnItems == 1 ? !firstReturnType!.refType : false;
+//   }
 
-  String? get defaultInitValue {
-    return firstReturnType?.initValue;
-  }
+//   String? get defaultInitValue {
+//     return firstReturnType?.initValue;
+//   }
 
-  String get describe {
-    if (valueType != null) return '=> ${valueType!.name}';
-    if (functionType != null) return functionType!.toString();
-    return '';
-  }
-}
+//   String get describe {
+//     if (valueType != null) return '=> ${valueType!.name}';
+//     if (functionType != null) return functionType!.toString();
+//     return '';
+//   }
+// }
 
 class Instruction_SelectT extends Instruction {
   // Note that the shorthand below is approximate; it should be
@@ -559,35 +168,14 @@ class Instruction_SelectT extends Instruction {
 
     return Instr(this, args);
   }
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    return Code('frame.select_t(0x${immediate.toRadixString(16)});');
-  }
 }
 
 class Instruction_LocalGet extends Instruction {
   Instruction_LocalGet() : super('local.get', 0x20, '(u32) => any');
 
   @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var localName = function.variables[immediate].name;
-
-    function.scope.updateStackDepth(1, name);
-
-    return refer('frame').property('push').call([refer(localName)]).statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var localName = functionBuilder.variableFromIndex(immediate).name;
-
-    functionBuilder.scope.updateStackDepth(1, name);
-
-    functionBuilder.pushRef(Ref(localName));
+  ExecInst convert(Instr instr) {
+    return ExecLocalGet(instr.args[0] as int);
   }
 }
 
@@ -595,464 +183,92 @@ class Instruction_LocalSet extends Instruction {
   Instruction_LocalSet() : super('local.set', 0x21, '(u32) any');
 
   @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var localName = function.variables[immediate].name;
-
-    function.scope.updateStackDepth(-1, name);
-
-    return refer(localName)
-        .assign(refer('frame').property('pop').call([]))
-        .statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var localName = functionBuilder.variableFromIndex(immediate).name;
-
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    functionBuilder.generateAssign(Ref(localName), functionBuilder.popRef());
+  ExecInst convert(Instr instr) {
+    return ExecLocalSet(instr.args[0] as int);
   }
 }
 
 class Instruction_LocalTee extends Instruction {
   Instruction_LocalTee() : super('local.tee', 0x22, '(u32) any => any');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var localName = function.variables[immediate].name;
-
-    return refer(localName)
-        .assign(refer('frame').property('peek').call([]))
-        .statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var localName = functionBuilder.variableFromIndex(immediate).name;
-
-    functionBuilder.generateAssign(Ref(localName), functionBuilder.peekRef());
-  }
 }
 
 class Instruction_GlobalGet extends Instruction {
   Instruction_GlobalGet() : super('global.get', 0x23, '(u32) => any');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var global = function.module.globals.globals[immediate];
-
-    function.scope.updateStackDepth(1, name);
-
-    return refer('frame')
-        .property('push')
-        .call([refer(global.containerName).property(global.name)]).statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var global = functionBuilder.module.globals.globals[immediate];
-
-    functionBuilder.scope.updateStackDepth(1, name);
-
-    functionBuilder.pushRef(Ref('${global.containerName}.${global.name}'));
-  }
 }
 
 class Instruction_GlobalSet extends Instruction {
   Instruction_GlobalSet() : super('global.set', 0x24, '(u32) any');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var global = function.module.globals.globals[immediate];
-
-    function.scope.updateStackDepth(-1, name);
-
-    return refer(global.containerName)
-        .property(global.name)
-        .assign(refer('frame').property('pop').call([]))
-        .statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var global = functionBuilder.module.globals.globals[immediate];
-
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    functionBuilder.generateAssign(
-        Ref('${global.containerName}.${global.name}'),
-        functionBuilder.popRef());
-  }
 }
 
 class Instruction_TableGet extends Instruction {
   Instruction_TableGet() : super('table.get', 0x25, '(u32) i32 => any');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    return refer('frame').property('push').call([
-      refer('table$immediate').index(refer('frame').property('pop').call([]))
-    ]).statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-
-    var ref = functionBuilder.popRef();
-    functionBuilder.pushRef(Ref('table$immediate[$ref]'));
-  }
 }
 
 class Instruction_TableSet extends Instruction {
   Instruction_TableSet() : super('table.set', 0x26, '(u32) i32 => any');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-
-    function.scope.updateStackDepth(-2, name);
-
-    return Block.of([
-      Code('{'),
-      declareVar('ref')
-          .assign(refer('frame').property('pop').call([]))
-          .statement,
-      Code('table$immediate[frame.pop() as int] = ref;'),
-      Code('}'),
-    ]);
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-
-    functionBuilder.scope.updateStackDepth(-2, name);
-
-    var ref = functionBuilder.popRef();
-    var index = functionBuilder.popRef();
-    functionBuilder.addStatement(Code('table$immediate[$index] = $ref;'));
-  }
 }
 
 class Instruction_Const extends Instruction {
   Instruction_Const(super.name, super.opcode, super.shorthand);
 
   @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.updateStackDepth(1, name);
-
-    var arg = instr.args.first;
-    var literal = printLiteral(arg as num);
-    functionBuilder.pushRef(Ref(printExpression(literal)));
+  ExecInst convert(Instr instr) {
+    return ExecConst(instr.args[0]);
   }
 }
 
 class Instruction_Call extends Instruction {
   Instruction_Call() : super('call', 0x10, '(u32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var immediate = instr.args[0] as int;
-    var target = function.module.functionByIndex(immediate)!;
-    var statements = <Code>[];
-
-    // update stack depth
-    var paramCount = target.functionType.parameterTypes.length;
-    var resultCount = target.functionType.resultType.length;
-    function.scope.updateStackDepth(resultCount - paramCount, name);
-
-    var temps = List.generate(target.parameterTypes.length, (i) => 't$i');
-    for (var temp in temps.reversed) {
-      statements.add(
-        declareVar(temp).assign(CodeExpression(Code('frame.pop()'))).statement,
-      );
-    }
-
-    Expression call = refer(target.name).call([
-      ...temps.map((t) => refer(t)),
-    ]);
-
-    if (target.returnsVoid) {
-      // nothing to do
-    } else if (target.returnsTuple) {
-      // push the return tuples item's to the stack
-      call = call.property('pushTo').call([refer('frame.stack')]);
-    } else {
-      call = refer('frame.push').call([call]);
-    }
-
-    statements.add(call.statement);
-
-    if (statements.length == 1) {
-      return statements.first;
-    } else {
-      return Block.of([
-        Code('{'),
-        ...statements,
-        Code('}'),
-      ]);
-    }
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var immediate = instr.args[0] as int;
-    var target = functionBuilder.functionByIndex(immediate)!;
-
-    // update stack depth
-    var paramCount = target.functionType.parameterTypes.length;
-    var resultCount = target.functionType.resultType.length;
-    functionBuilder.scope.updateStackDepth(resultCount - paramCount, name);
-
-    var args = <Ref>[];
-    for (var _ in target.parameterTypes) {
-      args.add(functionBuilder.popRef());
-    }
-
-    var call = VmCall(target.name, [], args.reversed.toList(),
-        target.functionType.resultType);
-
-    if (target.returnsVoid) {
-      functionBuilder.performCall(call);
-    } else if (target.returnsTuple) {
-      // push the return tuples item's to the stack
-      functionBuilder.pushAssignTuple(call);
-    } else {
-      functionBuilder.pushAssignTemp(call);
-    }
-  }
 }
 
 class Instruction_CallIndirect extends Instruction {
   Instruction_CallIndirect() : super('call_indirect', 0x11, '(u32 u32)');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var sigIndex = instr.args[0] as int;
-    var tableIndex = instr.args[1] as int;
-
-    var funcType = function.module.functionTypes[sigIndex];
-
-    // update stack depth
-    var paramCount = funcType.parameterTypes.length;
-    var resultCount = funcType.resultType.length;
-    function.scope.updateStackDepth(resultCount - paramCount, name);
-
-    var statements = <Code>[];
-
-    // TODO: Ensure that the runtime properly infers the type of func.
-
-    statements.addAll([
-      Code('var func = table$tableIndex[frame.pop()];'),
-      Code('if (func == null) throw Trap(\'uninitialized element\');'),
-      Code('if (func is! FunctionType$sigIndex) '
-          'throw Trap(\'indirect call type mismatch\');'),
-    ]);
-
-    var temps = List.generate(funcType.parameterTypes.length, (i) => 't$i');
-    for (var temp in temps.reversed) {
-      statements.add(
-        declareVar(temp).assign(CodeExpression(Code('frame.pop()'))).statement,
-      );
-    }
-
-    Expression call = refer('func').call([
-      ...temps.map((t) => refer(t)),
-    ]);
-
-    if (funcType.returnsTuple) {
-      // push the return tuples item's to the stack
-      call = call.property('pushTo').call([refer('frame.stack')]);
-    } else if (!funcType.returnsVoid) {
-      call = refer('frame.push').call([call]);
-    }
-
-    statements.add(call.statement);
-
-    return Block.of([
-      Code('{'),
-      ...statements,
-      Code('}'),
-    ]);
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var sigIndex = instr.args[0] as int;
-    var tableIndex = instr.args[1] as int;
-
-    var funcType = functionBuilder.module.functionTypes[sigIndex];
-
-    // update stack depth
-    var paramCount = funcType.parameterTypes.length;
-    var resultCount = funcType.resultType.length;
-    functionBuilder.scope.updateStackDepth(resultCount - paramCount, this.name);
-
-    var name = functionBuilder.generateName('func');
-
-    var ref = functionBuilder.popRef();
-
-    functionBuilder.addStatement(Code(
-      'var $name = assertCallable<FunctionType$sigIndex>(table$tableIndex[$ref]);',
-    ));
-
-    var args = <Ref>[];
-    for (var _ in funcType.parameterTypes) {
-      args.add(functionBuilder.popRef());
-    }
-
-    var call = VmCall(name, [], args.reversed.toList(), funcType.resultType);
-
-    if (funcType.returnsVoid) {
-      functionBuilder.performCall(call);
-    } else if (funcType.returnsTuple) {
-      functionBuilder.pushAssignTuple(call);
-    } else {
-      functionBuilder.pushAssignTemp(call);
-    }
-  }
 }
 
 class Instruction_Drop extends Instruction {
   Instruction_Drop() : super('drop', 0x1A, 'any');
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.updateStackDepth(-1, name);
-
-    functionBuilder.popRef();
-  }
 }
 
 class Instruction_RefNull extends Instruction {
   Instruction_RefNull() : super('ref.null', 0xD0, '(u32) => reftype');
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    functionBuilder.scope.updateStackDepth(1, name);
-
-    functionBuilder.pushRef(Ref('null'));
-  }
 }
 
 class Instruction_MemoryInit extends Instruction {
   Instruction_MemoryInit()
       : super('memory.init', 0x08, '(u32 u32) i32 i32 i32');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var dataSegment = instr.args[0] as int;
-    // ignore: unused_local_variable
-    var memIndex = instr.args[1] as int;
-
-    var module = function.module;
-    var segmentName = module.dataSegments.segments[dataSegment].name;
-
-    function.scope.updateStackDepth(-3, name);
-
-    return Block.of([
-      Code('{'),
-      Code('i32 count = frame.pop() as i32;'),
-      Code('i32 srcOffset = frame.pop() as i32;'),
-      Code('i32 dstOffset = frame.pop() as i32;'),
-      Code(
-          'memory.copyFrom(dataSegments.$segmentName, srcOffset, dstOffset, count);'),
-      Code('}'),
-    ]);
-  }
 }
 
 class Instruction_TableInit extends Instruction {
   Instruction_TableInit() : super('table.init', 0x0C, '(u32 u32) i32 i32 i32');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var segment = instr.args[0] as int;
-    var table = instr.args[1] as int;
-
-    var seg = function.module.elementSegments.segments[segment];
-    if (seg.segmentKind != SegmentKind.passive) {
-      var error =
-          'table.init does not support ${seg.segmentKind.name} element segments';
-      return literalString(error).thrown.statement;
-    }
-
-    function.scope.updateStackDepth(-3, name);
-
-    return Block.of([
-      Code('{'),
-      Code('i32 count = frame.pop() as i32;'),
-      Code('i32 sourceOffset = frame.pop() as i32;'),
-      Code('i32 destOffset = frame.pop() as i32;'),
-      Code('elementSegments.copyTo(table$table, sourceOffset, destOffset, '
-          'count, elementSegments.segment$segment);'),
-      Code('}'),
-    ]);
-  }
 }
 
 class Instruction_RefFunc extends Instruction {
   Instruction_RefFunc() : super('ref.func', 0xD2, '(u32) => funcref');
-
-  @override
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var funcIndex = instr.args[0] as int;
-    var func = function.module.allFunctions[funcIndex];
-    var name =
-        ElementSegments.inSegmentContext ? 'module.${func.name}' : func.name;
-
-    function.scope.updateStackDepth(1, name);
-
-    return refer('frame.push').call([refer(name)]).statement;
-  }
-
-  @override
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var funcIndex = instr.args[0] as int;
-    var func = functionBuilder.module.allFunctions[funcIndex];
-    var name =
-        ElementSegments.inSegmentContext ? 'module.${func.name}' : func.name;
-
-    functionBuilder.scope.updateStackDepth(1, name);
-
-    return functionBuilder.pushRef(Ref(name));
-  }
 }
 
-/// valtype := numtype | vectype | reftype
-/// numtype := i32, i64, f32, f64
-/// reftype := functype | externref
-enum ValueType {
-  i32(0x7F),
-  i64(0x7E),
-  f32(0x7D),
-  f64(0x7C),
-  funcref(0x70),
-  u32(0x7F),
-  reftype(0x70),
-  any(0x7F);
+// /// valtype := numtype | vectype | reftype
+// /// numtype := i32, i64, f32, f64
+// /// reftype := functype | externref
+// enum ValueType {
+//   i32(0x7F),
+//   i64(0x7E),
+//   f32(0x7D),
+//   f64(0x7C),
+//   funcref(0x70),
+//   u32(0x7F),
+//   reftype(0x70),
+//   any(0x7F);
 
-  final int code;
+//   final int code;
 
-  const ValueType(this.code);
+//   const ValueType(this.code);
 
-  static ValueType fromString(String str) {
-    var ret = values.firstWhereOrNull((e) => e.name == str);
-    if (ret == null) throw 'no ValueType found for \'$str\'';
-    return ret;
-  }
-}
+//   static ValueType fromString(String str) {
+//     var ret = values.firstWhereOrNull((e) => e.name == str);
+//     if (ret == null) throw 'no ValueType found for \'$str\'';
+//     return ret;
+//   }
+// }
 
 class Literal {
   final ValueType type;
@@ -1110,11 +326,12 @@ class Instruction {
 
   final String name;
   final int opcode;
+  final ExecInst Function(List<Object?>)? execBuilder;
   late final List<ValueType> immediates;
   late final List<ValueType> params;
   late final List<ValueType> returns;
 
-  Instruction(this.name, this.opcode, String shorthand) {
+  Instruction(this.name, this.opcode, String shorthand, [this.execBuilder]) {
     _parseShorthand(shorthand);
   }
 
@@ -1173,52 +390,6 @@ class Instruction {
       return Instr(this, args);
     } else {
       return Instr(this);
-    }
-  }
-
-  Code generateToStatement(Instr instr, DefinedFunction function) {
-    var frame = refer('frame');
-
-    var paramCount = params.length;
-    var resultCount = returns.length;
-    function.scope.updateStackDepth(resultCount - paramCount, name);
-
-    if (immediates.isNotEmpty) {
-      return frame
-          .property(methodName)
-          .call(instr.args.map((arg) => printLiteral(arg as num)))
-          .statement;
-    } else {
-      return frame.property(methodName).call([]).statement;
-    }
-  }
-
-  void generateToVm(Instr instr, FunctionBuilder functionBuilder) {
-    var paramCount = params.length;
-    var resultCount = returns.length;
-    functionBuilder.scope.updateStackDepth(resultCount - paramCount, name);
-
-    var instruction = instr.instruction;
-
-    var args = <Ref>[];
-    for (var _ in instruction.params) {
-      args.add(functionBuilder.popRef());
-    }
-
-    if (resultCount == 0) {
-      functionBuilder.performCall(VmCall(
-        'vm.${instruction.methodName}',
-        instr.args.cast<num>(),
-        args.reversed.toList(),
-        [],
-      ));
-    } else {
-      functionBuilder.pushAssignTemp(VmCall(
-        'vm.${instruction.methodName}',
-        instr.args.cast<num>(),
-        args.reversed.toList(),
-        [compiler.ValueType.fromCode(returns.first.code)],
-      ));
     }
   }
 
@@ -1330,7 +501,7 @@ class Instruction {
       Instruction('i32.ne', 0x47, 'i32 i32 => i32'),
       Instruction('i32.lt_s', 0x48, 'i32 i32 => i32'),
       Instruction('i32.lt_u', 0x49, 'i32 i32 => i32'),
-      Instruction('i32.gt_s', 0x4A, 'i32 i32 => i32'),
+      Instruction('i32.gt_s', 0x4A, 'i32 i32 => i32', (_) => Exec_i32_gt_s()),
       Instruction('i32.gt_u', 0x4B, 'i32 i32 => i32'),
       Instruction('i32.le_s', 0x4C, 'i32 i32 => i32'),
       Instruction('i32.le_u', 0x4D, 'i32 i32 => i32'),
@@ -1486,5 +657,13 @@ class Instruction {
       Instruction('table.size', 0x10, '(u32) => i32'),
       Instruction('table.fill', 0x11, '(u32) i32 reftype i32'),
     ];
+  }
+
+  ExecInst convert(Instr instr) {
+    if (execBuilder != null) {
+      return execBuilder!(instr.args);
+    } else {
+      return UnimplementedExecInst(this);
+    }
   }
 }
