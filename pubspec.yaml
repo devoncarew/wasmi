@@ -1,7 +1,7 @@
 name: wasmi
-description: A sample command-line application.
 version: 0.1.0
-# repository: https://github.com/my_org/my_repo
+description: An experimental Wasm interpreter for Dart.
+repository: https://github.com/devoncarew/wasmi
 
 environment:
   sdk: ^3.3.0
