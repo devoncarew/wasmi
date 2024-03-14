@@ -1,12 +1,6 @@
-// Generated from samples/fib.wasm.
+### Generated from example/fib.wasm.
 
-// ignore_for_file: curly_braces_in_flow_control_structures, dead_code
-// ignore_for_file: non_constant_identifier_names, unused_element, unused_label
-// ignore_for_file: unused_local_variable
-
-import 'package:wasmi/old/runtime.dart';
-import 'package:wasmi/old/runtime_vm.dart';
-
+```dart
 class FibModule extends Module {
   FibModule() {
     vm = VM(this);
@@ -52,3 +46,4 @@ class FibModule extends Module {
 }
 
 typedef FunctionType0 = i32 Function(i32);
+```

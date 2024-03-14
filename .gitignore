@@ -1,24 +1,4 @@
-# Files and directories created by pub.
+# https://dart.dev/guides/libraries/private-files
+# Created by `dart pub`
 .dart_tool/
-.packages
 pubspec.lock
-
-# Conventional directory for build output.
-build/
-
-samples/*.dis
-
-# Large samples.
-samples/large/
-
-# Intermediary wat and wasm files
-test/spec/**/*.dis
-test/spec/**/*.json
-test/spec/**/*.wasm
-test/spec/**/*.wat
-test/unit/**/*.dis
-test/unit/**/*.wasm
-test/wasm/
-
-# Example output from spec/ build.py
-js/
