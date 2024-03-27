@@ -1,4 +1,4 @@
-### Generated from example/fib.wasm.
+## Generated from example/fib.wasm.
 
 ```dart
 class FibModule extends Module {

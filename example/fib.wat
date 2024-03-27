@@ -17,16 +17,16 @@
     local.get $0
     i32.const 1
     i32.sub
-    local.tee $0
+    local.tee $0 // $0 = $0 - 1
     if
      local.get $1
      local.get $2
      i32.add
-     local.set $3
+     local.set $3 // $3 = $1 + $2
      local.get $1
-     local.set $2
+     local.set $2 // $2 = $1
      local.get $3
-     local.set $1
+     local.set $1 // $1 = $3
      br $while-continue|0
     end
    end
