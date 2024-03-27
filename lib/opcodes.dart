@@ -5,25 +5,28 @@ import 'src/utils.dart';
 void main() {
   const skip = {'overflow', 'vector'};
 
+  int count = 0;
+
   for (final opcode in Opcode.values) {
     // static const unreachable = 0x00;
     if (opcode.name.startsWith('reserved_')) continue;
     if (skip.contains(opcode.name)) continue;
 
     // print('static const int ${opcode.name} = ${hex(count)};');
-    // count++;
+    print("${hex(count)}: '${opcode.name}',");
+    count++;
 
     // print('${opcode.name},');
 
-    print('  void ${opcode.name}(Bytecode code) {');
-    for (var i = opcode.params.length - 1; i >= 0; i--) {
-      final param = opcode.params[i];
-      print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
-    }
-    final escape = opcode.name.contains(r'$') ? 'r' : '';
-    print("    throw $escape'unimplemented: ${opcode.name}';");
-    print('  }');
-    print('');
+    // print('  void ${opcode.name}(Bytecode code) {');
+    // for (var i = opcode.params.length - 1; i >= 0; i--) {
+    //   final param = opcode.params[i];
+    //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
+    // }
+    // final escape = opcode.name.contains(r'$') ? 'r' : '';
+    // print("    throw $escape'unimplemented: ${opcode.name}';");
+    // print('  }');
+    // print('');
   }
 
   for (final opcode in OverflowOpcode.values) {
@@ -32,18 +35,19 @@ void main() {
 
     // print('${opcode.name},');
 
-    print('  void ${opcode.name}(Bytecode code) {');
-    for (var i = opcode.params.length - 1; i >= 0; i--) {
-      final param = opcode.params[i];
-      print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
-    }
-    final escape = opcode.name.contains(r'$') ? 'r' : '';
-    print("    throw $escape'unimplemented: ${opcode.name}';");
-    print('  }');
-    print('');
+    // print('  void ${opcode.name}(Bytecode code) {');
+    // for (var i = opcode.params.length - 1; i >= 0; i--) {
+    //   final param = opcode.params[i];
+    //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
+    // }
+    // final escape = opcode.name.contains(r'$') ? 'r' : '';
+    // print("    throw $escape'unimplemented: ${opcode.name}';");
+    // print('  }');
+    // print('');
 
     // print('static const int ${opcode.name} = ${hex(count)};');
-    // count++;
+    print("${hex(count)}: '${opcode.name}',");
+    count++;
   }
 }
 
