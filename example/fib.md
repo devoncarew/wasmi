@@ -2,19 +2,6 @@
 
 ```dart
 class FibModule extends Module {
-  FibModule() {
-    vm = VM(this);
-  }
-
-  late final VM vm;
-
-  @override
-  final Memory memory = Memory(0);
-
-  @override
-  late final List<Table> tables = [];
-
-  i32 fib(i32 arg0) => _func0(arg0);
 
   i32 _func0(i32 arg0) {
     i32 local0 = 0;
@@ -43,6 +30,20 @@ class FibModule extends Module {
     }
     return 0;
   }
+
+  FibModule() {
+    vm = VM(this);
+  }
+
+  late final VM vm;
+
+  @override
+  final Memory memory = Memory(0);
+
+  @override
+  late final List<Table> tables = [];
+
+  i32 fib(i32 arg0) => _func0(arg0);
 }
 
 typedef FunctionType0 = i32 Function(i32);
