@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, deprecated_member_use
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: camel_case_types
 
@@ -19,7 +19,7 @@ class ExecutionContect {
     _initDispatch();
   }
 
-  Object? execute(DefinedFunction fn, [List<Object> args = const []]) {
+  Object? execute(DefinedFunction fn, [List<Object?> args = const []]) {
     // todo: if not module inited (memory, ...), then init
 
     if (!fn.compiled) {
@@ -182,17 +182,17 @@ class ExecutionContect {
   }
 
   void localGet(Bytecode code) {
-    stack[sp++] = locals[code.immediate_0_u64];
+    stack[sp++] = locals[code.i0];
   }
 
   void localSet(Bytecode code) {
     Object? arg0 = stack[--sp];
-    locals[code.immediate_0_u64] = arg0;
+    locals[code.i0] = arg0;
   }
 
   void localTee(Bytecode code) {
     Object? arg0 = stack[sp - 1];
-    locals[code.immediate_0_u64] = arg0;
+    locals[code.i0] = arg0;
   }
 
   void globalGet(Bytecode code) {
@@ -348,7 +348,7 @@ class ExecutionContect {
   }
 
   void i32_const(Bytecode code) {
-    stack[sp++] = code.immediate_0_u64;
+    stack[sp++] = code.i0;
   }
 
   void i64_const(Bytecode code) {
@@ -365,31 +365,31 @@ class ExecutionContect {
 
   void i32_eqz(Bytecode code) {
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_eqz';
+    stack[sp++] = arg0 == 0 ? 1 : 0;
   }
 
   void i32_eq(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_eq';
+    stack[sp++] = arg0 == arg1 ? 1 : 0;
   }
 
   void i32_ne(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_ne';
+    stack[sp++] = arg0 != arg1 ? 1 : 0;
   }
 
   void i32_lt_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_lt_s';
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void i32_lt_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_lt_u';
+    i32 arg1 = (stack[--sp] as int) & _mask32;
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void i32_gt_s(Bytecode code) {
@@ -399,33 +399,33 @@ class ExecutionContect {
   }
 
   void i32_gt_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_gt_u';
+    i32 arg1 = (stack[--sp] as int) & _mask32;
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    stack[sp++] = arg0 > arg1 ? 1 : 0;
   }
 
   void i32_le_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_le_s';
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void i32_le_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_le_u';
+    i32 arg1 = (stack[--sp] as int) & _mask32;
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void i32_ge_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_ge_s';
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void i32_ge_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_ge_u';
+    i32 arg1 = (stack[--sp] as int) & _mask32;
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void i64_eqz(Bytecode code) {
@@ -566,18 +566,43 @@ class ExecutionContect {
   }
 
   void i32_clz(Bytecode code) {
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_clz';
+    // "Return the count of leading zero bits in i; all bits are considered
+    // leading zeros if i is 0."
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    stack[sp++] = 32 - arg0.bitLength;
   }
 
   void i32_ctz(Bytecode code) {
+    // "Return the count of trailing zero bits in i; all bits are considered
+    // trailing zeros if i is 0."
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_ctz';
+
+    if (arg0 == 0) {
+      stack[sp++] = 32;
+    } else {
+      arg0 |= 0xFFFFFFFF00000000;
+      arg0 &= -arg0;
+      int clz;
+      if (arg0 & 0x8000000000000000 != 0) {
+        clz = 0;
+      } else {
+        clz = 32 - arg0.bitLength;
+      }
+      // function ctz4 (x)
+      //   x &= -x
+      //   return w - (clz(x) + 1)
+      stack[sp++] = 32 - (clz + 1);
+    }
   }
 
   void i32_popcnt(Bytecode code) {
+    // "Return the count of non-zero bits in i."
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_popcnt';
+    var result = popcntTable[arg0 & 0xFF];
+    result += popcntTable[(arg0 >> 8) & 0xFF];
+    result += popcntTable[(arg0 >> 16) & 0xFF];
+    result += popcntTable[(arg0 >> 24) & 0xFF];
+    stack[sp++] = result;
   }
 
   void i32_add(Bytecode code) {
@@ -599,79 +624,145 @@ class ExecutionContect {
   void i32_mul(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_mul';
+    var result = arg0 * arg1;
+    if ((result & _bit31) != 0) {
+      result |= _maskTop32;
+    } else {
+      result &= _mask32;
+    }
+    stack[sp++] = result;
   }
 
   void i32_div_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_div_s';
+    try {
+      var result = arg0 ~/ arg1;
+      stack[sp++] = result;
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i32_div_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_div_u';
+    i32 arg1 = (stack[--sp] as int) & _mask32;
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    try {
+      stack[sp++] = arg0 ~/ arg1;
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i32_rem_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_rem_s';
+    try {
+      stack[sp++] = arg0.remainder(arg1);
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i32_rem_u(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_rem_u';
+    u32 arg1 = (stack[--sp] as int) & _mask32;
+    u32 arg0 = (stack[--sp] as int) & _mask32;
+    try {
+      var result = arg0.remainder(arg1);
+      // sign extend result
+      if ((result & _bit31) != 0) result |= _maskTop32;
+      stack[sp++] = result;
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i32_and(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_and';
+    stack[sp++] = arg0 & arg1;
   }
 
   void i32_or(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_or';
+    stack[sp++] = arg0 | arg1;
   }
 
   void i32_xor(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_xor';
+    stack[sp++] = arg0 ^ arg1;
   }
 
   void i32_shl(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_shl';
+    arg1 = arg1 & 0x1F; // shift left by arg1 bits modulo 32
+    var result = arg0 << arg1;
+    if ((result & _bit31) != 0) {
+      // sign extend result
+      result |= _maskTop32;
+    } else {
+      // remove anything shifted into the 64 bit portion
+      result &= _mask32;
+    }
+    stack[sp++] = result;
   }
 
   void i32_shr_s(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_shr_s';
+    arg1 = arg1 & 0x1F; // shift right by arg1 bits modulo 32
+    stack[sp++] = arg0 >> arg1;
   }
 
   void i32_shr_u(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_shr_u';
+    i32 arg0 = (stack[--sp] as int) & _mask32;
+    arg1 = arg1 & 0x1F; // shift right by arg1 bits modulo 32
+    var result = arg0 >>> arg1;
+    // sign extend result
+    if ((result & _bit31) != 0) result |= _maskTop32;
+    stack[sp++] = result;
   }
 
   void i32_rotl(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_rotl';
+    const bitCount = 32;
+
+    i32 count = stack[--sp] as int;
+    i32 value = (stack[--sp] as int) & _mask32;
+
+    count = count & 0x1F; // modulo 32
+
+    var result = (value << count) | (value >>> (bitCount - count));
+    if ((result & _bit31) != 0) {
+      // sign extend result
+      result |= _maskTop32;
+    } else {
+      // remove anything shifted into the 64 bit portion
+      result &= _mask32;
+    }
+    stack[sp++] = result;
   }
 
   void i32_rotr(Bytecode code) {
-    i32 arg1 = stack[--sp] as int;
-    i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_rotr';
+    const bitCount = 32;
+
+    i32 count = stack[--sp] as int;
+    i32 value = (stack[--sp] as int) & _mask32;
+
+    count = count & 0x1F; //  modulo 32
+
+    i32 result = (value << (bitCount - count)) | (value >>> count);
+    if ((result & _bit31) != 0) {
+      // sign extend result
+      result |= _maskTop32;
+    } else {
+      // remove anything shifted into the 64 bit portion
+      result &= _mask32;
+    }
+    stack[sp++] = result;
   }
 
   void i64_clz(Bytecode code) {
@@ -1060,17 +1151,32 @@ class ExecutionContect {
 
   void i32_extend8_s(Bytecode code) {
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_extend8_s';
+    if ((arg0 & 0x80) != 0) {
+      stack[sp++] = 0xFFFFFFFFFFFFFF00 | arg0;
+    } else {
+      stack[sp++] = arg0 & 0xFF;
+    }
   }
 
   void i32_extend16_s(Bytecode code) {
     i32 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_extend16_s';
+    if ((arg0 & 0x8000) != 0) {
+      i64 result = 0xFFFFFFFFFFFF0000 | arg0;
+      stack[sp++] = result;
+    } else {
+      stack[sp++] = arg0 & 0xFFFF;
+    }
   }
 
   void i64_extend8_s(Bytecode code) {
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_extend8_s';
+    if ((arg0 & 0x80) != 0) {
+      i64 result = 0xFFFFFFFFFFFFFF00 | arg0;
+      stack[sp++] = result;
+    } else {
+      i64 result = 0x00000000000000FF & arg0;
+      stack[sp++] = result;
+    }
   }
 
   void i64_extend16_s(Bytecode code) {
@@ -1406,3 +1512,79 @@ class ExecutionContect {
 const int _mask32 = 0xFFFFFFFF;
 const int _bit31 = 0x80000000;
 const int _maskTop32 = 0xFFFFFFFF00000000;
+
+class Trap implements Exception {
+  final String message;
+
+  Trap(this.message);
+
+  @override
+  String toString() => message;
+}
+
+const List<int> popcntTable = <int>[
+  0, 1, 1, 2, // 00000000, 00000001, 00000010, 00000011
+  1, 2, 2, 3, // 00000100, 00000101, 00000110, 00000111
+  1, 2, 2, 3, // 00001000, 00001001, 00001010, 00001011
+  2, 3, 3, 4, // 00001100, 00001101, 00001110, 00001111
+  1, 2, 2, 3, // 00010000, 00010001, 00010010, 00010011
+  2, 3, 3, 4, // 00010100, 00010101, 00010110, 00010111
+  2, 3, 3, 4, // 00011000, 00011001, 00011010, 00011011
+  3, 4, 4, 5, // 00011100, 00011101, 00011110, 00011111
+  1, 2, 2, 3, // 00100000, 00100001, 00100010, 00100011
+  2, 3, 3, 4, // 00100100, 00100101, 00100110, 00100111
+  2, 3, 3, 4, // 00101000, 00101001, 00101010, 00101011
+  3, 4, 4, 5, // 00101100, 00101101, 00101110, 00101111
+  2, 3, 3, 4, // 00110000, 00110001, 00110010, 00110011
+  3, 4, 4, 5, // 00110100, 00110101, 00110110, 00110111
+  3, 4, 4, 5, // 00111000, 00111001, 00111010, 00111011
+  4, 5, 5, 6, // 00111100, 00111101, 00111110, 00111111
+  1, 2, 2, 3, // 01000000, 01000001, 01000010, 01000011
+  2, 3, 3, 4, // 01000100, 01000101, 01000110, 01000111
+  2, 3, 3, 4, // 01001000, 01001001, 01001010, 01001011
+  3, 4, 4, 5, // 01001100, 01001101, 01001110, 01001111
+  2, 3, 3, 4, // 01010000, 01010001, 01010010, 01010011
+  3, 4, 4, 5, // 01010100, 01010101, 01010110, 01010111
+  3, 4, 4, 5, // 01011000, 01011001, 01011010, 01011011
+  4, 5, 5, 6, // 01011100, 01011101, 01011110, 01011111
+  2, 3, 3, 4, // 01100000, 01100001, 01100010, 01100011
+  3, 4, 4, 5, // 01100100, 01100101, 01100110, 01100111
+  3, 4, 4, 5, // 01101000, 01101001, 01101010, 01101011
+  4, 5, 5, 6, // 01101100, 01101101, 01101110, 01101111
+  3, 4, 4, 5, // 01110000, 01110001, 01110010, 01110011
+  4, 5, 5, 6, // 01110100, 01110101, 01110110, 01110111
+  4, 5, 5, 6, // 01111000, 01111001, 01111010, 01111011
+  5, 6, 6, 7, // 01111100, 01111101, 01111110, 01111111
+  1, 2, 2, 3, // 10000000, 10000001, 10000010, 10000011
+  2, 3, 3, 4, // 10000100, 10000101, 10000110, 10000111
+  2, 3, 3, 4, // 10001000, 10001001, 10001010, 10001011
+  3, 4, 4, 5, // 10001100, 10001101, 10001110, 10001111
+  2, 3, 3, 4, // 10010000, 10010001, 10010010, 10010011
+  3, 4, 4, 5, // 10010100, 10010101, 10010110, 10010111
+  3, 4, 4, 5, // 10011000, 10011001, 10011010, 10011011
+  4, 5, 5, 6, // 10011100, 10011101, 10011110, 10011111
+  2, 3, 3, 4, // 10100000, 10100001, 10100010, 10100011
+  3, 4, 4, 5, // 10100100, 10100101, 10100110, 10100111
+  3, 4, 4, 5, // 10101000, 10101001, 10101010, 10101011
+  4, 5, 5, 6, // 10101100, 10101101, 10101110, 10101111
+  3, 4, 4, 5, // 10110000, 10110001, 10110010, 10110011
+  4, 5, 5, 6, // 10110100, 10110101, 10110110, 10110111
+  4, 5, 5, 6, // 10111000, 10111001, 10111010, 10111011
+  5, 6, 6, 7, // 10111100, 10111101, 10111110, 10111111
+  2, 3, 3, 4, // 11000000, 11000001, 11000010, 11000011
+  3, 4, 4, 5, // 11000100, 11000101, 11000110, 11000111
+  3, 4, 4, 5, // 11001000, 11001001, 11001010, 11001011
+  4, 5, 5, 6, // 11001100, 11001101, 11001110, 11001111
+  3, 4, 4, 5, // 11010000, 11010001, 11010010, 11010011
+  4, 5, 5, 6, // 11010100, 11010101, 11010110, 11010111
+  4, 5, 5, 6, // 11011000, 11011001, 11011010, 11011011
+  5, 6, 6, 7, // 11011100, 11011101, 11011110, 11011111
+  3, 4, 4, 5, // 11100000, 11100001, 11100010, 11100011
+  4, 5, 5, 6, // 11100100, 11100101, 11100110, 11100111
+  4, 5, 5, 6, // 11101000, 11101001, 11101010, 11101011
+  5, 6, 6, 7, // 11101100, 11101101, 11101110, 11101111
+  4, 5, 5, 6, // 11110000, 11110001, 11110010, 11110011
+  5, 6, 6, 7, // 11110100, 11110101, 11110110, 11110111
+  5, 6, 6, 7, // 11111000, 11111001, 11111010, 11111011
+  6, 7, 7, 8, // 11111100, 11111101, 11111110, 11111111
+];

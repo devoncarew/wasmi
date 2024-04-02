@@ -206,7 +206,9 @@ class Bytecode {
   static const int table_fill = 0xC8;
 
   final int code;
-  final int immediate_0_u64;
+  final int i0;
+  final int i1;
+  final double f0;
 
   // The start pc of the coorespinding else block, if any.
   int? elseStart;
@@ -219,7 +221,9 @@ class Bytecode {
 
   Bytecode(
     this.code, {
-    this.immediate_0_u64 = 0,
+    this.i0 = 0,
+    this.i1 = 0,
+    this.f0 = 0.0,
   });
 
   String get name => _opcodeNames[code]!;

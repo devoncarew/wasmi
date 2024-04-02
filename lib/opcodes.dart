@@ -2,54 +2,74 @@ import 'package:collection/collection.dart';
 
 import 'src/utils.dart';
 
-void main() {
-  const skip = {'overflow', 'vector'};
+// void main() {
+//   const skip = {'overflow', 'vector'};
 
-  int count = 0;
+//   int count = 0;
 
-  for (final opcode in Opcode.values) {
-    // static const unreachable = 0x00;
-    if (opcode.name.startsWith('reserved_')) continue;
-    if (skip.contains(opcode.name)) continue;
+//   for (final opcode in Opcode.values) {
+//     // static const unreachable = 0x00;
+//     if (opcode.name.startsWith('reserved_')) continue;
+//     // if (skip.contains(opcode.name)) continue;
 
-    // print('static const int ${opcode.name} = ${hex(count)};');
-    print("${hex(count)}: '${opcode.name}',");
-    count++;
+//     // print('static const int ${opcode.name} = ${hex(count)};');
+//     // print("${hex(count)}: '${opcode.name}',");
+//     // count++;
 
-    // print('${opcode.name},');
+//     // case Opcode.unreachable:
+//     //   return Bytecode(Bytecode.unreachable);
+//     // case Opcode.nop:
+//     //   return Bytecode(Bytecode.nop);
+//     // case Opcode.localGet:
+//     //   return Bytecode(
+//     //     Bytecode.localGet,
+//     //     immediate_0_u64: instr.immediate_0 as int,
+//     //   );
 
-    // print('  void ${opcode.name}(Bytecode code) {');
-    // for (var i = opcode.params.length - 1; i >= 0; i--) {
-    //   final param = opcode.params[i];
-    //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
-    // }
-    // final escape = opcode.name.contains(r'$') ? 'r' : '';
-    // print("    throw $escape'unimplemented: ${opcode.name}';");
-    // print('  }');
-    // print('');
-  }
+//     print('case Opcode.${opcode.name}:');
+//     final params = ['Bytecode.${opcode.name}'];
+//     int immediateIndex = 0;
+//     for (final i in opcode.immediates) {
+//       final name = '${i.dartType.substring(0, 1)}$immediateIndex';
+//       params.add('$name: instr.immediate_$immediateIndex as ${i.dartType}');
+//       immediateIndex++;
+//     }
+//     print('  return Bytecode(${params.join(', ')});');
 
-  for (final opcode in OverflowOpcode.values) {
-    // static const unreachable = 0x00;
-    if (opcode.name.startsWith('reserved_')) continue;
+//     // print('${opcode.name},');
 
-    // print('${opcode.name},');
+//     // print('  void ${opcode.name}(Bytecode code) {');
+//     // for (var i = opcode.params.length - 1; i >= 0; i--) {
+//     //   final param = opcode.params[i];
+//     //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
+//     // }
+//     // final escape = opcode.name.contains(r'$') ? 'r' : '';
+//     // print("    throw $escape'unimplemented: ${opcode.name}';");
+//     // print('  }');
+//     // print('');
+//   }
 
-    // print('  void ${opcode.name}(Bytecode code) {');
-    // for (var i = opcode.params.length - 1; i >= 0; i--) {
-    //   final param = opcode.params[i];
-    //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
-    // }
-    // final escape = opcode.name.contains(r'$') ? 'r' : '';
-    // print("    throw $escape'unimplemented: ${opcode.name}';");
-    // print('  }');
-    // print('');
+//   for (final opcode in OverflowOpcode.values) {
+//     // static const unreachable = 0x00;
+//     if (opcode.name.startsWith('reserved_')) continue;
 
-    // print('static const int ${opcode.name} = ${hex(count)};');
-    print("${hex(count)}: '${opcode.name}',");
-    count++;
-  }
-}
+//     // print('${opcode.name},');
+
+//     // print('  void ${opcode.name}(Bytecode code) {');
+//     // for (var i = opcode.params.length - 1; i >= 0; i--) {
+//     //   final param = opcode.params[i];
+//     //   print('    ${param.name} arg$i = stack[--sp] as ${param.dartType};');
+//     // }
+//     // final escape = opcode.name.contains(r'$') ? 'r' : '';
+//     // print("    throw $escape'unimplemented: ${opcode.name}';");
+//     // print('  }');
+//     // print('');
+
+//     // print('static const int ${opcode.name} = ${hex(count)};');
+//     // print("${hex(count)}: '${opcode.name}',");
+//     count++;
+//   }
+// }
 
 enum Opcode {
   // 0x00
