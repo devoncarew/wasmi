@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:test/test.dart';
 import 'package:wasmi/execution.dart';
@@ -53,40 +54,36 @@ void defineSpecTests(String spec) {
     });
 
     group(filename, () {
-      final nameCounts = <String, int>{};
-
       for (var command in moduleGroup) {
         final type = command['type'] as String;
         final line = command['line'] as int;
+
         final action = command['action'] as Map;
         final actionType = action['type'];
-        final text = action['type'] as String?;
-        final expected = parseTypes((command['expected'] as List).cast<Map>());
-
         if (actionType != 'invoke') {
           throw 'unhandled action type: $actionType';
         }
-
         final field = action['field'];
-        final args = parseTypes((action['args'] as List).cast<Map>());
-        nameCounts[field] = nameCounts.putIfAbsent(field, () => -1) + 1;
 
-        final testName = '$type $field.${nameCounts[field]}';
+        final testName = '$field $type $line';
         test(testName, () {
-          // printOnFailure('Test defined at line $line.');
-
           var function =
               module!.exportedFunction(field)!.func as DefinedFunction;
 
           if (type == 'assert_return') {
+            final args = parseTypes((action['args'] as List).cast<Map>());
             final result = context!.execute(function, args);
-            // todo: handle tuple results
+
+            final expected =
+                parseTypes((command['expected'] as List).cast<Map>());
+            // TODO: handle tuple results
             expect(result, expected.single);
           } else if (type == 'assert_trap') {
-            // todo: verify the message
+            final args = parseTypes((action['args'] as List).cast<Map>());
+            final text = command['text'] as String?;
             expect(
               () => context!.execute(function, args),
-              throwsA(Trap),
+              throwsA(isA<Trap>().having((e) => e.message, 'message', text)),
             );
           } else {
             throw 'unhandled type: $type';
@@ -103,10 +100,8 @@ void defineSpecTests(String spec) {
   //   final line = command['line'] as int;
   //   final filename = command['filename'] as String;
 
-  //   final testName = '$filename $type';
+  //   final testName = '$filename $type $line';
   //   test(testName, () {
-  //     // printOnFailure('Test defined at line $line.');
-
   //     // todo: implement
   //   });
   // }
@@ -124,22 +119,49 @@ List<Object?> parseTypes(List<Map> types) {
 }
 
 dynamic _decodeType(String type, String value) {
-  if (value == 'null') {
-    return value;
-  } else if (type == 'i32' || type == 'i64') {
-    return int.parse(value);
-  } else if (type == 'f32' || type == 'f64') {
-    if (value == 'nan:arithmetic' || value == 'nan:canonical') {
-      double.nan;
-    } else {
-      // todo: double check this
+  if (value == 'null') return value;
 
-      return double.parse(value);
+  switch (type) {
+    case 'i32':
+      return $i32(value);
+    case 'i64':
+      return $i64(value);
+    case 'f32':
+      if (value == 'nan:arithmetic' || value == 'nan:canonical') {
+        double.nan;
+      }
+      return $f32(value);
+    case 'f64':
+      if (value == 'nan:arithmetic' || value == 'nan:canonical') {
+        double.nan;
+      }
+      return $f64(value);
 
-      // var val = BigInt.parse(value);
-      // return "\$$type('${val.toRadixString(16).toUpperCase()}')";
-    }
-  } else {
-    throw 'unhandled type: $type';
+    default:
+      throw 'unhandled type: $type';
   }
 }
+
+int $i32(String value) {
+  var n = int.parse(value);
+  return n.toSigned(32).toInt();
+}
+
+int $i64(String value) {
+  var n = BigInt.parse(value);
+  return n.toSigned(64).toInt();
+}
+
+double $f32(String value) {
+  var val = int.parse(value);
+  _reinterpretData.setInt32(0, val, Endian.little);
+  return _reinterpretData.getFloat32(0, Endian.little);
+}
+
+double $f64(String value) {
+  var val = int.parse(value);
+  _reinterpretData.setInt64(0, val, Endian.little);
+  return _reinterpretData.getFloat64(0, Endian.little);
+}
+
+final ByteData _reinterpretData = ByteData(8);

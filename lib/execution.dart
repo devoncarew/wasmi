@@ -430,67 +430,67 @@ class ExecutionContect {
 
   void i64_eqz(Bytecode code) {
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_eqz';
+    stack[sp++] = arg0 == 0 ? 1 : 0;
   }
 
   void i64_eq(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_eq';
+    stack[sp++] = arg0 == arg1 ? 1 : 0;
   }
 
   void i64_ne(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_ne';
+    stack[sp++] = arg0 != arg1 ? 1 : 0;
   }
 
   void i64_lt_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_lt_s';
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void i64_lt_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_lt_u';
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void i64_gt_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_gt_s';
+    stack[sp++] = arg0 > arg1 ? 1 : 0;
   }
 
   void i64_gt_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_gt_u';
+    stack[sp++] = arg0 > arg1 ? 1 : 0;
   }
 
   void i64_le_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_le_s';
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void i64_le_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_le_u';
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void i64_ge_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_ge_s';
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void i64_ge_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_ge_u';
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void f32_eq(Bytecode code) {
@@ -608,9 +608,13 @@ class ExecutionContect {
   void i32_add(Bytecode code) {
     i32 arg1 = stack[--sp] as int;
     i32 arg0 = stack[--sp] as int;
-    final result = arg0 + arg1;
-    stack[sp++] =
-        (result & _bit31) != 0 ? result | _maskTop32 : result & _mask32;
+    var result = arg0 + arg1;
+    if ((result & _bit31) != 0) {
+      result |= _maskTop32;
+    } else {
+      result &= _mask32;
+    }
+    stack[sp++] = result;
   }
 
   void i32_sub(Bytecode code) {
@@ -766,108 +770,175 @@ class ExecutionContect {
   }
 
   void i64_clz(Bytecode code) {
-    i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_clz';
+    // "Return the count of leading zero bits in i; all bits are considered
+    // leading zeros if i is 0."
+    i64 arg0 = stack.removeLast() as i64;
+    if (arg0 & 0x8000000000000000 != 0) {
+      stack[sp++] = 0;
+    } else {
+      stack[sp++] = 64 - arg0.bitLength;
+    }
   }
 
   void i64_ctz(Bytecode code) {
+    // "Return the count of trailing zero bits in i; all bits are considered
+    // trailing zeros if i is 0."
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_ctz';
+    if (arg0 == 0) {
+      stack[sp++] = 64;
+    } else {
+      arg0 &= -arg0;
+      int clz;
+      if (arg0 & 0x8000000000000000 != 0) {
+        clz = 0;
+      } else {
+        clz = 64 - arg0.bitLength;
+      }
+      // function ctz4 (x)
+      //   x &= -x
+      //   return w - (clz(x) + 1)
+      stack[sp++] = 64 - (clz + 1);
+    }
   }
 
   void i64_popcnt(Bytecode code) {
+    // "Return the count of non-zero bits in i."
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_popcnt';
+    var result = popcntTable[arg0 & 0xFF];
+    result += popcntTable[(arg0 >> 8) & 0xFF];
+    result += popcntTable[(arg0 >> 16) & 0xFF];
+    result += popcntTable[(arg0 >> 24) & 0xFF];
+    result += popcntTable[(arg0 >> 32) & 0xFF];
+    result += popcntTable[(arg0 >> 40) & 0xFF];
+    result += popcntTable[(arg0 >> 48) & 0xFF];
+    result += popcntTable[(arg0 >> 56) & 0xFF];
+    stack[sp++] = result;
   }
 
   void i64_add(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_add';
+    stack[sp++] = arg0 + arg1;
   }
 
   void i64_sub(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_sub';
+    stack[sp++] = arg0 - arg1;
   }
 
   void i64_mul(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_mul';
+    stack[sp++] = arg0 * arg1;
   }
 
   void i64_div_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_div_s';
+    try {
+      stack[sp++] = arg0 ~/ arg1;
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i64_div_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_div_u';
+    try {
+      stack[sp++] = arg0 ~/ arg1;
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i64_rem_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_rem_s';
+    try {
+      stack[sp++] = arg0.remainder(arg1);
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i64_rem_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_rem_u';
+    try {
+      stack[sp++] = arg0.remainder(arg1);
+    } on IntegerDivisionByZeroException {
+      throw Trap('integer divide by zero');
+    }
   }
 
   void i64_and(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_and';
+    stack[sp++] = arg0 & arg1;
   }
 
   void i64_or(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_or';
+    stack[sp++] = arg0 | arg1;
   }
 
   void i64_xor(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_xor';
+    stack[sp++] = arg0 ^ arg1;
   }
 
   void i64_shl(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_shl';
+    // shift left by arg1 bits modulo 64
+    arg1 = arg1 & 0x3F;
+    stack[sp++] = arg0 << arg1;
   }
 
   void i64_shr_s(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_shr_s';
+    // shift right by arg1 bits modulo 64
+    arg1 = arg1 & 0x3F;
+    stack[sp++] = arg0 >> arg1;
   }
 
   void i64_shr_u(Bytecode code) {
     i64 arg1 = stack[--sp] as int;
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_shr_u';
+    // shift right by arg1 bits modulo 64
+    arg1 = arg1 & 0x3F;
+    stack[sp++] = arg0 >>> arg1;
   }
 
   void i64_rotl(Bytecode code) {
-    i64 arg1 = stack[--sp] as int;
-    i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_rotl';
+    const bitCount = 64;
+
+    u64 count = stack[--sp] as int;
+    u64 value = stack[--sp] as int;
+
+    count = count & 0x3F; // count bits modulo 64
+
+    i64 result =
+        count == 0 ? value : (value << count) | (value >>> (bitCount - count));
+    stack[sp++] = result;
   }
 
   void i64_rotr(Bytecode code) {
-    i64 arg1 = stack[--sp] as int;
-    i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_rotr';
+    const bitCount = 64;
+
+    u64 count = stack[--sp] as int;
+    u64 value = stack[--sp] as int;
+
+    count = count & 0x3F; // count bits modulo 64
+
+    i64 result =
+        count == 0 ? value : (value << (bitCount - count)) | (value >>> count);
+    stack[sp++] = result;
   }
 
   void f32_abs(Bytecode code) {
@@ -1181,16 +1252,28 @@ class ExecutionContect {
 
   void i64_extend16_s(Bytecode code) {
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_extend16_s';
+    if ((arg0 & 0x8000) != 0) {
+      i64 result = 0xFFFFFFFFFFFF0000 | arg0;
+      stack[sp++] = result;
+    } else {
+      i64 result = 0x000000000000FFFF & arg0;
+      stack[sp++] = result;
+    }
   }
 
   void i64_extend32_s(Bytecode code) {
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i64_extend32_s';
+    if ((arg0 & 0x80000000) != 0) {
+      i64 result = 0xFFFFFFFF00000000 | arg0;
+      stack[sp++] = result;
+    } else {
+      i64 result = 0x00000000FFFFFFFF & arg0;
+      stack[sp++] = result;
+    }
   }
 
   void refNull(Bytecode code) {
-    throw 'unimplemented: refNull';
+    stack[sp++] = null;
   }
 
   void ref_is_null(Bytecode code) {
