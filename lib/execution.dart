@@ -772,7 +772,7 @@ class ExecutionContect {
   void i64_clz(Bytecode code) {
     // "Return the count of leading zero bits in i; all bits are considered
     // leading zeros if i is 0."
-    i64 arg0 = stack.removeLast() as i64;
+    i64 arg0 = stack[--sp] as i64;
     if (arg0 & 0x8000000000000000 != 0) {
       stack[sp++] = 0;
     } else {
