@@ -2,6 +2,8 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+
 import 'bytecode.dart';
 import 'compile.dart';
 import 'format.dart';
@@ -943,67 +945,67 @@ class ExecutionContect {
 
   void f32_abs(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_abs';
+    stack[sp++] = arg0.abs();
   }
 
   void f32_neg(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_neg';
+    stack[sp++] = -arg0;
   }
 
   void f32_ceil(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_ceil';
+    stack[sp++] = arg0.ceilToDouble();
   }
 
   void f32_floor(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_floor';
+    stack[sp++] = arg0.floorToDouble();
   }
 
   void f32_trunc(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_trunc';
+    stack[sp++] = arg0.truncateToDouble();
   }
 
   void f32_nearest(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_nearest';
+    stack[sp++] = arg0.roundToDouble();
   }
 
   void f32_sqrt(Bytecode code) {
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_sqrt';
+    stack[sp++] = sqrt(arg0);
   }
 
   void f32_add(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_add';
+    stack[sp++] = arg0 + arg1;
   }
 
   void f32_sub(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_sub';
+    stack[sp++] = arg0 - arg1;
   }
 
   void f32_mul(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_mul';
+    stack[sp++] = arg0 * arg1;
   }
 
   void f32_div(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_div';
+    stack[sp++] = arg0 / arg1;
   }
 
   void f32_min(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_min';
+    stack[sp++] = min(arg0, arg1);
   }
 
   void f32_max(Bytecode code) {
@@ -1015,89 +1017,92 @@ class ExecutionContect {
   void f32_copysign(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_copysign';
+    stack[sp++] = arg0.isNegative == arg1.isNegative ? arg0 : -arg0;
   }
 
   void f64_abs(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_abs';
+    stack[sp++] = arg0.abs();
   }
 
   void f64_neg(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_neg';
+    stack[sp++] = -arg0;
   }
 
   void f64_ceil(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_ceil';
+    stack[sp++] = arg0.ceilToDouble();
   }
 
   void f64_foor(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_foor';
+    stack[sp++] = arg0.floorToDouble();
   }
 
   void f64_trunc(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_trunc';
+    stack[sp++] = arg0.truncateToDouble();
   }
 
   void f64_nearest(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_nearest';
+    stack[sp++] = arg0.roundToDouble();
   }
 
   void f64_sqrt(Bytecode code) {
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_sqrt';
+    stack[sp++] = sqrt(arg0);
   }
 
   void f64_add(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_add';
+    stack[sp++] = arg0 + arg1;
   }
 
   void f64_sub(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_sub';
+    stack[sp++] = arg0 - arg1;
   }
 
   void f64_mul(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_mul';
+    stack[sp++] = arg0 * arg1;
   }
 
   void f64_div(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_div';
+    stack[sp++] = arg0 / arg1;
   }
 
   void f64_min(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_min';
+    stack[sp++] = min(arg0, arg1);
   }
 
   void f64_max(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_max';
+    stack[sp++] = max(arg0, arg1);
   }
 
   void f64_copysign(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_copysign';
+    stack[sp++] = arg0.isNegative == arg1.isNegative ? arg0 : -arg0;
   }
 
   void i32_wrap_i64(Bytecode code) {
     i64 arg0 = stack[--sp] as int;
-    throw 'unimplemented: i32_wrap_i64';
+    i32 result = arg0 & _mask32;
+    // sign extend
+    if ((result & _bit31) != 0) result |= _maskTop32;
+    stack[sp++] = result;
   }
 
   void i32_trunc_f32_s(Bytecode code) {
