@@ -123,6 +123,8 @@ extension DefinedFunctionExtension on DefinedFunction {
       case Opcode.brIf:
         return Bytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
       case Opcode.brTable:
+        // todo: fix this
+        //   "type 'List<int>' is not a subtype of type 'int' in type cast"
         return Bytecode(Bytecode.brTable, i0: instr.immediate_0 as int);
       case Opcode.$return:
         return Bytecode(Bytecode.$return);
