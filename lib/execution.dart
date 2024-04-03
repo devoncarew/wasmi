@@ -498,73 +498,73 @@ class ExecutionContect {
   void f32_eq(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_eq';
+    stack[sp++] = arg0 == arg1 ? 1 : 0;
   }
 
   void f32_ne(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_ne';
+    stack[sp++] = arg0 != arg1 ? 1 : 0;
   }
 
   void f32_lt(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_lt';
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void f32_gt(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_gt';
+    stack[sp++] = arg0 > arg1 ? 1 : 0;
   }
 
   void f32_le(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_le';
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void f32_ge(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_ge';
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void f64_eq(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_eq';
+    stack[sp++] = arg0 == arg1 ? 1 : 0;
   }
 
   void f64_ne(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_ne';
+    stack[sp++] = arg0 != arg1 ? 1 : 0;
   }
 
   void f64_lt(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_lt';
+    stack[sp++] = arg0 < arg1 ? 1 : 0;
   }
 
   void f64_gt(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_gt';
+    stack[sp++] = arg0 > arg1 ? 1 : 0;
   }
 
   void f64_le(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_le';
+    stack[sp++] = arg0 <= arg1 ? 1 : 0;
   }
 
   void f64_ge(Bytecode code) {
     f64 arg1 = stack[--sp] as double;
     f64 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f64_ge';
+    stack[sp++] = arg0 >= arg1 ? 1 : 0;
   }
 
   void i32_clz(Bytecode code) {
@@ -1011,7 +1011,7 @@ class ExecutionContect {
   void f32_max(Bytecode code) {
     f32 arg1 = stack[--sp] as double;
     f32 arg0 = stack[--sp] as double;
-    throw 'unimplemented: f32_max';
+    stack[sp++] = max(arg0, arg1);
   }
 
   void f32_copysign(Bytecode code) {

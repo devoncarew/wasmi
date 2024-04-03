@@ -6,6 +6,10 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
 const Set<String> allowList = {
+  'f32_cmp.wast',
+  'f32.wast',
+  'f64_cmp.wast',
+  'f64.wast',
   'float_misc.wast',
   'i32.wast',
   'i64.wast',
@@ -14,12 +18,17 @@ const Set<String> allowList = {
 void main(List<String> args) {
   final specTestDir = Directory('spec/test/core');
 
-  for (final file in specTestDir.listSync().whereType<File>()) {
+  final files = specTestDir.listSync().whereType<File>().toList();
+  files.sort((a, b) => a.path.compareTo(b.path));
+
+  for (final file in files) {
     final name = p.basename(file.path);
     if (!name.endsWith('.wast')) continue;
 
     if (allowList.contains(name)) {
       generateSpecTests(file);
+    } else {
+      print('  skipping $name');
     }
   }
 }
@@ -215,5 +224,6 @@ Set<String> readExpectedFails() {
       .readAsLinesSync()
       .map((l) => l.trim())
       .where((l) => l.isNotEmpty)
+      .where((l) => !l.startsWith('#'))
       .toSet();
 }

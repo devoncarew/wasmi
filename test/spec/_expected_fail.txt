@@ -1,3 +1,5 @@
+# These tests are skipped when generated.
+
 call as_call_indirect_last_0
 call_indirect call_1_2
 call_indirect call_2_3
