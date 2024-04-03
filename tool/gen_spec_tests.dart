@@ -126,7 +126,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
       final field = action['field'];
 
       nameCount.putIfAbsent(field, () => 0);
-      final testName = '${field}_${nameCount[field]}';
+      final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
       nameCount[field] = nameCount[field]! + 1;
 
       final testId = '$spec $testName';
