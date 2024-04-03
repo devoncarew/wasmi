@@ -3,4 +3,5 @@
 .dart_tool/
 pubspec.lock
 
+test/spec/**/*.json
 test/spec/**/*.wat
