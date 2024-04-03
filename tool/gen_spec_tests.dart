@@ -6,6 +6,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
 const Set<String> allowList = {
+  'float_misc.wast',
   'i32.wast',
   'i64.wast',
 };
@@ -49,6 +50,8 @@ void generateSpecTests(File wastFile) {
 
 Library createLibraryFor(File wastFile, File jsonFile) {
   final spec = p.basenameWithoutExtension(wastFile.path);
+
+  final expectedFails = readExpectedFails();
 
   final builder = LibraryBuilder();
   builder.generatedByComment = 'Generated from ${wastFile.path}.';
@@ -103,10 +106,10 @@ Library createLibraryFor(File wastFile, File jsonFile) {
     final moduleFilePath = 'test/spec/$spec/$filename';
 
     code.writeln("group('$filename', () {");
-    code.writeln('late Module module;');
+    code.writeln('late Module m;');
     code.writeln();
     code.writeln('setUpAll(() {');
-    code.writeln("module = Module.parse(File('$moduleFilePath'));");
+    code.writeln("m = Module.parse(File('$moduleFilePath'));");
     code.writeln('});');
     code.writeln();
 
@@ -123,12 +126,15 @@ Library createLibraryFor(File wastFile, File jsonFile) {
       final field = action['field'];
 
       nameCount.putIfAbsent(field, () => 0);
-      final testName = '$field-${nameCount[field]}';
+      final testName = '${field}_${nameCount[field]}';
       nameCount[field] = nameCount[field]! + 1;
 
-      if (type == 'assert_return') {
-        // todo: returns
+      final testId = '$spec $testName';
+      final expectedFail = expectedFails.contains(testId);
+      final failText =
+          expectedFail ? ", 'skip: see test/spec/_expected_fail.txt'," : '';
 
+      if (type == 'assert_return') {
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
         final argList = args.map((arg) {
           return encodeType(arg['type'], arg['value']);
@@ -143,10 +149,8 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           return encodeType(arg['type'], arg['value']);
         }).join(', ');
 
-        code.writeln("test('$testName', () {");
-        code.writeln(
-            "  returns(module, '$field', [$argList], $expectedValue);");
-        code.writeln('});');
+        code.writeln("returns('$testName', () => m.call('$field', [$argList]), "
+            '$expectedValue$failText);');
       } else if (type == 'assert_trap') {
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
         final text = command['text'] as String?;
@@ -155,9 +159,8 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           return encodeType(arg['type'], arg['value']);
         }).join(', ');
 
-        code.writeln("test('$testName traps', () {");
-        code.writeln("  traps(module, '$field', [$argList], '$text');");
-        code.writeln('});');
+        code.writeln(
+            "traps('$testName', () => m.call('$field', [$argList]), '$text'$failText);");
       } else {
         throw 'unhandled type: $type';
       }
@@ -204,4 +207,13 @@ String encodeType(String type, String value) {
       return "\$$type('${val.toRadixString(16).toUpperCase()}')";
     }
   }
+}
+
+Set<String> readExpectedFails() {
+  final file = File('test/spec/_expected_fail.txt');
+  return file
+      .readAsLinesSync()
+      .map((l) => l.trim())
+      .where((l) => l.isNotEmpty)
+      .toSet();
 }

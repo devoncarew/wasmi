@@ -1,22 +1,73 @@
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 import 'package:wasmi/execution.dart';
 import 'package:wasmi/format.dart';
 
-void returns(Module module, String fnName, List args, Object? expected) {
-  final context = ExecutionContect(module);
-  var function = module.exportedFunction(fnName)!.func as DefinedFunction;
-  expect(context.execute(function, args), expected);
+/// Assert that the result of the given closure matches the expected result.
+@isTest
+void returns(
+  String testName,
+  Function() testClosure, [
+  Object? expected,
+  String? skip,
+]) {
+  const floatEpsilon = 1 / 1000000;
+
+  test(
+    testName,
+    () {
+      final actual = testClosure();
+      if (expected != null) {
+        if (expected is double && expected.isNaN) {
+          expect(actual, isNaN);
+        } else if (expected is int && expected.isNaN) {
+          expect(actual, isNaN);
+        } else if (expected is double && expected.isFinite) {
+          // TODO: We only want to do this check for floats, not doubles (we did
+          // the intermediate calculations with more precision than an actual
+          // float, so can have some variance nine or ten places out).
+          final e = expected == 0.0 ? 1e-38 : (expected * floatEpsilon).abs();
+          expect(actual, closeTo(expected, e));
+        } else {
+          expect(actual, expected);
+        }
+      }
+    },
+    skip: skip,
+  );
 }
 
-void traps(Module module, String fnName, List args, String expectedTrap) {
-  final context = ExecutionContect(module);
-  var function = module.exportedFunction(fnName)!.func as DefinedFunction;
-  expect(
-    () => context.execute(function, args),
-    throwsA(isA<Trap>().having((e) => e.message, 'message', expectedTrap)),
+/// Assert that the runtime fires a trap.
+@isTest
+void traps(
+  String testName,
+  Function() testClosure,
+  String expectedTrapMessage, [
+  String? skip,
+]) {
+  test(
+    testName,
+    () {
+      try {
+        testClosure();
+        fail('trap expected but not thrown');
+      } on Trap catch (e) {
+        expect(e.message, expectedTrapMessage,
+            reason: 'difference in trap message');
+      }
+    },
+    skip: skip,
   );
+}
+
+extension ModuleExtension on Module {
+  Object? call(String fnName, List args) {
+    final context = ExecutionContect(this);
+    final function = exportedFunction(fnName)!.func as DefinedFunction;
+    return context.execute(function, args);
+  }
 }
 
 List<Object?> parseTypes(List<Map> types) {
