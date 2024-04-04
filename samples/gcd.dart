@@ -10,6 +10,6 @@ void main(List<String> args) {
   final arga = 24;
   final argb = 6;
 
-  final result = module.call('gcd', [arga, argb]);
+  final result = module.invoke('gcd', [arga, argb]);
   print('gcd($arga, $argb) = $result');
 }
