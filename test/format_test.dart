@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:wasmi/format.dart';
+import 'package:wasmi/parse.dart';
 
 void main() {
   group('example/fib.wasm', () {
-    late Module module;
+    late ModuleDefinition module;
 
     setUpAll(() {
-      module = Module.parse(File('example/fib.wasm'));
+      module = ModuleDefinition.parse(File('example/fib.wasm'));
     });
 
     test('SectionKind.custom', () {
@@ -57,14 +57,14 @@ void main() {
 
   group('samples', () {
     test('branch1.wasm', () {
-      final module = Module.parse(File('samples/branch1.wasm'));
+      final module = ModuleDefinition.parse(File('samples/branch1.wasm'));
 
       expect(module.exportedFunctions, isNotEmpty);
       expect(module.globals.globals, isNotEmpty);
     });
 
     test('branch2.wasm', () {
-      final module = Module.parse(File('samples/branch2.wasm'));
+      final module = ModuleDefinition.parse(File('samples/branch2.wasm'));
 
       expect(module.globals.globals, isNotEmpty);
 
@@ -76,7 +76,7 @@ void main() {
     });
 
     test('eratosthenes.wasm', () {
-      final module = Module.parse(File('samples/eratosthenes.wasm'));
+      final module = ModuleDefinition.parse(File('samples/eratosthenes.wasm'));
 
       expect(module.importModules, isNotEmpty);
       expect(module.globals.globals, isNotEmpty);
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('fac.wasm', () {
-      final module = Module.parse(File('samples/fac.wasm'));
+      final module = ModuleDefinition.parse(File('samples/fac.wasm'));
 
       expect(module.exportedFunctions, isNotEmpty);
       final export = module.exportedFunctions.first;
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('gcd.wasm', () {
-      final module = Module.parse(File('samples/gcd.wasm'));
+      final module = ModuleDefinition.parse(File('samples/gcd.wasm'));
 
       expect(module.exportedFunctions, isNotEmpty);
       final export = module.exportedFunctions.first;
@@ -110,7 +110,7 @@ void main() {
     });
 
     test('hello.wasm', () {
-      final module = Module.parse(File('samples/hello.wasm'));
+      final module = ModuleDefinition.parse(File('samples/hello.wasm'));
 
       expect(module.memoryInfo, isNotNull);
       expect(module.memoryInfo!.min, 10);
@@ -119,14 +119,14 @@ void main() {
     });
 
     test('icu_capi.wasm', () {
-      final module = Module.parse(File('samples/icu_capi.wasm'));
+      final module = ModuleDefinition.parse(File('samples/icu_capi.wasm'));
 
       expect(module.importModules, isNotEmpty);
       expect(module.exportedFunctions, isNotEmpty);
     });
 
     test('mandelbrot.wasm', () {
-      final module = Module.parse(File('samples/mandelbrot.wasm'));
+      final module = ModuleDefinition.parse(File('samples/mandelbrot.wasm'));
 
       expect(module.importModules, isNotEmpty);
       expect(module.globals.globals, isNotEmpty);
@@ -136,7 +136,7 @@ void main() {
     });
 
     test('print.wasm', () {
-      final module = Module.parse(File('samples/print.wasm'));
+      final module = ModuleDefinition.parse(File('samples/print.wasm'));
 
       expect(module.importModules, isNotEmpty);
       expect(module.dataSegments.segments, isNotEmpty);
@@ -145,7 +145,7 @@ void main() {
     });
 
     test('rot13.wasm', () {
-      final module = Module.parse(File('samples/rot13.wasm'));
+      final module = ModuleDefinition.parse(File('samples/rot13.wasm'));
 
       // memory is imported
       expect(module.memoryInfo?.imported, isTrue);
@@ -167,7 +167,7 @@ void main() {
     });
 
     test('sha3.wasm', () {
-      final module = Module.parse(File('samples/sha3.wasm'));
+      final module = ModuleDefinition.parse(File('samples/sha3.wasm'));
 
       expect(module.exportedFunctions, isNotEmpty);
       expect(module.globals.globals, isNotEmpty);

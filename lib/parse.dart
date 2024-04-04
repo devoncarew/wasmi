@@ -6,7 +6,6 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 
-import 'bytecode.dart';
 import 'instructions.dart';
 import 'opcodes.dart';
 import 'src/utils.dart';
@@ -14,8 +13,8 @@ import 'types.dart';
 
 const _verbose = false;
 
-class Module {
-  static Module parse(File file) {
+class ModuleDefinition {
+  static ModuleDefinition parse(File file) {
     Uint8List fileData = file.readAsBytesSync();
     Reader r = Reader(fileData);
 
@@ -24,7 +23,7 @@ class Module {
     r.verifyMarker(magic, 0x0061736D);
     int version = r.readByteHeader();
 
-    final module = Module(magic: magic, version: version);
+    final module = ModuleDefinition(magic: magic, version: version);
 
     _log('magic: ${hex(magic, 8)}');
     _log('version: $version'); // expected: 1
@@ -93,7 +92,7 @@ class Module {
   MemoryInfo? memoryInfo;
   int? startFunctionIndex;
 
-  Module({
+  ModuleDefinition({
     this.magic = 0x0061736D,
     this.version = 1,
   });
@@ -879,7 +878,7 @@ enum SectionKind {
 }
 
 class ModuleFunction {
-  final Module module;
+  final ModuleDefinition module;
   final int typeIndex;
 
   ModuleFunction(this.module, this.typeIndex);
@@ -894,7 +893,6 @@ class DefinedFunction extends ModuleFunction {
 
   List<ValueType> locals = [];
   List<Instruction> instructions = [];
-  List<Bytecode>? bytecodes;
 
   DefinedFunction(super.module, super.typeIndex, this.generatedIndex);
 
@@ -905,8 +903,6 @@ class DefinedFunction extends ModuleFunction {
   void setCode(List<Instruction> instructions) {
     this.instructions = instructions;
   }
-
-  bool get compiled => bytecodes != null;
 }
 
 class ExportedFunction {
@@ -930,7 +926,7 @@ class MemoryInfo {
 
 class ImportModule {
   final String name;
-  final Module wasmModule;
+  final ModuleDefinition wasmModule;
 
   final List<ImportedFunction> functions = [];
   final List<ImportedGlobal> globals = [];
@@ -984,7 +980,7 @@ abstract class Global {
 }
 
 class DefinedGlobal implements Global {
-  final Module module;
+  final ModuleDefinition module;
   final int index;
   @override
   final ValueType type;
@@ -1123,7 +1119,7 @@ class DataSegments {
 }
 
 class DataSegment {
-  final Module module;
+  final ModuleDefinition module;
   final int index;
   final bool passive;
   final List<int> bytes;

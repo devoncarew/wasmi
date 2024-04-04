@@ -1,6 +1,6 @@
 import 'bytecode.dart';
-import 'format.dart';
 import 'opcodes.dart';
+import 'parse.dart';
 
 class Instruction {
   final Opcode opcode;

@@ -2,15 +2,18 @@
 
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:wasmi/format.dart';
+import 'package:wasmi/execute.dart';
+import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
   group('f32_cmp.0.wasm', () {
+    late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
-      m = Module.parse(File('test/spec/f32_cmp/f32_cmp.0.wasm'));
+      def = ModuleDefinition.parse(File('test/spec/f32_cmp/f32_cmp.0.wasm'));
+      m = Module(def);
     });
 
     returns(

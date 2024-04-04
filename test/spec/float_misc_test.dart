@@ -2,15 +2,19 @@
 
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:wasmi/format.dart';
+import 'package:wasmi/execute.dart';
+import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
   group('float_misc.0.wasm', () {
+    late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
-      m = Module.parse(File('test/spec/float_misc/float_misc.0.wasm'));
+      def = ModuleDefinition.parse(
+          File('test/spec/float_misc/float_misc.0.wasm'));
+      m = Module(def);
     });
 
     returns(
