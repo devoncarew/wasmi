@@ -2,7 +2,9 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: camel_case_types
 
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'bytecode.dart';
 import 'compile.dart';
@@ -13,22 +15,29 @@ typedef ImplFn = void Function(Bytecode code);
 typedef reftype = Object?; // todo:
 
 class Module {
-  final ModuleDefinition moduleDefinition;
+  final ModuleDefinition definition;
 
   final Map<String, CompiledFn> _exportedFunctions = {};
 
-  Module(this.moduleDefinition) {
+  Memory? memory;
+
+  Module(this.definition) {
     _init();
   }
 
   void _init() {
-    // todo: memory and such
+    if (definition.memoryInfo != null) {
+      final info = definition.memoryInfo!;
+      memory = Memory(info.min, info.max);
+    }
+
+    // todo: read data segments into memory
   }
 
   Object? invoke(String methodName, [List<Object?> args = const []]) {
     final fn = _exportedFunctions.putIfAbsent(methodName, () {
       // todo: throw an exception if there is no such method
-      var function = moduleDefinition.exportedFunction(methodName)!.func;
+      var function = definition.exportedFunction(methodName)!.func;
       return compile(this, function as DefinedFunction);
     });
 
@@ -41,8 +50,10 @@ class CompiledFn {
   final DefinedFunction function;
   final List<Bytecode> bytecodes;
   final int stackHeight;
+  final Memory? memory;
 
-  CompiledFn(this.module, this.function, this.bytecodes, this.stackHeight);
+  CompiledFn(this.module, this.function, this.bytecodes, this.stackHeight)
+      : memory = module.memory;
 
   Object? invoke(List<Object?> args) {
     final paramTypes = function.functionType!.parameterTypes;
@@ -58,6 +69,8 @@ class CompiledFn {
     for (final local in function.locals) {
       locals.add(local.defaultValue);
     }
+
+    final ByteData reinterpretData = ByteData(8);
 
     final List<Object?> stack = List<Object?>.filled(stackHeight, null);
     int sp = 0;
@@ -213,58 +226,113 @@ class CompiledFn {
     }
 
     void f64_load(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_load';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getFloat64(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_load8_s(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_load8_s';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt8(index + code.i1);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_load8_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_load8_u';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getUint8(index + code.i1);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_load16_s(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_load16_s';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt16(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_load16_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_load16_u';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getUint16(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load8_s(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load8_s';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt8(index + code.i1);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load8_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load8_u';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getUint8(index + code.i1);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load16_s(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load16_s';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt16(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load16_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load16_u';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getUint16(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load32_s(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load32_s';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt32(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load32_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load32_u';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getUint32(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_store(Bytecode code) {
@@ -274,9 +342,13 @@ class CompiledFn {
     }
 
     void i64_store(Bytecode code) {
-      i64 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_store';
+      i64 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt64(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void f32_store(Bytecode code) {
@@ -292,37 +364,57 @@ class CompiledFn {
     }
 
     void i32_store8(Bytecode code) {
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_store8';
+      i32 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt8(index + code.i1, value);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_store16(Bytecode code) {
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_store16';
+      i32 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt16(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_store8(Bytecode code) {
-      i64 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_store8';
+      i64 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt8(index + code.i1, value);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_store16(Bytecode code) {
-      i64 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_store16';
+      i64 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt16(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_store32(Bytecode code) {
-      i64 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_store32';
+      i64 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt32(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void memory_size(Bytecode code) {
-      throw 'unimplemented: memory_size';
+      stack[sp++] = memory!.size;
     }
 
     void memory_grow(Bytecode code) {
@@ -1205,7 +1297,8 @@ class CompiledFn {
 
     void f64_reinterpret_i64(Bytecode code) {
       i64 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_reinterpret_i64';
+      reinterpretData.setUint64(0, arg0, Endian.little);
+      stack[sp++] = reinterpretData.getFloat64(0, Endian.little);
     }
 
     void i32_extend8_s(Bytecode code) {
@@ -1611,6 +1704,100 @@ class Trap implements Exception {
 
   @override
   String toString() => message;
+}
+
+class Memory {
+  static const defaultMaxSize = 64 * 1024;
+  static const pageSize = 64 * 1024;
+
+  final int initialPageSize;
+  final int? maxPageSize;
+
+  ByteData data;
+
+  // TODO: guard against large initial page sizes
+
+  Memory(this.initialPageSize, [this.maxPageSize])
+      : data = ByteData(initialPageSize * pageSize);
+
+  // Utility methods.
+
+  Uint8List getBytes(int offset, int length) {
+    return data.buffer.asUint8List(offset, length);
+  }
+
+  String getUtf8(int offset, int length) {
+    var bytes = data.buffer.asUint8List(offset, length);
+    return utf8.decode(bytes);
+  }
+
+  /// Return the current size of the memory, in pages.
+  int get size => data.buffer.lengthInBytes ~/ pageSize;
+
+  int grow(int growPages) {
+    var oldSize = size;
+
+    // TODO: guard against large values for maxPageSize
+
+    if (oldSize + growPages > (maxPageSize ?? defaultMaxSize)) {
+      return -1;
+    }
+
+    // TODO: find a faster way to do this
+    var newData = ByteData((oldSize + growPages) * pageSize);
+    int len = data.buffer.lengthInBytes;
+    for (int i = 0; i < len; i++) {
+      newData.setUint8(i, data.getUint8(i));
+    }
+    data = newData;
+
+    return oldSize;
+  }
+
+  void copyFrom(Uint8List bytes, int sourceOffset, int destOffset, int length) {
+    if (sourceOffset < 0 || sourceOffset + length > bytes.length) {
+      throw Trap('out of bounds memory access');
+    }
+
+    if (destOffset < 0 || destOffset + length > data.lengthInBytes) {
+      throw Trap('out of bounds memory access');
+    }
+
+    if (length < 0) {
+      throw Trap('out of bounds memory access');
+    }
+
+    for (int i = 0; i < length; i++) {
+      data.setUint8(destOffset + i, bytes[sourceOffset + i]);
+    }
+  }
+
+  void copy(i32 count, i32 sourceOffset, i32 destOffset) {
+    var len = data.lengthInBytes;
+    if (sourceOffset + count > len || destOffset + count > len) {
+      throw Trap('out of bounds memory access');
+    }
+
+    if (sourceOffset > destOffset) {
+      for (int i = 0; i < count; i++) {
+        data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+      }
+    } else {
+      for (int i = count - 1; i >= 0; i--) {
+        data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+      }
+    }
+  }
+
+  void fill(i32 value, i32 offset, i32 count) {
+    if (offset < 0 || count < 0 || offset + count > data.lengthInBytes) {
+      throw Trap('out of bounds memory access');
+    }
+
+    for (int i = 0; i < count; i++) {
+      data.setUint8(i + offset, value);
+    }
+  }
 }
 
 const List<int> _popcntTable = <int>[
