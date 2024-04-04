@@ -13,6 +13,8 @@ const Set<String> allowList = {
   'float_misc.wast',
   'i32.wast',
   'i64.wast',
+  'int_exprs.wast',
+  'int_literals.wast',
 };
 
 void main(List<String> args) {
@@ -146,7 +148,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
       final testId = '$spec $testName';
       final expectedFail = expectedFails.contains(testId);
       final failText =
-          expectedFail ? ", 'skip: see test/spec/_expected_fail.txt'," : '';
+          expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
 
       if (type == 'assert_return') {
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
@@ -163,7 +165,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           return encodeType(arg['type'], arg['value']);
         }).join(', ');
 
-        code.writeln("returns('$testName', () => m.call('$field', [$argList]), "
+        code.writeln("returns('$testName', () => m.\$('$field', [$argList]), "
             '$expectedValue$failText);');
       } else if (type == 'assert_trap') {
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
@@ -174,13 +176,14 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         }).join(', ');
 
         code.writeln(
-            "traps('$testName', () => m.call('$field', [$argList]), '$text'$failText);");
+            "traps('$testName', () => m.\$('$field', [$argList]), '$text'$failText);");
       } else {
         throw 'unhandled type: $type';
       }
     }
 
     code.writeln('});');
+    code.writeln();
   }
 
   // todo: implement this
@@ -210,7 +213,11 @@ String encodeType(String type, String value) {
       return value;
     } else {
       var val = int.parse(value);
-      return '0x${val.toRadixString(16).toUpperCase()}';
+      if (val >= 1 && val < 10) {
+        return '$val';
+      } else {
+        return '0x${val.toRadixString(16).toUpperCase()}';
+      }
     }
   } else {
     if ((type == 'f32' || type == 'f64') &&

@@ -25,23 +25,14 @@ class Module {
     // todo: memory and such
   }
 
-  Object? call(String methodName, [List<Object?> args = const []]) {
+  Object? invoke(String methodName, [List<Object?> args = const []]) {
     final fn = _exportedFunctions.putIfAbsent(methodName, () {
       // todo: throw an exception if there is no such method
       var function = moduleDefinition.exportedFunction(methodName)!.func;
       return compile(this, function as DefinedFunction);
     });
 
-    return fn.call(args);
-
-    // // todo:
-    // var context = ExecutionContect(this);
-    // // todo: throw an exception if there is no such method
-    // var function = module.exportedFunction(methodName)!.func as DefinedFunction;
-
-    // // todo: handle compilation here
-
-    // return context.execute(function, args);
+    return fn.invoke(args);
   }
 }
 
@@ -53,7 +44,7 @@ class CompiledFn {
 
   CompiledFn(this.module, this.function, this.bytecodes, this.stackHeight);
 
-  Object? call(List<Object?> args) {
+  Object? invoke(List<Object?> args) {
     final paramTypes = function.functionType!.parameterTypes;
     if (args.length != paramTypes.length) {
       throw StateError(
@@ -344,7 +335,7 @@ class CompiledFn {
     }
 
     void i64_const(Bytecode code) {
-      throw 'unimplemented: i64_const';
+      stack[sp++] = code.i0;
     }
 
     void f32_const(Bytecode code) {
@@ -1119,12 +1110,12 @@ class CompiledFn {
 
     void i64_extend_i32_s(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_extend_i32_s';
+      stack[sp++] = arg0 /*as i64*/;
     }
 
     void i64_extend_i32_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_extend_i32_u';
+      i32 arg0 = (stack[--sp] as int) & _mask32;
+      stack[sp++] = arg0 /*as u64*/;
     }
 
     void i64_trunc_f32_s(Bytecode code) {

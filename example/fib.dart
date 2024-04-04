@@ -8,7 +8,7 @@ void main(List<String> args) {
   var module = Module(moduleDefinition);
 
   for (var i = 0; i <= 10; i++) {
-    final result = module.call('fib', [i]);
+    final result = module.invoke('fib', [i]);
     print('fib($i) = $result');
   }
 }

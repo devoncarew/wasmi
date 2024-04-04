@@ -8,10 +8,10 @@ import 'package:wasmi/execute.dart';
 @isTest
 void returns(
   String testName,
-  Function() testClosure, [
-  Object? expected,
+  Function() testClosure,
+  Object? expected, {
   String? skip,
-]) {
+}) {
   const floatEpsilon = 1 / 1000000;
 
   test(
@@ -43,9 +43,9 @@ void returns(
 void traps(
   String testName,
   Function() testClosure,
-  String expectedTrapMessage, [
+  String expectedTrapMessage, {
   String? skip,
-]) {
+}) {
   test(
     testName,
     () {
@@ -61,13 +61,9 @@ void traps(
   );
 }
 
-// extension ModuleDefinitionExtension on ModuleDefinition {
-//   Object? call(String fnName, List args) {
-//     final context = ExecutionContect(this);
-//     final function = exportedFunction(fnName)!.func as DefinedFunction;
-//     return context.execute(function, args);
-//   }
-// }
+extension ModuleDefinitionExtension on Module {
+  Object? $(String fnName, List args) => invoke(fnName, args);
+}
 
 int $i32(String value) {
   var n = BigInt.parse(value, radix: 16);
