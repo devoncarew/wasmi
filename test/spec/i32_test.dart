@@ -2,15 +2,18 @@
 
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:wasmi/format.dart';
+import 'package:wasmi/execute.dart';
+import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
   group('i32.0.wasm', () {
+    late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
-      m = Module.parse(File('test/spec/i32/i32.0.wasm'));
+      def = ModuleDefinition.parse(File('test/spec/i32/i32.0.wasm'));
+      m = Module(def);
     });
 
     returns('add_0', () => m.call('add', [0x1, 0x1]), 0x2);

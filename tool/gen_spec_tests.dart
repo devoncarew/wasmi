@@ -66,8 +66,11 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   builder.generatedByComment = 'Generated from ${wastFile.path}.';
   builder.directives.addAll([
     Directive.import('dart:io'),
+    //
     Directive.import('package:test/test.dart'),
-    Directive.import('package:wasmi/format.dart'),
+    Directive.import('package:wasmi/execute.dart'),
+    Directive.import('package:wasmi/parse.dart'),
+    //
     Directive.import('_framework.dart'),
   ]);
 
@@ -115,10 +118,12 @@ Library createLibraryFor(File wastFile, File jsonFile) {
     final moduleFilePath = 'test/spec/$spec/$filename';
 
     code.writeln("group('$filename', () {");
+    code.writeln('late ModuleDefinition def;');
     code.writeln('late Module m;');
     code.writeln();
     code.writeln('setUpAll(() {');
-    code.writeln("m = Module.parse(File('$moduleFilePath'));");
+    code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
+    code.writeln('m = Module(def);');
     code.writeln('});');
     code.writeln();
 

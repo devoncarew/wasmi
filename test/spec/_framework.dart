@@ -2,8 +2,7 @@ import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
-import 'package:wasmi/execution.dart';
-import 'package:wasmi/format.dart';
+import 'package:wasmi/execute.dart';
 
 /// Assert that the result of the given closure matches the expected result.
 @isTest
@@ -62,48 +61,13 @@ void traps(
   );
 }
 
-extension ModuleExtension on Module {
-  Object? call(String fnName, List args) {
-    final context = ExecutionContect(this);
-    final function = exportedFunction(fnName)!.func as DefinedFunction;
-    return context.execute(function, args);
-  }
-}
-
-List<Object?> parseTypes(List<Map> types) {
-  // Remove items where there is no value; this can happen when the expected
-  // response is to throw.
-  final items = types.where((json) => json['value'] != null);
-
-  return items.map((json) {
-    // {"type": "i32", "value": "1"}
-    return _decodeType(json['type'], json['value']);
-  }).toList();
-}
-
-dynamic _decodeType(String type, String value) {
-  if (value == 'null') return value;
-
-  switch (type) {
-    case 'i32':
-      return $i32(value);
-    case 'i64':
-      return $i64(value);
-    case 'f32':
-      if (value == 'nan:arithmetic' || value == 'nan:canonical') {
-        double.nan;
-      }
-      return $f32(value);
-    case 'f64':
-      if (value == 'nan:arithmetic' || value == 'nan:canonical') {
-        double.nan;
-      }
-      return $f64(value);
-
-    default:
-      throw 'unhandled type: $type';
-  }
-}
+// extension ModuleDefinitionExtension on ModuleDefinition {
+//   Object? call(String fnName, List args) {
+//     final context = ExecutionContect(this);
+//     final function = exportedFunction(fnName)!.func as DefinedFunction;
+//     return context.execute(function, args);
+//   }
+// }
 
 int $i32(String value) {
   var n = BigInt.parse(value, radix: 16);
