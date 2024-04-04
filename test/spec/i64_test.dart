@@ -1,5 +1,7 @@
 // Generated from spec/test/core/i64.wast.
 
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';

@@ -15,6 +15,7 @@ const Set<String> allowList = {
   'i64.wast',
   'int_exprs.wast',
   'int_literals.wast',
+  'memory.wast',
 };
 
 void main(List<String> args) {
@@ -66,6 +67,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
   final builder = LibraryBuilder();
   builder.generatedByComment = 'Generated from ${wastFile.path}.';
+  builder.ignoreForFile.add('unused_local_variable');
   builder.directives.addAll([
     Directive.import('dart:io'),
     //
