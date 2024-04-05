@@ -6,6 +6,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
 const Set<String> allowList = {
+  'data.wast',
   'f32_cmp.wast',
   'f32.wast',
   'f64_cmp.wast',
@@ -15,6 +16,9 @@ const Set<String> allowList = {
   'i64.wast',
   'int_exprs.wast',
   'int_literals.wast',
+  // 'local_get.wast',
+  // 'local_set.wast',
+  // 'local_tee.wast',
   'memory.wast',
 };
 
@@ -67,7 +71,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
   final builder = LibraryBuilder();
   builder.generatedByComment = 'Generated from ${wastFile.path}.';
-  builder.ignoreForFile.add('unused_local_variable');
+  builder.ignoreForFile.addAll(['unused_import', 'unused_local_variable']);
   builder.directives.addAll([
     Directive.import('dart:io'),
     //
@@ -87,91 +91,108 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   final json = jsonDecode(jsonFile.readAsStringSync()) as Map;
   final commands = (json['commands'] as List).cast<Map>();
 
-  final groups = <List<Map>>[];
-  final singletons = <Map>[];
+  final nameCount = <String, int>{};
 
-  for (final command in commands) {
-    final type = command['type'] as String;
+  bool inGroup = false;
 
-    switch (type) {
-      case 'module':
-        final newGroup = [command];
-        groups.add(newGroup);
-        break;
-      case 'assert_invalid':
-      case 'assert_return':
-      case 'assert_trap':
-        final filename = command['filename'] as String?;
-        if (filename != null) {
-          singletons.add(command);
-        } else {
-          groups.last.add(command);
-        }
-        break;
-      case 'assert_malformed':
-        // skip processing malformed wat files
-        break;
-      default:
-        throw 'unhandled type: $type';
+  void closeGroup() {
+    if (inGroup) {
+      code.writeln('});\n');
+      inGroup = false;
     }
   }
 
-  for (var moduleGroup in groups) {
-    final moduleCommand = moduleGroup.removeAt(0);
-    final filename = moduleCommand['filename'];
-    final moduleFilePath = 'test/spec/$spec/$filename';
+  void startGroup(String name) {
+    closeGroup();
 
-    code.writeln("group('$filename', () {");
-    code.writeln('late ModuleDefinition def;');
-    code.writeln('late Module m;');
-    code.writeln();
-    code.writeln('setUpAll(() {');
-    code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
-    code.writeln('m = Module(def);');
-    code.writeln('});');
-    code.writeln();
+    code.writeln("\ngroup('$name', () {");
+    inGroup = true;
+  }
 
-    final nameCount = <String, int>{};
+  for (final command in commands) {
+    final type = command['type'] as String;
+    final filename = command['filename'] as String?;
 
-    for (var command in moduleGroup) {
-      final type = command['type'] as String;
-      // final line = command['line'] as int;
-      final action = command['action'] as Map;
-      final actionType = action['type'];
-      if (actionType != 'invoke') {
-        throw 'unhandled action type: $actionType';
-      }
-      final field = action['field'];
+    switch (type) {
+      case 'module':
+        startGroup(filename!);
 
-      nameCount.putIfAbsent(field, () => 0);
-      final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
-      nameCount[field] = nameCount[field]! + 1;
+        final moduleFilePath = 'test/spec/$spec/$filename';
 
-      final testId = '$spec $testName';
-      final expectedFail = expectedFails.contains(testId);
-      final failText =
-          expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
+        code.writeln('late ModuleDefinition def;');
+        code.writeln('late Module m;');
+        code.writeln();
+        code.writeln('setUpAll(() {');
+        code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
+        code.writeln('m = Module(def);');
+        code.writeln('});');
+        code.writeln();
 
-      if (type == 'assert_return') {
+        nameCount.clear();
+
+        break;
+
+      case 'assert_return':
+        final action = command['action'] as Map;
+        final actionType = action['type'];
+        if (actionType != 'invoke') {
+          throw 'unhandled action type: $actionType';
+        }
+
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
         final argList = args.map((arg) {
           return encodeType(arg['type'], arg['value']);
         }).join(', ');
+
+        final field = action['field'];
+
+        nameCount.putIfAbsent(field, () => 0);
+        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        nameCount[field] = nameCount[field]! + 1;
+
+        final testId = '$spec $testName';
+        final expectedFail = expectedFails.contains(testId);
+        final failText =
+            expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
 
         var expected =
             (command['expected'] as List? ?? []).cast<Map<String, dynamic>>();
         if (expected.length > 1) {
           throw 'todo: support more than one return value';
         }
-        final expectedValue = expected.map((arg) {
-          return encodeType(arg['type'], arg['value']);
-        }).join(', ');
+        final String expectedValue;
+        if (expected.isNotEmpty) {
+          expectedValue = expected.map((arg) {
+            return encodeType(arg['type'], arg['value']);
+          }).join(', ');
+        } else {
+          expectedValue = 'null /*void*/';
+        }
 
         code.writeln("returns('$testName', () => m.\$('$field', [$argList]), "
             '$expectedValue$failText);');
-      } else if (type == 'assert_trap') {
+        break;
+
+      case 'assert_trap':
+        final action = command['action'] as Map;
+        final actionType = action['type'];
+        if (actionType != 'invoke') {
+          throw 'unhandled action type: $actionType';
+        }
+
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
         final text = command['text'] as String?;
+
+        final field = action['field'];
+
+        nameCount.putIfAbsent(field, () => 0);
+        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        nameCount[field] = nameCount[field]! + 1;
+
+        final testId = '$spec $testName';
+        final expectedFail = expectedFails.contains(testId);
+        final failText =
+            expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
 
         final argList = args.map((arg) {
           return encodeType(arg['type'], arg['value']);
@@ -179,27 +200,40 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
         code.writeln(
             "traps('$testName', () => m.\$('$field', [$argList]), '$text'$failText);");
-      } else {
-        throw 'unhandled type: $type';
-      }
-    }
 
-    code.writeln('});');
-    code.writeln();
+        break;
+
+      case 'assert_invalid':
+        final text = command['text'] as String;
+        final moduleType = command['module_type'] as String;
+        final moduleFilePath = '$spec/$filename';
+
+        closeGroup();
+
+        if (moduleType != 'binary') {
+          throw 'unhandled moduel type: $moduleType';
+        }
+
+        final testName = 'invalid ${filename!}';
+        // todo:
+        code.writeln(
+            "  // assertInvalid('$testName', '$moduleFilePath', '$text');");
+        break;
+
+      case 'assert_malformed':
+        // skip processing malformed wat files
+        break;
+
+      case 'assert_uninstantiable':
+        // todo: ?
+        break;
+
+      default:
+        throw 'unhandled type: $type';
+    }
   }
 
-  // todo: implement this
-
-  // for (var command in singletons) {
-  //   final type = command['type'] as String;
-  //   final line = command['line'] as int;
-  //   final filename = command['filename'] as String;
-
-  //   final testName = '$filename $type $line';
-  //   test(testName, () {
-  //     // todo: implement
-  //   });
-  // }
+  closeGroup();
 
   mainMethod.body = Code(code.toString());
   builder.body.add(mainMethod.build());

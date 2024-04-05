@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
+import 'package:wasmi/parse.dart';
 
 /// Assert that the result of the given closure matches the expected result.
 @isTest
@@ -59,6 +61,21 @@ void traps(
     },
     skip: skip,
   );
+}
+
+@isTest
+void assertInvalid(String testName, String filePath, String text) {
+  test(testName, () {
+    try {
+      final definition = ModuleDefinition.parse(File('test/spec/$filePath'));
+      // ignore: unused_local_variable
+      final module = Module(definition);
+
+      fail('Expected: $text');
+    } on FormatException catch (e) {
+      expect(e.message, text);
+    }
+  });
 }
 
 extension ModuleDefinitionExtension on Module {

@@ -8,55 +8,103 @@ import 'dart:typed_data';
 
 import 'bytecode.dart';
 import 'compile.dart';
-import 'parse.dart';
+import 'instructions.dart';
+import 'parse.dart' as def;
 import 'types.dart';
 
 typedef ImplFn = void Function(Bytecode code);
 typedef reftype = Object?; // todo:
 
+// TODO: import items come first in the index for func, table, mem, global
+
 class Module {
-  final ModuleDefinition definition;
+  final def.ModuleDefinition definition;
 
   final Map<String, CompiledFn> _exportedFunctions = {};
 
   Memory? memory;
+  final List<Global> globals = [];
 
   Module(this.definition) {
-    _init();
-  }
-
-  void _init() {
     if (definition.memoryInfo != null) {
       final info = definition.memoryInfo!;
       memory = Memory(info.min, info.max);
     }
 
-    // todo: read data segments into memory
+    // Init globals first - they can be referenced from other initializers (for
+    // data segments, ...).
+    _initGlobals();
+    _initDataSegments();
+  }
+
+  void _initDataSegments() {
+    for (final segment in definition.dataSegments.segments) {
+      if (segment.passive) continue;
+
+      // Copy active segments into memory on module init.
+      int offset = _evaluateConstantExpression(segment.offsetExpression!);
+      memory!.copyFrom(segment.bytes, 0, offset, segment.bytes.length);
+    }
+  }
+
+  void _initGlobals() {
+    for (final g in definition.globals.globals) {
+      if (g is def.ImportedGlobal) {
+        // todo: handle imported globals
+        throw 'not yet supported: $g';
+      } else if (g is def.DefinedGlobal) {
+        final global = DefinedGlobal(g.type, g.mutable);
+        global.value =
+            _evaluateConstantExpression(g.initExpression, global.type);
+        globals.add(global);
+      } else {
+        throw StateError('unknown global type: $g');
+      }
+    }
   }
 
   Object? invoke(String methodName, [List<Object?> args = const []]) {
     final fn = _exportedFunctions.putIfAbsent(methodName, () {
       // todo: throw an exception if there is no such method
       var function = definition.exportedFunction(methodName)!.func;
-      return compile(this, function as DefinedFunction);
+      return compile(this, function as def.DefinedFunction);
     });
 
     return fn.invoke(args);
+  }
+
+  int _evaluateConstantExpression(
+    List<Instruction> expr, [
+    ValueType type = ValueType.i64,
+  ]) {
+    final tempFunction = def.DefinedFunction(definition, 0)
+      ..instructions = expr;
+    final func =
+        compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
+    return func.invoke() as int;
   }
 }
 
 class CompiledFn {
   final Module module;
-  final DefinedFunction function;
+  final def.DefinedFunction function;
+  final FunctionType functionType;
   final List<Bytecode> bytecodes;
   final int stackHeight;
   final Memory? memory;
+  final List<Global> globals;
 
-  CompiledFn(this.module, this.function, this.bytecodes, this.stackHeight)
-      : memory = module.memory;
+  CompiledFn(
+    this.module,
+    this.function,
+    this.functionType,
+    this.bytecodes,
+    this.stackHeight,
+  )   : memory = module.memory,
+        globals = module.globals;
 
-  Object? invoke(List<Object?> args) {
-    final paramTypes = function.functionType!.parameterTypes;
+  Object? invoke([List<Object?> args = const []]) {
+    final paramTypes = functionType.parameterTypes;
     if (args.length != paramTypes.length) {
       throw StateError(
         'wrong number of args: expected '
@@ -150,8 +198,7 @@ class CompiledFn {
     }
 
     void drop(Bytecode code) {
-      Object? arg0 = stack[--sp];
-      throw 'unimplemented: drop';
+      --sp;
     }
 
     void select(Bytecode code) {
@@ -183,12 +230,12 @@ class CompiledFn {
     }
 
     void globalGet(Bytecode code) {
-      throw 'unimplemented: globalGet';
+      stack[sp++] = globals[code.i0].value;
     }
 
     void globalSet(Bytecode code) {
       Object? arg0 = stack[--sp];
-      throw 'unimplemented: globalSet';
+      globals[code.i0].value = arg0;
     }
 
     void tableGet(Bytecode code) {
@@ -431,11 +478,11 @@ class CompiledFn {
     }
 
     void f32_const(Bytecode code) {
-      throw 'unimplemented: f32_const';
+      stack[sp++] = code.f0;
     }
 
     void f64_const(Bytecode code) {
-      throw 'unimplemented: f64_const';
+      stack[sp++] = code.f0;
     }
 
     void i32_eqz(Bytecode code) {
@@ -1222,7 +1269,15 @@ class CompiledFn {
 
     void i64_trunc_f64_s(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_f64_s';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i64_trunc_f64_u(Bytecode code) {
@@ -1257,12 +1312,12 @@ class CompiledFn {
 
     void f64_convert_i32_s(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_convert_i32_s';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f64_convert_i32_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_convert_i32_u';
+      i32 arg0 = (stack[--sp] as int) & _mask32;
+      stack[sp++] = arg0.toDouble();
     }
 
     void f64_convert_i64_s(Bytecode code) {
@@ -1272,12 +1327,12 @@ class CompiledFn {
 
     void f64_convert_i64_u(Bytecode code) {
       i64 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_convert_i64_u';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f64_promote_f32(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: f64_promote_f32';
+      stack[sp++] = arg0 /*as f64*/;
     }
 
     void i32_reinterpret_f32(Bytecode code) {
@@ -1797,6 +1852,32 @@ class Memory {
     for (int i = 0; i < count; i++) {
       data.setUint8(i + offset, value);
     }
+  }
+}
+
+abstract class Global {
+  final ValueType type;
+  final bool mutable;
+
+  Global(this.type, this.mutable);
+
+  Object? get value;
+  set value(Object? v);
+}
+
+class DefinedGlobal extends Global {
+  Object? _value;
+
+  DefinedGlobal(super.type, super.mutable);
+
+  @override
+  Object? get value => _value;
+
+  @override
+  set value(Object? v) {
+    if (!mutable) throw 'value not mutable';
+
+    _value = v;
   }
 }
 

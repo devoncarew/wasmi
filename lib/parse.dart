@@ -267,6 +267,10 @@ class ModuleDefinition {
           switch (limitKind) {
             case 0x00:
               var min = r.leb128();
+              if (min > 65536) {
+                throw FormatException(
+                    'memory size must be at most 65536 pages (4GiB)');
+              }
               _log('  min: $min pages');
 
               memoryInfo = MemoryInfo(min: min);
@@ -274,7 +278,21 @@ class ModuleDefinition {
               break;
             case 0x01:
               var min = r.leb128();
+              if (min > 65536) {
+                throw FormatException(
+                    'memory size must be at most 65536 pages (4GiB)');
+              }
+
               var max = r.leb128();
+              if (max > 65536) {
+                throw FormatException(
+                    'memory size must be at most 65536 pages (4GiB)');
+              }
+              if (min > max) {
+                throw FormatException(
+                    'size minimum must not be greater than maximum');
+              }
+
               _log('  min: $min pages');
               _log('  max: $max pages');
               memoryInfo = MemoryInfo(min: min, max: max);
@@ -306,7 +324,7 @@ class ModuleDefinition {
 
     for (int i = 0; i < vecCount; i++) {
       int typeIndex = r.leb128();
-      _addDefinedFunction(DefinedFunction(this, typeIndex, i));
+      _addDefinedFunction(DefinedFunction(this, typeIndex));
     }
 
     for (var func in definedFunctions) {
@@ -344,20 +362,44 @@ class ModuleDefinition {
   void _parseMemorySection(Reader r) {
     int count = r.leb128();
     if (count > 1) {
-      throw StateError('Only 1 memory item supported (found $count)');
+      throw FormatException('multiple memories');
     }
 
     for (int i = 0; i < count; i++) {
       var limitKind = r.readUint8();
       switch (limitKind) {
         case 0x00:
+          if (memoryInfo != null) {
+            throw FormatException('multiple memories');
+          }
+
           var min = r.leb128();
+          if (min > 65536) {
+            throw FormatException(
+                'memory size must be at most 65536 pages (4GiB)');
+          }
           memoryInfo = MemoryInfo(min: min);
           _log('  min: $min pages');
           break;
         case 0x01:
+          if (memoryInfo != null) {
+            throw FormatException('multiple memories');
+          }
+
           var min = r.leb128();
+          if (min > 65536) {
+            throw FormatException(
+                'memory size must be at most 65536 pages (4GiB)');
+          }
           var max = r.leb128();
+          if (max > 65536) {
+            throw FormatException(
+                'memory size must be at most 65536 pages (4GiB)');
+          }
+          if (min > max) {
+            throw FormatException(
+                'size minimum must not be greater than maximum');
+          }
           memoryInfo = MemoryInfo(min: min, max: max);
           _log('  min: $min pages');
           _log('  max: $max pages');
@@ -378,14 +420,13 @@ class ModuleDefinition {
 
       var global = DefinedGlobal(
         module: this,
-        index: globals.globals.length,
         type: ValueType.fromCode(type),
         mutable: mutability == 0x01,
         initExpression: instructions,
       );
       globals.addDefinedGlobal(global);
 
-      _log('  global: ${global.type} ${global.name}');
+      _log('  global: ${global.type} (mutable: ${global.mutable})');
     }
   }
 
@@ -593,12 +634,12 @@ class ModuleDefinition {
         case 0x00:
           var instructions = r.readInstructionsEndTerminated();
           var bytes = r.readByteVector();
-          dataSegments.add(DataSegment(this, i,
+          dataSegments.add(DataSegment(this,
               passive: false, offsetExpression: instructions, bytes: bytes));
           break;
         case 0x01:
           var bytes = r.readByteVector();
-          dataSegments.add(DataSegment(this, i, passive: true, bytes: bytes));
+          dataSegments.add(DataSegment(this, passive: true, bytes: bytes));
           break;
         case 0x02:
           var memIndex = r.leb128();
@@ -610,7 +651,6 @@ class ModuleDefinition {
           var bytes = r.readByteVector();
           dataSegments.add(DataSegment(
             this,
-            i,
             passive: false,
             offsetExpression: instructions,
             bytes: bytes,
@@ -887,14 +927,12 @@ class ModuleFunction {
 }
 
 class DefinedFunction extends ModuleFunction {
-  final int generatedIndex;
-
   DebugInfo? debugInfo;
 
   List<ValueType> locals = [];
   List<Instruction> instructions = [];
 
-  DefinedFunction(super.module, super.typeIndex, this.generatedIndex);
+  DefinedFunction(super.module, super.typeIndex);
 
   void setLocals(List<ValueType> locals) {
     this.locals = locals;
@@ -955,7 +993,9 @@ class ImportModule {
     required ValueType type,
     required bool mutable,
   }) {
-    var global = ImportedGlobal(name, type, mutable, this);
+    // todo: use the name?
+
+    var global = ImportedGlobal(type, mutable, this);
     wasmModule.globals.addImportedGlobal(global);
     globals.add(global);
   }
@@ -970,49 +1010,26 @@ class ImportedFunction extends ModuleFunction {
 }
 
 abstract class Global {
-  final String name;
   final ValueType type;
   final bool mutable;
 
-  Global(this.name, this.type, this.mutable);
-
-  String get containerName;
+  Global(this.type, this.mutable);
 }
 
 class DefinedGlobal implements Global {
   final ModuleDefinition module;
-  final int index;
   @override
   final ValueType type;
   @override
   final bool mutable;
   final List<Instruction> initExpression;
 
-  late String _generatedName;
-
   DefinedGlobal({
     required this.module,
-    required this.index,
     required this.type,
     required this.mutable,
     required this.initExpression,
-  }) {
-    _generatedName = 'global$index';
-  }
-
-  @override
-  String get containerName => 'globals';
-
-  @override
-  String get name {
-    var debugInfo = module.globals.debugInfo;
-    if (debugInfo == null) return _generatedName;
-
-    return debugInfo.indexedNames[index] ?? _generatedName;
-  }
-
-  // /// Return the literal for this global value if it can be inferred.
-  // Literal? get calcLiteralValue => Instruction.calcLiternal(initExpression);
+  });
 }
 
 class GlobalExport {
@@ -1025,10 +1042,7 @@ class GlobalExport {
 class ImportedGlobal extends Global {
   final ImportModule importModule;
 
-  ImportedGlobal(super.name, super.type, super.mutable, this.importModule);
-
-  @override
-  String get containerName => importModule.referenceName;
+  ImportedGlobal(super.type, super.mutable, this.importModule);
 }
 
 enum TableType {
@@ -1085,13 +1099,11 @@ class Globals {
 
   bool get isNotEmpty => globals.isNotEmpty;
 
-  num get count => globals.length;
-
-  void addDefinedGlobal(DefinedGlobal global) {
+  void addImportedGlobal(ImportedGlobal global) {
     globals.add(global);
   }
 
-  void addImportedGlobal(ImportedGlobal global) {
+  void addDefinedGlobal(DefinedGlobal global) {
     globals.add(global);
   }
 
@@ -1120,28 +1132,19 @@ class DataSegments {
 
 class DataSegment {
   final ModuleDefinition module;
-  final int index;
+
   final bool passive;
-  final List<int> bytes;
+  final Uint8List bytes;
   final List<Instruction>? offsetExpression;
 
-  late String _generatedName;
+  String? name;
 
   DataSegment(
-    this.module,
-    this.index, {
+    this.module, {
     required this.passive,
-    this.offsetExpression,
     required this.bytes,
-  }) {
-    _generatedName = 'data$index';
-  }
-
-  String get name {
-    var debugInfo = module.dataSegments.debugInfo;
-    if (debugInfo == null) return _generatedName;
-    return debugInfo.indexedNames[index] ?? _generatedName;
-  }
+    this.offsetExpression,
+  });
 }
 
 class ElementSegments {

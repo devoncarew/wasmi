@@ -1,6 +1,6 @@
 // Generated from spec/test/core/i32.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
@@ -551,4 +551,88 @@ void main() {
     returns(
         'ge_u_13', () => m.$('ge_u', [$i32('7FFFFFFF'), $i32('80000000')]), 0);
   });
+
+  // assertInvalid('invalid i32.1.wasm', 'i32/i32.1.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.2.wasm', 'i32/i32.2.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.3.wasm', 'i32/i32.3.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.4.wasm', 'i32/i32.4.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.5.wasm', 'i32/i32.5.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.6.wasm', 'i32/i32.6.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.7.wasm', 'i32/i32.7.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.8.wasm', 'i32/i32.8.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.9.wasm', 'i32/i32.9.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.10.wasm', 'i32/i32.10.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.11.wasm', 'i32/i32.11.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.12.wasm', 'i32/i32.12.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.13.wasm', 'i32/i32.13.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.14.wasm', 'i32/i32.14.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.15.wasm', 'i32/i32.15.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.16.wasm', 'i32/i32.16.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.17.wasm', 'i32/i32.17.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.18.wasm', 'i32/i32.18.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.19.wasm', 'i32/i32.19.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.20.wasm', 'i32/i32.20.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.21.wasm', 'i32/i32.21.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.22.wasm', 'i32/i32.22.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.23.wasm', 'i32/i32.23.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.24.wasm', 'i32/i32.24.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.25.wasm', 'i32/i32.25.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.26.wasm', 'i32/i32.26.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.27.wasm', 'i32/i32.27.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.28.wasm', 'i32/i32.28.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.29.wasm', 'i32/i32.29.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.30.wasm', 'i32/i32.30.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.31.wasm', 'i32/i32.31.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.32.wasm', 'i32/i32.32.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.33.wasm', 'i32/i32.33.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.34.wasm', 'i32/i32.34.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.35.wasm', 'i32/i32.35.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.36.wasm', 'i32/i32.36.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.37.wasm', 'i32/i32.37.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.38.wasm', 'i32/i32.38.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.39.wasm', 'i32/i32.39.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.40.wasm', 'i32/i32.40.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.41.wasm', 'i32/i32.41.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.42.wasm', 'i32/i32.42.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.43.wasm', 'i32/i32.43.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.44.wasm', 'i32/i32.44.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.45.wasm', 'i32/i32.45.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.46.wasm', 'i32/i32.46.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.47.wasm', 'i32/i32.47.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.48.wasm', 'i32/i32.48.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.49.wasm', 'i32/i32.49.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.50.wasm', 'i32/i32.50.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.51.wasm', 'i32/i32.51.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.52.wasm', 'i32/i32.52.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.53.wasm', 'i32/i32.53.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.54.wasm', 'i32/i32.54.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.55.wasm', 'i32/i32.55.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.56.wasm', 'i32/i32.56.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.57.wasm', 'i32/i32.57.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.58.wasm', 'i32/i32.58.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.59.wasm', 'i32/i32.59.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.60.wasm', 'i32/i32.60.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.61.wasm', 'i32/i32.61.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.62.wasm', 'i32/i32.62.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.63.wasm', 'i32/i32.63.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.64.wasm', 'i32/i32.64.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.65.wasm', 'i32/i32.65.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.66.wasm', 'i32/i32.66.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.67.wasm', 'i32/i32.67.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.68.wasm', 'i32/i32.68.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.69.wasm', 'i32/i32.69.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.70.wasm', 'i32/i32.70.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.71.wasm', 'i32/i32.71.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.72.wasm', 'i32/i32.72.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.73.wasm', 'i32/i32.73.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.74.wasm', 'i32/i32.74.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.75.wasm', 'i32/i32.75.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.76.wasm', 'i32/i32.76.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.77.wasm', 'i32/i32.77.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.78.wasm', 'i32/i32.78.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.79.wasm', 'i32/i32.79.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.80.wasm', 'i32/i32.80.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.81.wasm', 'i32/i32.81.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.82.wasm', 'i32/i32.82.wasm', 'type mismatch');
+  // assertInvalid('invalid i32.83.wasm', 'i32/i32.83.wasm', 'type mismatch');
 }

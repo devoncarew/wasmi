@@ -1,6 +1,6 @@
 // Generated from spec/test/core/int_exprs.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
