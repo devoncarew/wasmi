@@ -232,6 +232,13 @@ class Bytecode {
   String toString() => hex(code);
 }
 
+class BytecodeTable extends Bytecode {
+  final List<int> indexes;
+
+  BytecodeTable(this.indexes, int defaultIndex)
+      : super(Bytecode.brTable, i1: defaultIndex);
+}
+
 const Map<int, String> _opcodeNames = {
   0x00: 'unreachable',
   0x01: 'nop',

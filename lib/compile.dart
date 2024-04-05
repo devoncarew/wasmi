@@ -15,7 +15,7 @@ CompiledFn compile(
   int stackHeight = 0;
   int maxHeight = 0;
 
-  final result = <Bytecode>[];
+  final List<Bytecode> bytecodes = <Bytecode>[];
   final List<Instruction> labels = [];
   final List<FunctionType> blockTypes = [];
   final functionType = fnTypeOverride ?? function.functionType!;
@@ -39,7 +39,9 @@ CompiledFn compile(
     // translate to bytecode
     final bytecode = _translate(instruction);
     instruction.bytecode = bytecode;
-    result.add(bytecode);
+    bytecodes.add(bytecode);
+
+    // TODO: handle manipulating the stack when branching
 
     if (instruction.opcode == Opcode.end) {
       // TODO: use this value
@@ -48,11 +50,13 @@ CompiledFn compile(
 
       // print('  blocktype = $blockType');
 
-      if (labels.peek?.ifInstr == true) {
+      if (labels.peek?.ifInstr == true ||
+          labels.peek?.blockInstr == true ||
+          labels.peek?.loopInstr == true) {
         labels.last.endInstr = instruction;
       }
 
-      // todo: this is special casing the method block end
+      // TODO: this is special casing the method block end
       if (labels.isNotEmpty) {
         labels.pop();
       }
@@ -68,6 +72,13 @@ CompiledFn compile(
       if (labels.last.ifInstr) {
         labels.last.elseInstr = instruction;
       }
+    } else if (instruction.opcode == Opcode.block) {
+      labels.push(instruction);
+      final code = instruction.blockType;
+      final blockType = code < 0
+          ? FunctionType.fromBlockType(code)!
+          : function.module.functionTypes[code];
+      blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.loop) {
       labels.push(instruction);
       final code = instruction.blockType;
@@ -76,11 +87,10 @@ CompiledFn compile(
           : function.module.functionTypes[code];
       // print('  blocktype = $blockType');
       blockTypes.push(blockType);
-    } else if (instruction.opcode == Opcode.br) {
+    } else if (instruction.brInstr || instruction.brIfInstr) {
       final labelTarget = instruction.labelTarget;
       final target = labels[labels.length - labelTarget - 1];
-      final targetPc = result.indexOf(target.bytecode!);
-      instruction.bytecode!.targetPc = targetPc;
+      instruction.targetInstr = target;
     }
   }
 
@@ -94,7 +104,7 @@ CompiledFn compile(
 
       // end block
       final endBytecode = instruction.endInstr!.bytecode!;
-      final followPc = result.indexOf(endBytecode) + 1;
+      final followPc = bytecodes.indexOf(endBytecode) + 1;
 
       // tell the if statement how to skip to the end
       ifBytecode.endFollow = followPc;
@@ -104,16 +114,28 @@ CompiledFn compile(
         final elseBytecode = instruction.elseInstr!.bytecode!;
 
         // tell the if bytecode where the else block starts
-        final elsePc = result.indexOf(elseBytecode) + 1;
+        final elsePc = bytecodes.indexOf(elseBytecode) + 1;
         ifBytecode.elseStart = elsePc;
 
         // tell the else bytecode how to skip to the end of the if statement
         elseBytecode.endFollow = followPc;
       }
+    } else if (instruction.brInstr || instruction.brIfInstr) {
+      final target = instruction.targetInstr!;
+      final targetBytecode = target.bytecode!;
+
+      if (target.loopInstr) {
+        // jump to the start
+        instruction.bytecode!.targetPc = bytecodes.indexOf(targetBytecode);
+      } else {
+        // jump to after the end
+        final endByteCode = target.endInstr!.bytecode!;
+        instruction.bytecode!.targetPc = bytecodes.indexOf(endByteCode) + 1;
+      }
     }
   }
 
-  return CompiledFn(module, function, functionType, result, maxHeight);
+  return CompiledFn(module, function, functionType, bytecodes, maxHeight);
 }
 
 Bytecode _translate(Instruction instr) {
@@ -137,9 +159,8 @@ Bytecode _translate(Instruction instr) {
     case Opcode.brIf:
       return Bytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
     case Opcode.brTable:
-      // todo: fix this
-      //   "type 'List<int>' is not a subtype of type 'int' in type cast"
-      return Bytecode(Bytecode.brTable, i0: instr.immediate_0 as int);
+      return BytecodeTable(
+          instr.immediate_0 as List<int>, instr.immediate_1 as int);
     case Opcode.$return:
       return Bytecode(Bytecode.$return);
     case Opcode.call:
