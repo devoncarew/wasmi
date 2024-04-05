@@ -6,6 +6,8 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
 const Set<String> allowList = {
+  'address.wast',
+  'align.wast',
   'data.wast',
   'f32_cmp.wast',
   'f32.wast',
@@ -20,6 +22,8 @@ const Set<String> allowList = {
   // 'local_set.wast',
   // 'local_tee.wast',
   'memory.wast',
+  'memory_init.wast',
+  'memory_size.wast',
 };
 
 void main(List<String> args) {
@@ -171,6 +175,27 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
         code.writeln("returns('$testName', () => m.\$('$field', [$argList]), "
             '$expectedValue$failText);');
+        break;
+
+      case 'action':
+        final action = command['action'] as Map;
+        final actionType = action['type'];
+        if (actionType != 'invoke') {
+          throw 'unhandled action type: $actionType';
+        }
+
+        var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
+        final argList = args.map((arg) {
+          return encodeType(arg['type'], arg['value']);
+        }).join(', ');
+
+        final field = action['field'];
+
+        nameCount.putIfAbsent(field, () => 0);
+        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        nameCount[field] = nameCount[field]! + 1;
+
+        code.writeln("action('$testName', () => m.\$('$field', [$argList]));");
         break;
 
       case 'assert_trap':

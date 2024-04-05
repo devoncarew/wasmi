@@ -103,6 +103,9 @@ class CompiledFn {
   )   : memory = module.memory,
         globals = module.globals;
 
+  List<def.DataSegment> get dataSegments =>
+      module.definition.dataSegments.segments;
+
   Object? invoke([List<Object?> args = const []]) {
     final paramTypes = functionType.parameterTypes;
     if (args.length != paramTypes.length) {
@@ -129,11 +132,11 @@ class CompiledFn {
     /* bytecode implementations */
 
     void unreachable(Bytecode code) {
-      throw 'unimplemented: unreachable';
+      throw Trap('encountered unreachable');
     }
 
     void nop(Bytecode code) {
-      throw 'unimplemented: nop';
+      // nop
     }
 
     void block(Bytecode code) {
@@ -249,27 +252,33 @@ class CompiledFn {
     }
 
     void i32_load(Bytecode code) {
-      // i32 index = stack[--sp] as int;
-      // if (index < 0) throw Trap('out of bounds memory access');
-      // try {
-      //   i32 value = memory.data.getInt32(index + code.i1, Endian.little);
-      //   stack.add(value);
-      // } on RangeError {
-      //   throw Trap('out of bounds memory access');
-      // }
-
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_load';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt32(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_load(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i64_load';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getInt64(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void f32_load(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_load';
+      i32 index = stack[--sp] as int;
+      if (index < 0) throw Trap('out of bounds memory access');
+      try {
+        stack[sp++] = memory!.data.getFloat32(index + code.i1, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void f64_load(Bytecode code) {
@@ -466,7 +475,7 @@ class CompiledFn {
 
     void memory_grow(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: memory_grow';
+      stack[sp++] = memory!.grow(arg0);
     }
 
     void i32_const(Bytecode code) {
@@ -1462,21 +1471,31 @@ class CompiledFn {
     }
 
     void memory_init(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: memory_init';
+      i32 dataSegment = code.i0;
+      i32 memIndex = code.i1;
+
+      i32 count = stack[--sp] as int;
+      i32 srcOffset = stack[--sp] as int;
+      i32 dstOffset = stack[--sp] as int;
+
+      memory!.copyFrom(
+          dataSegments[dataSegment].bytes, srcOffset, dstOffset, count);
     }
 
     void data_drop(Bytecode code) {
-      throw 'unimplemented: data_drop';
+      // nothing to do (optionally drop data segment 'index')
+      i32 index = code.i0;
     }
 
     void memory_copy(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: memory_copy';
+      i32 destMemoryIndex = code.i0;
+      i32 srcMemoryIndex = code.i1;
+
+      i32 count = stack[--sp] as int;
+      i32 srcOffset = stack[--sp] as int;
+      i32 dstOffset = stack[--sp] as int;
+
+      memory!.copy(count, srcOffset, dstOffset);
     }
 
     void memory_fill(Bytecode code) {

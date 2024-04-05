@@ -392,11 +392,11 @@ class Instruction {
       case OverflowOpcode.i64_trunc_sat_f64_u:
         return Instruction(Opcode.overflow, [], opcode2);
       case OverflowOpcode.memory_init:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
       case OverflowOpcode.data_drop:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32()], opcode2);
       case OverflowOpcode.memory_copy:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
       case OverflowOpcode.memory_fill:
         return Instruction(Opcode.overflow, [r.u32()], opcode2);
       case OverflowOpcode.table_init:
