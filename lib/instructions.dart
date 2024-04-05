@@ -22,8 +22,14 @@ class Instruction {
   Bytecode? bytecode;
   Instruction? elseInstr;
   Instruction? endInstr;
+  Instruction? targetInstr;
 
   bool get ifInstr => opcode == Opcode.$if;
+  bool get blockInstr => opcode == Opcode.block;
+  bool get loopInstr => opcode == Opcode.loop;
+
+  bool get brInstr => opcode == Opcode.br;
+  bool get brIfInstr => opcode == Opcode.brIf;
 
   static Instruction? parse(Reader r, int code, {int? code2}) {
     final opcode = Opcode.from(code);

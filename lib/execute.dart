@@ -31,9 +31,10 @@ class Module {
       memory = Memory(info.min, info.max);
     }
 
-    // Init globals first - they can be referenced from other initializers (for
+    // Init globals first - they can be referenced from other initializers (like
     // data segments, ...).
     _initGlobals();
+
     _initDataSegments();
   }
 
@@ -42,7 +43,8 @@ class Module {
       if (segment.passive) continue;
 
       // Copy active segments into memory on module init.
-      int offset = _evaluateConstantExpression(segment.offsetExpression!);
+      var offset =
+          _evaluateExpression(segment.offsetExpression!, ValueType.i64) as int;
       memory!.copyFrom(segment.bytes, 0, offset, segment.bytes.length);
     }
   }
@@ -53,10 +55,8 @@ class Module {
         // todo: handle imported globals
         throw 'not yet supported: $g';
       } else if (g is def.DefinedGlobal) {
-        final global = DefinedGlobal(g.type, g.mutable);
-        global.value =
-            _evaluateConstantExpression(g.initExpression, global.type);
-        globals.add(global);
+        final startingValue = _evaluateExpression(g.initExpression, g.type);
+        globals.add(DefinedGlobal(g.type, g.mutable, startingValue));
       } else {
         throw StateError('unknown global type: $g');
       }
@@ -64,24 +64,23 @@ class Module {
   }
 
   Object? invoke(String methodName, [List<Object?> args = const []]) {
-    final fn = _exportedFunctions.putIfAbsent(methodName, () {
+    var fn = _exportedFunctions[methodName];
+    if (fn == null) {
       // todo: throw an exception if there is no such method
       var function = definition.exportedFunction(methodName)!.func;
-      return compile(this, function as def.DefinedFunction);
-    });
+      fn = compile(this, function as def.DefinedFunction);
+      _exportedFunctions[methodName] = fn;
+    }
 
     return fn.invoke(args);
   }
 
-  int _evaluateConstantExpression(
-    List<Instruction> expr, [
-    ValueType type = ValueType.i64,
-  ]) {
+  Object? _evaluateExpression(List<Instruction> expr, ValueType type) {
     final tempFunction = def.DefinedFunction(definition, 0)
       ..instructions = expr;
     final func =
         compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
-    return func.invoke() as int;
+    return func.invoke();
   }
 }
 
@@ -140,9 +139,7 @@ class CompiledFn {
     }
 
     void block(Bytecode code) {
-      // todo:
-
-      throw 'unimplemented: block';
+      // nothing to do
     }
 
     void loop(Bytecode code) {
@@ -173,11 +170,21 @@ class CompiledFn {
     }
 
     void brIf(Bytecode code) {
-      throw 'unimplemented: brIf';
+      i32 arg0 = stack[--sp] as int;
+      if (arg0 == 0) {
+        // todo: update the stack
+        pc = code.targetPc!;
+      }
     }
 
     void brTable(Bytecode code) {
+      final table = code as BytecodeTable;
+
+      var labelIndexes = table.indexes;
+      var defaultIndex = table.i1;
+
       i32 arg0 = stack[--sp] as int;
+
       throw 'unimplemented: brTable';
     }
 
@@ -392,9 +399,13 @@ class CompiledFn {
     }
 
     void i32_store(Bytecode code) {
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: i32_store';
+      i32 value = stack[--sp] as int;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setInt32(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i64_store(Bytecode code) {
@@ -408,15 +419,23 @@ class CompiledFn {
     }
 
     void f32_store(Bytecode code) {
-      f32 arg1 = stack[--sp] as double;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_store';
+      f32 value = stack[--sp] as double;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setFloat32(index + code.i1, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void f64_store(Bytecode code) {
-      f64 arg1 = stack[--sp] as double;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_store';
+      f64 value = stack[--sp] as double;
+      i32 index = stack[--sp] as int;
+      try {
+        memory!.data.setFloat64(index + code.i0, value, Endian.little);
+      } on RangeError {
+        throw Trap('out of bounds memory access');
+      }
     }
 
     void i32_store8(Bytecode code) {
@@ -1346,7 +1365,8 @@ class CompiledFn {
 
     void i32_reinterpret_f32(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_reinterpret_f32';
+      reinterpretData.setFloat32(0, arg0, Endian.little);
+      stack[sp++] = reinterpretData.getUint32(0, Endian.little);
     }
 
     void i64_reinterpret_f64(Bytecode code) {
@@ -1887,7 +1907,7 @@ abstract class Global {
 class DefinedGlobal extends Global {
   Object? _value;
 
-  DefinedGlobal(super.type, super.mutable);
+  DefinedGlobal(super.type, super.mutable, [this._value]);
 
   @override
   Object? get value => _value;
