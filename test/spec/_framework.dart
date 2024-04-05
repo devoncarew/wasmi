@@ -6,6 +6,11 @@ import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
 
+@isTest
+void action(String testName, Function() testClosure) {
+  test(testName, testClosure);
+}
+
 /// Assert that the result of the given closure matches the expected result.
 @isTest
 void returns(

@@ -513,7 +513,49 @@ Bytecode _translate(Instruction instr) {
       return Bytecode(Bytecode.refFunc, i0: instr.immediate_0 as int);
 
     case Opcode.overflow:
-      throw 'unhandled ${instr.opcode}';
+      switch (instr.opcode2!) {
+        case OverflowOpcode.i32_trunc_sat_f32_s:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i32_trunc_sat_f32_u:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i32_trunc_sat_f64_s:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i32_trunc_sat_f64_u:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i64_trunc_sat_f32_s:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i64_trunc_sat_f32_u:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i64_trunc_sat_f64_s:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.i64_trunc_sat_f64_u:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.memory_init:
+          return Bytecode(Bytecode.memory_init,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
+        case OverflowOpcode.data_drop:
+          return Bytecode(Bytecode.data_drop, i0: instr.immediate_0 as int);
+        case OverflowOpcode.memory_copy:
+          return Bytecode(Bytecode.memory_copy,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
+        case OverflowOpcode.memory_fill:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.table_init:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.elem_drop:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.table_copy:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.table_grow:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.table_size:
+          throw 'unhandled overflow ${instr.opcode2}';
+        case OverflowOpcode.table_fill:
+          throw 'unhandled overflow ${instr.opcode2}';
+
+        default:
+          throw 'unhandled overflow ${instr.opcode2}';
+      }
 
     case Opcode.vector:
       throw 'unhandled ${instr.opcode}';
