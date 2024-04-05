@@ -1,6 +1,6 @@
 // Generated from spec/test/core/f32_cmp.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
@@ -2419,4 +2419,11 @@ void main() {
     returns('ge_398', () => m.$('ge', [$f32('7FC00000'), $f32('7FA00000')]), 0);
     returns('ge_399', () => m.$('ge', [$f32('7FA00000'), $f32('7FA00000')]), 0);
   });
+
+  // assertInvalid('invalid f32_cmp.1.wasm', 'f32_cmp/f32_cmp.1.wasm', 'type mismatch');
+  // assertInvalid('invalid f32_cmp.2.wasm', 'f32_cmp/f32_cmp.2.wasm', 'type mismatch');
+  // assertInvalid('invalid f32_cmp.3.wasm', 'f32_cmp/f32_cmp.3.wasm', 'type mismatch');
+  // assertInvalid('invalid f32_cmp.4.wasm', 'f32_cmp/f32_cmp.4.wasm', 'type mismatch');
+  // assertInvalid('invalid f32_cmp.5.wasm', 'f32_cmp/f32_cmp.5.wasm', 'type mismatch');
+  // assertInvalid('invalid f32_cmp.6.wasm', 'f32_cmp/f32_cmp.6.wasm', 'type mismatch');
 }

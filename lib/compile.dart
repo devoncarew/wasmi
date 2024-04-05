@@ -7,15 +7,20 @@ import 'opcodes.dart';
 import 'parse.dart';
 import 'types.dart';
 
-CompiledFn compile(Module module, DefinedFunction function) {
+CompiledFn compile(
+  Module module,
+  DefinedFunction function, {
+  FunctionType? fnTypeOverride,
+}) {
   int stackHeight = 0;
   int maxHeight = 0;
 
   final result = <Bytecode>[];
   final List<Instruction> labels = [];
-  final List<BlockFunctionType> blockTypes = [];
+  final List<FunctionType> blockTypes = [];
+  final functionType = fnTypeOverride ?? function.functionType!;
 
-  blockTypes.push(BlockFunctionType.fn(function.functionType!));
+  blockTypes.push(functionType);
 
   for (final instruction in function.instructions) {
     final opcode = instruction.opcode;
@@ -53,7 +58,10 @@ CompiledFn compile(Module module, DefinedFunction function) {
       }
     } else if (instruction.opcode == Opcode.$if) {
       labels.push(instruction);
-      final blockType = BlockFunctionType.from(instruction.blockType, function);
+      final code = instruction.blockType;
+      final blockType = code < 0
+          ? FunctionType.fromBlockType(code)!
+          : function.module.functionTypes[code];
       // print('  blocktype = $blockType');
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.$else) {
@@ -62,7 +70,10 @@ CompiledFn compile(Module module, DefinedFunction function) {
       }
     } else if (instruction.opcode == Opcode.loop) {
       labels.push(instruction);
-      final blockType = BlockFunctionType.from(instruction.blockType, function);
+      final code = instruction.blockType;
+      final blockType = code < 0
+          ? FunctionType.fromBlockType(code)!
+          : function.module.functionTypes[code];
       // print('  blocktype = $blockType');
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.br) {
@@ -102,7 +113,7 @@ CompiledFn compile(Module module, DefinedFunction function) {
     }
   }
 
-  return CompiledFn(module, function, result, maxHeight);
+  return CompiledFn(module, function, functionType, result, maxHeight);
 }
 
 Bytecode _translate(Instruction instr) {
@@ -518,67 +529,4 @@ extension StackExt<T> on List<T> {
   T pop() => removeLast();
 
   T? get peek => isEmpty ? null : last;
-}
-
-class BlockFunctionType {
-  ValueType? valueType;
-  FunctionType? functionType;
-
-  BlockFunctionType.from(int code, DefinedFunction function) {
-    if (code == -0x40) {
-      // no block type
-    } else if (code < 0) {
-      valueType = ValueType.fromCode(code & 0x7F);
-    } else {
-      functionType = function.module.functionTypes[code];
-    }
-  }
-
-  BlockFunctionType.fn(this.functionType);
-  BlockFunctionType.value(this.valueType);
-
-  int get paramItems {
-    if (valueType != null) return 0;
-    if (functionType != null) return functionType!.parameterTypes.length;
-    return 0;
-  }
-
-  int get returnItems {
-    if (valueType != null) return 1;
-    if (functionType != null) return functionType!.resultTypes.length;
-    return 0;
-  }
-
-  // String get tupleTypeName {
-  //   var retItems = functionType!.resultType;
-  //   return 'Tuple${retItems.length}<${retItems.map((t) => t.typeName).join(', ')}>';
-  // }
-
-  // ValueType? get firstReturnType {
-  //   if (valueType != null) {
-  //     return valueType;
-  //   } else if (functionType != null) {
-  //     var types = functionType!.resultType;
-  //     return types.firstOrNull;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  // bool get isPrimitive {
-  //   return returnItems == 1 ? !firstReturnType!.refType : false;
-  // }
-
-  // String? get defaultInitValue {
-  //   return firstReturnType?.initValue;
-  // }
-
-  String get describe {
-    if (valueType != null) return '=> ${valueType!.name}';
-    if (functionType != null) return functionType!.toString();
-    return '∅';
-  }
-
-  @override
-  String toString() => describe;
 }

@@ -1,6 +1,6 @@
 // Generated from spec/test/core/f64.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
@@ -8882,4 +8882,16 @@ void main() {
     returns('nearest_19', () => m.$('nearest', [$f64('7FF4000000000000')]),
         double.nan);
   });
+
+  // assertInvalid('invalid f64.1.wasm', 'f64/f64.1.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.2.wasm', 'f64/f64.2.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.3.wasm', 'f64/f64.3.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.4.wasm', 'f64/f64.4.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.5.wasm', 'f64/f64.5.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.6.wasm', 'f64/f64.6.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.7.wasm', 'f64/f64.7.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.8.wasm', 'f64/f64.8.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.9.wasm', 'f64/f64.9.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.10.wasm', 'f64/f64.10.wasm', 'type mismatch');
+  // assertInvalid('invalid f64.11.wasm', 'f64/f64.11.wasm', 'type mismatch');
 }

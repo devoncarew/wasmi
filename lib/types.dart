@@ -67,6 +67,19 @@ enum ValueType {
 }
 
 class FunctionType {
+  static FunctionType empty = FunctionType([], []);
+
+  static FunctionType? fromBlockType(int code) {
+    if (code == -0x40) {
+      // no block type
+      return FunctionType.empty;
+    } else if (code < 0) {
+      return FunctionType([], [ValueType.fromCode(code & 0x7F)]);
+    } else {
+      return null;
+    }
+  }
+
   final List<ValueType> parameterTypes;
   final List<ValueType> resultTypes;
 

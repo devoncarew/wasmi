@@ -1,6 +1,6 @@
 // Generated from spec/test/core/f64_cmp.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
@@ -7999,4 +7999,11 @@ void main() {
         () => m.$('ge', [$f64('7FF4000000000000'), $f64('7FF4000000000000')]),
         0);
   });
+
+  // assertInvalid('invalid f64_cmp.1.wasm', 'f64_cmp/f64_cmp.1.wasm', 'type mismatch');
+  // assertInvalid('invalid f64_cmp.2.wasm', 'f64_cmp/f64_cmp.2.wasm', 'type mismatch');
+  // assertInvalid('invalid f64_cmp.3.wasm', 'f64_cmp/f64_cmp.3.wasm', 'type mismatch');
+  // assertInvalid('invalid f64_cmp.4.wasm', 'f64_cmp/f64_cmp.4.wasm', 'type mismatch');
+  // assertInvalid('invalid f64_cmp.5.wasm', 'f64_cmp/f64_cmp.5.wasm', 'type mismatch');
+  // assertInvalid('invalid f64_cmp.6.wasm', 'f64_cmp/f64_cmp.6.wasm', 'type mismatch');
 }

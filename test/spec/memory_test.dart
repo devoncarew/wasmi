@@ -1,6 +1,6 @@
 // Generated from spec/test/core/memory.wast.
 
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
 import 'package:test/test.dart';
@@ -69,6 +69,9 @@ void main() {
     });
   });
 
+  // assertInvalid('invalid memory.6.wasm', 'memory/memory.6.wasm', 'multiple memories');
+  // assertInvalid('invalid memory.7.wasm', 'memory/memory.7.wasm', 'multiple memories');
+
   group('memory.8.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -104,6 +107,23 @@ void main() {
 
     returns('memsize_0', () => m.$('memsize', []), 1);
   });
+
+  // assertInvalid('invalid memory.11.wasm', 'memory/memory.11.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.12.wasm', 'memory/memory.12.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.13.wasm', 'memory/memory.13.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.14.wasm', 'memory/memory.14.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.15.wasm', 'memory/memory.15.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.16.wasm', 'memory/memory.16.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.17.wasm', 'memory/memory.17.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.18.wasm', 'memory/memory.18.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.19.wasm', 'memory/memory.19.wasm', 'unknown memory');
+  // assertInvalid('invalid memory.20.wasm', 'memory/memory.20.wasm', 'size minimum must not be greater than maximum');
+  // assertInvalid('invalid memory.21.wasm', 'memory/memory.21.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertInvalid('invalid memory.22.wasm', 'memory/memory.22.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertInvalid('invalid memory.23.wasm', 'memory/memory.23.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertInvalid('invalid memory.24.wasm', 'memory/memory.24.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertInvalid('invalid memory.25.wasm', 'memory/memory.25.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertInvalid('invalid memory.26.wasm', 'memory/memory.26.wasm', 'memory size must be at most 65536 pages (4GiB)');
 
   group('memory.30.wasm', () {
     late ModuleDefinition def;
