@@ -15,7 +15,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/f64/f64.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns(

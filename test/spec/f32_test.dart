@@ -15,7 +15,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/f32/f32.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('add_0', () => m.$('add', [$f32('80000000'), $f32('80000000')]),

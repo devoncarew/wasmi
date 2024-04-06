@@ -15,7 +15,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -25,7 +25,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.1.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -35,7 +35,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.2.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -45,7 +45,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.3.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -55,7 +55,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.4.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -65,7 +65,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.5.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
   });
 
@@ -78,7 +78,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.8.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('memsize_0', () => m.$('memsize', []), 0);
@@ -90,7 +90,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.9.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('memsize_0', () => m.$('memsize', []), 0);
@@ -102,7 +102,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.10.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('memsize_0', () => m.$('memsize', []), 1);
@@ -131,7 +131,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/memory/memory.30.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('data_0', () => m.$('data', []), 1);

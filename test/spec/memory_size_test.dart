@@ -16,7 +16,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('size_0', () => m.$('size', []), 0);
@@ -35,7 +35,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.1.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('size_0', () => m.$('size', []), 1);
@@ -54,7 +54,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.2.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('size_0', () => m.$('size', []), 0);
@@ -77,7 +77,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.3.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('size_0', () => m.$('size', []), 3);

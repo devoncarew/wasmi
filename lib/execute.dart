@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
+
 import 'bytecode.dart';
 import 'compile.dart';
 import 'instructions.dart';
@@ -19,16 +21,16 @@ typedef reftype = Object?; // todo:
 
 // TODO: improve branching / stack handling
 
-// TODO: implement imports
-
 // TODO: implement tables
 
 // TODO: implement brTable
 
 class Module {
   final def.ModuleDefinition definition;
+  final Map<String, ImportModule> imports;
 
   final Map<String, int> _exportedFunctions = {};
+  final List<ImportFunction?> _importedFunctions = [];
   final List<CompiledFn?> _compiledFunctions = [];
 
   Memory? memory;
@@ -36,8 +38,12 @@ class Module {
 
   bool _hasStarted = false;
 
-  Module(this.definition) {
+  Module(this.definition, {this.imports = const {}}) {
+    // init imports
+    _initImports();
+
     // memory
+    // todo: throw if memory != null
     if (definition.memoryInfo != null) {
       final info = definition.memoryInfo!;
       memory = Memory(info.min, info.max);
@@ -59,6 +65,57 @@ class Module {
     _initDataSegments();
   }
 
+  void _initImports() {
+    // init imported functions
+    for (var fn in definition.allFunctions) {
+      if (fn is def.ImportedFunctionDefinition) {
+        final importName = fn.importModule.name;
+        final importModule = imports[importName];
+        if (importModule == null) throw 'import not found: $importName';
+        final importFunction =
+            importModule.functions.firstWhereOrNull((f) => f.name == fn.name);
+        if (importFunction == null) {
+          throw 'import function not found: ${fn.name}';
+        }
+        // todo: validate params and return type
+        _importedFunctions.add(importFunction);
+      } else {
+        _importedFunctions.add(null);
+      }
+    }
+
+    // init imported memory
+    for (var moduleDef in definition.importModules) {
+      if (moduleDef.memory != null) {
+        final importModule = imports[moduleDef.name]!;
+        memory = importModule.memory!;
+      }
+    }
+
+    // globals are inited in _initGlobals()
+
+    // todo: tables
+  }
+
+  void _initGlobals() {
+    for (final g in definition.globals.globals) {
+      if (g is def.ImportedGlobalDefinition) {
+        final importName = g.importModule.name;
+        final importModule = imports[importName];
+        if (importModule == null) throw 'import not found: $importName';
+        final global =
+            importModule.globals.firstWhereOrNull((f) => f.name == g.name);
+        if (global == null) throw 'import global not found: ${g.name}';
+        globals.add(global);
+      } else if (g is def.DefinedGlobal) {
+        final startingValue = _evaluateExpression(g.initExpression, g.type);
+        globals.add(DefinedGlobal(g.type, g.mutable, startingValue));
+      } else {
+        throw StateError('unknown global type: $g');
+      }
+    }
+  }
+
   void _initDataSegments() {
     for (final segment in definition.dataSegments.segments) {
       if (segment.passive) continue;
@@ -67,20 +124,6 @@ class Module {
       var offset =
           _evaluateExpression(segment.offsetExpression!, ValueType.i64) as int;
       memory!.copyFrom(segment.bytes, 0, offset, segment.bytes.length);
-    }
-  }
-
-  void _initGlobals() {
-    for (final g in definition.globals.globals) {
-      if (g is def.ImportedGlobal) {
-        // todo: handle imported globals
-        throw 'not yet supported: $g';
-      } else if (g is def.DefinedGlobal) {
-        final startingValue = _evaluateExpression(g.initExpression, g.type);
-        globals.add(DefinedGlobal(g.type, g.mutable, startingValue));
-      } else {
-        throw StateError('unknown global type: $g');
-      }
     }
   }
 
@@ -104,15 +147,21 @@ class Module {
   }
 
   Object? invokeByIndex(int functionIndex, [List<Object?> args = const []]) {
-    var fn = _compiledFunctions[functionIndex];
+    final importedFn = _importedFunctions[functionIndex];
 
-    if (fn == null) {
-      var function = definition.allFunctions[functionIndex];
-      fn = compile(this, function as def.DefinedFunction);
-      _compiledFunctions[functionIndex] = fn;
+    if (importedFn != null) {
+      return importedFn.invoke(args);
+    } else {
+      var fn = _compiledFunctions[functionIndex];
+
+      if (fn == null) {
+        var function = definition.allFunctions[functionIndex];
+        fn = compile(this, function as def.DefinedFunction);
+        _compiledFunctions[functionIndex] = fn;
+      }
+
+      return fn.invoke(args);
     }
-
-    return fn.invoke(args);
   }
 
   Object? _evaluateExpression(List<Instruction> expr, ValueType type) {
@@ -121,6 +170,54 @@ class Module {
     final func =
         compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
     return func.invoke();
+  }
+}
+
+class ImportModule {
+  final List<ImportFunction> functions = [];
+  // final List<ImportTable> tables = [];
+  Memory? memory;
+  final List<ImportGlobal> globals = [];
+}
+
+typedef InvokeHandler = Object? Function(List<Object?> args);
+
+class ImportFunction {
+  final String name;
+  final InvokeHandler invokeHandler;
+  final List<ValueType> args;
+  final List<ValueType> returns;
+
+  ImportFunction(this.name, this.invokeHandler,
+      [this.args = const [], this.returns = const []]);
+
+  Object? invoke([List<Object?> args = const []]) => invokeHandler(args);
+}
+
+typedef GetHandler = Object? Function();
+typedef SetHandler = void Function(Object?);
+
+class ImportGlobal extends Global {
+  final String name;
+  final GetHandler getter;
+  final SetHandler? setter;
+
+  ImportGlobal(
+    this.name,
+    super.type,
+    super.mutable,
+    this.getter, [
+    this.setter,
+  ]);
+
+  @override
+  Object? get value => getter();
+
+  @override
+  set value(Object? v) {
+    if (!mutable) throw 'value not mutable';
+
+    setter!(v);
   }
 }
 
@@ -247,10 +344,9 @@ class CompiledFn {
       final functionType = function.functionType!;
 
       // get args
-      final args = [];
-      for (int i = 0; i < functionType.parameterTypes.length; i++) {
-        args.add(stack[--sp]);
-      }
+      final len = functionType.parameterTypes.length;
+      final args = stack.sublist(sp - len, len);
+      sp -= len;
 
       final result = module.invokeByIndex(index, args);
 

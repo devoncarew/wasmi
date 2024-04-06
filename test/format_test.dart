@@ -148,7 +148,9 @@ void main() {
       final module = ModuleDefinition.parse(File('samples/rot13.wasm'));
 
       // memory is imported
-      expect(module.memoryInfo?.imported, isTrue);
+      expect(module.importModules.isNotEmpty, isTrue);
+      final importModule = module.importModules.first;
+      expect(importModule.memory, isNotNull);
 
       // defines imports
       expect(module.importModules, isNotEmpty);
