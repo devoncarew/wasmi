@@ -15,7 +15,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/i32/i32.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('add_0', () => m.$('add', [1, 1]), 2);

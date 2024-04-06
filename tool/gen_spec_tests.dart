@@ -126,7 +126,8 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         code.writeln();
         code.writeln('setUpAll(() {');
         code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
-        code.writeln('m = Module(def);');
+        code.writeln(
+            "m = Module(def, imports: {'spectest': specTestModule()});");
         code.writeln('});');
         code.writeln();
 

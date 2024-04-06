@@ -16,7 +16,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/int_literals/int_literals.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('i32_test_0', () => m.$('i32.test', []), $i32('BADD00D'));

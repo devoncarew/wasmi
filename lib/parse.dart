@@ -13,6 +13,8 @@ import 'types.dart';
 
 const _verbose = false;
 
+// TODO: a module definition should be able to print its import requirements
+
 class ModuleDefinition {
   static ModuleDefinition parse(File file) {
     Uint8List fileData = file.readAsBytesSync();
@@ -81,7 +83,7 @@ class ModuleDefinition {
 
   final Globals globals = Globals();
 
-  final List<ImportModule> importModules = [];
+  final List<ImportModuleDefinition> importModules = [];
 
   final DataSegments dataSegments = DataSegments();
   final ElementSegments elementSegments = ElementSegments();
@@ -231,7 +233,8 @@ class ModuleDefinition {
           var importModule = _getCreateImportModule(moduleName);
           var functionTypeIndex = r.leb128_u();
           importModule.addImportedFunction(
-            ImportedFunction(this, functionTypeIndex, importModule, itemName),
+            ImportedFunctionDefinition(
+                this, functionTypeIndex, importModule, itemName),
           );
           break;
         case 0x01:
@@ -263,6 +266,8 @@ class ModuleDefinition {
           break;
         case 0x02:
           // mem
+          var importModule = _getCreateImportModule(moduleName);
+
           var limitKind = r.readUint8();
           switch (limitKind) {
             case 0x00:
@@ -273,8 +278,7 @@ class ModuleDefinition {
               }
               _log('  min: $min pages');
 
-              memoryInfo = MemoryInfo(min: min);
-              memoryInfo!.imported = true;
+              importModule.memory = ImportedMemoryDefinition(min: min);
               break;
             case 0x01:
               var min = r.leb128();
@@ -295,8 +299,8 @@ class ModuleDefinition {
 
               _log('  min: $min pages');
               _log('  max: $max pages');
-              memoryInfo = MemoryInfo(min: min, max: max);
-              memoryInfo!.imported = true;
+              importModule.memory =
+                  ImportedMemoryDefinition(min: min, max: max);
               break;
             default:
               throw StateError('unsupported memory kind: ${hex(limitKind)}');
@@ -691,10 +695,10 @@ class ModuleDefinition {
     tables.add(DefinedTable(type, minSize, maxSize));
   }
 
-  ImportModule _getCreateImportModule(String name) {
+  ImportModuleDefinition _getCreateImportModule(String name) {
     return importModules.firstWhere((import) => import.name == name,
         orElse: () {
-      var module = ImportModule(name, this);
+      var module = ImportModuleDefinition(name, this);
       importModules.add(module);
       return module;
     });
@@ -957,32 +961,28 @@ class MemoryInfo {
   /// max pages
   final int? max;
 
-  bool imported = false;
-
   MemoryInfo({required this.min, this.max});
 }
 
-class ImportModule {
+class ImportModuleDefinition {
   final String name;
   final ModuleDefinition wasmModule;
 
-  final List<ImportedFunction> functions = [];
-  final List<ImportedGlobal> globals = [];
-  final List<ImportedTable> tables = [];
+  final List<ImportedFunctionDefinition> functions = [];
+  ImportedMemoryDefinition? memory;
+  final List<ImportedGlobalDefinition> globals = [];
+  final List<ImportedTableDefinition> tables = [];
 
-  ImportModule(this.name, this.wasmModule);
+  ImportModuleDefinition(this.name, this.wasmModule);
 
-  String get referenceName =>
-      '${name.substring(0, 1).toLowerCase()}${name.substring(1)}Imports';
-
-  void addImportedFunction(ImportedFunction function) {
+  void addImportedFunction(ImportedFunctionDefinition function) {
     functions.add(function);
 
     wasmModule.allFunctions.add(function);
   }
 
   void addImportedTable(String name, TableType tableType, int min, [int? max]) {
-    var table = ImportedTable(this, name, tableType, min, max);
+    var table = ImportedTableDefinition(this, name, tableType, min, max);
     tables.add(table);
 
     wasmModule.tables.add(table);
@@ -993,19 +993,27 @@ class ImportModule {
     required ValueType type,
     required bool mutable,
   }) {
-    // todo: use the name?
-
-    var global = ImportedGlobal(type, mutable, this);
+    var global = ImportedGlobalDefinition(type, mutable, this, name);
     wasmModule.globals.addImportedGlobal(global);
     globals.add(global);
   }
 }
 
-class ImportedFunction extends ModuleFunction {
-  final ImportModule importModule;
+class ImportedMemoryDefinition {
+  /// min pages
+  final int min;
+
+  /// max pages
+  final int? max;
+
+  ImportedMemoryDefinition({required this.min, this.max});
+}
+
+class ImportedFunctionDefinition extends ModuleFunction {
+  final ImportModuleDefinition importModule;
   final String name;
 
-  ImportedFunction(
+  ImportedFunctionDefinition(
       super.module, super.functionTypeIndex, this.importModule, this.name);
 }
 
@@ -1039,10 +1047,12 @@ class GlobalExport {
   GlobalExport(this.name, this.global);
 }
 
-class ImportedGlobal extends Global {
-  final ImportModule importModule;
+class ImportedGlobalDefinition extends Global {
+  final ImportModuleDefinition importModule;
+  final String name;
 
-  ImportedGlobal(super.type, super.mutable, this.importModule);
+  ImportedGlobalDefinition(
+      super.type, super.mutable, this.importModule, this.name);
 }
 
 enum TableType {
@@ -1076,11 +1086,11 @@ class DefinedTable extends Table {
   DefinedTable(super.type, super.minSize, [super.maxSize]);
 }
 
-class ImportedTable extends Table {
-  final ImportModule parent;
+class ImportedTableDefinition extends Table {
+  final ImportModuleDefinition parent;
   final String name;
 
-  ImportedTable(
+  ImportedTableDefinition(
     this.parent,
     this.name,
     super.type,
@@ -1099,7 +1109,7 @@ class Globals {
 
   bool get isNotEmpty => globals.isNotEmpty;
 
-  void addImportedGlobal(ImportedGlobal global) {
+  void addImportedGlobal(ImportedGlobalDefinition global) {
     globals.add(global);
   }
 

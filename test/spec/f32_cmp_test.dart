@@ -15,7 +15,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/f32_cmp/f32_cmp.0.wasm'));
-      m = Module(def);
+      m = Module(def, imports: {'spectest': specTestModule()});
     });
 
     returns('eq_0', () => m.$('eq', [$f32('80000000'), $f32('80000000')]), 1);
