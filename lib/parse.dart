@@ -917,7 +917,7 @@ enum SectionKind {
   }
 }
 
-class ModuleFunction {
+abstract class ModuleFunction {
   final ModuleDefinition module;
   final int typeIndex;
 

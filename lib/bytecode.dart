@@ -210,7 +210,7 @@ class Bytecode {
   final int i1;
   final double f0;
 
-  // The start pc of the coorespinding else block, if any.
+  // The start pc of the cooresponding else block, if any.
   int? elseStart;
 
   // Ths pc of the instructions following the end block, if any.
