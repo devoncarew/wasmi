@@ -17,18 +17,39 @@ typedef reftype = Object?; // todo:
 
 // TODO: import items come first in the index for func, table, mem, global
 
+// TODO: improve branching / stack handling
+
+// TODO: implement imports
+
+// TODO: implement tables
+
+// TODO: implement brTable
+
 class Module {
   final def.ModuleDefinition definition;
 
-  final Map<String, CompiledFn> _exportedFunctions = {};
+  final Map<String, int> _exportedFunctions = {};
+  final List<CompiledFn?> _compiledFunctions = [];
 
   Memory? memory;
   final List<Global> globals = [];
 
+  bool _hasStarted = false;
+
   Module(this.definition) {
+    // memory
     if (definition.memoryInfo != null) {
       final info = definition.memoryInfo!;
       memory = Memory(info.min, info.max);
+    }
+
+    // functions
+    for (var fn in definition.exportedFunctions) {
+      _exportedFunctions[fn.name] = definition.allFunctions.indexOf(fn.func);
+    }
+
+    for (var fn in definition.allFunctions) {
+      _compiledFunctions.add(null);
     }
 
     // Init globals first - they can be referenced from other initializers (like
@@ -63,13 +84,32 @@ class Module {
     }
   }
 
+  void start() {
+    if (!_hasStarted) {
+      _hasStarted = true;
+
+      if (definition.startFunctionIndex != null) {
+        invokeByIndex(definition.startFunctionIndex!);
+      }
+    }
+  }
+
   Object? invoke(String methodName, [List<Object?> args = const []]) {
-    var fn = _exportedFunctions[methodName];
+    // todo: throw an exception if there is no such method
+    var index = _exportedFunctions[methodName]!;
+
+    if (!_hasStarted) start();
+
+    return invokeByIndex(index, args);
+  }
+
+  Object? invokeByIndex(int functionIndex, [List<Object?> args = const []]) {
+    var fn = _compiledFunctions[functionIndex];
+
     if (fn == null) {
-      // todo: throw an exception if there is no such method
-      var function = definition.exportedFunction(methodName)!.func;
+      var function = definition.allFunctions[functionIndex];
       fn = compile(this, function as def.DefinedFunction);
-      _exportedFunctions[methodName] = fn;
+      _compiledFunctions[functionIndex] = fn;
     }
 
     return fn.invoke(args);
@@ -200,7 +240,27 @@ class CompiledFn {
     }
 
     void call(Bytecode code) {
-      throw 'unimplemented: call';
+      // todo: switch to invoking using the same stack
+
+      i32 index = code.i0;
+      final function = module.definition.allFunctions[index];
+      final functionType = function.functionType!;
+
+      // get args
+      final args = [];
+      for (int i = 0; i < functionType.parameterTypes.length; i++) {
+        args.add(stack[--sp]);
+      }
+
+      final result = module.invokeByIndex(index, args);
+
+      if (functionType.resultTypes.length > 1) {
+        throw 'unsupported: multiple return values';
+      }
+
+      if (functionType.resultTypes.length == 1) {
+        stack[sp++] = result;
+      }
     }
 
     void callIndirect(Bytecode code) {

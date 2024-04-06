@@ -18,9 +18,10 @@ const Set<String> allowList = {
   'i64.wast',
   'int_exprs.wast',
   'int_literals.wast',
-  'memory.wast',
   'memory_init.wast',
   'memory_size.wast',
+  'memory.wast',
+  'start.wast',
 };
 
 void main(List<String> args) {
