@@ -536,21 +536,21 @@ Bytecode _translate(Instruction instr) {
     case Opcode.overflow:
       switch (instr.opcode2!) {
         case OverflowOpcode.i32_trunc_sat_f32_s:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i32_trunc_sat_f32_s);
         case OverflowOpcode.i32_trunc_sat_f32_u:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i32_trunc_sat_f32_u);
         case OverflowOpcode.i32_trunc_sat_f64_s:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i32_trunc_sat_f64_s);
         case OverflowOpcode.i32_trunc_sat_f64_u:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i32_trunc_sat_f64_u);
         case OverflowOpcode.i64_trunc_sat_f32_s:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i64_trunc_sat_f32_s);
         case OverflowOpcode.i64_trunc_sat_f32_u:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i64_trunc_sat_f32_u);
         case OverflowOpcode.i64_trunc_sat_f64_s:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i64_trunc_sat_f64_s);
         case OverflowOpcode.i64_trunc_sat_f64_u:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.i64_trunc_sat_f64_u);
         case OverflowOpcode.memory_init:
           return Bytecode(Bytecode.memory_init,
               i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
