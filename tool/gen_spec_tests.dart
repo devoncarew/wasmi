@@ -8,11 +8,16 @@ import 'package:path/path.dart' as p;
 const Set<String> allowList = {
   'address.wast',
   'align.wast',
+  'conversions.wast',
   'data.wast',
+  'f32_bitwise.wast',
   'f32_cmp.wast',
   'f32.wast',
+  'f64_bitwise.wast',
   'f64_cmp.wast',
   'f64.wast',
+  'float_literals.wast',
+  'float_memory.wast',
   'float_misc.wast',
   'i32.wast',
   'i64.wast',
@@ -44,6 +49,8 @@ void main(List<String> args) {
 
 void generateSpecTests(File wastFile) {
   final specName = p.basenameWithoutExtension(wastFile.path);
+  final destDartFile = File('test/spec/${specName}_test.dart');
+  print('generating ${destDartFile.path}');
 
   final destJsonFile = File('test/spec/$specName/$specName.json');
 
@@ -60,8 +67,6 @@ void generateSpecTests(File wastFile) {
 
   final library = createLibraryFor(wastFile, destJsonFile);
   final emitter = DartEmitter.scoped();
-  final destDartFile = File('test/spec/${specName}_test.dart');
-  print('generating ${destDartFile.path}');
   destDartFile
       .writeAsStringSync(DartFormatter().format('${library.accept(emitter)}'));
 }
@@ -250,6 +255,10 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
       case 'assert_uninstantiable':
         // todo: ?
+        break;
+
+      case 'assert_exhaustion':
+        // TODO: implement
         break;
 
       default:

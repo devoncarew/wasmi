@@ -345,7 +345,7 @@ class CompiledFn {
 
       // get args
       final len = functionType.parameterTypes.length;
-      final args = stack.sublist(sp - len, len);
+      final args = stack.sublist(sp - len, sp);
       sp -= len;
 
       final result = module.invokeByIndex(index, args);
@@ -1413,22 +1413,55 @@ class CompiledFn {
 
     void i32_trunc_f32_s(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_f32_s';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i32_trunc_f32_u(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_f32_u';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i32_trunc_f64_s(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_f64_s';
+      try {
+        i32 result = arg0.truncate();
+        stack[sp++] = result;
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i32_trunc_f64_u(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_f64_u';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i64_extend_i32_s(Bytecode code) {
@@ -1443,12 +1476,28 @@ class CompiledFn {
 
     void i64_trunc_f32_s(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_f32_s';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i64_trunc_f32_u(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_f32_u';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void i64_trunc_f64_s(Bytecode code) {
@@ -1466,32 +1515,45 @@ class CompiledFn {
 
     void i64_trunc_f64_u(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_f64_u';
+      try {
+        stack[sp++] = arg0.truncate();
+      } on UnsupportedError {
+        if (arg0.isInfinite) {
+          throw Trap('integer overflow');
+        } else {
+          throw Trap('invalid conversion to integer');
+        }
+      }
     }
 
     void f32_convert_i32_s(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_convert_i32_s';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f32_convert_i32_u(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_convert_i32_u';
+      i32 arg0 = (stack[--sp] as int) & _mask32;
+      stack[sp++] = arg0.toDouble();
     }
 
     void f32_convert_i64_s(Bytecode code) {
       i64 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_convert_i64_s';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f32_convert_i64_u(Bytecode code) {
       i64 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_convert_i64_u';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f32_demote_f64(Bytecode code) {
+      // TODO: verify this implementation
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: f32_demote_f64';
+      f32 result = arg0.clamp(
+        -3.4028234663852885981170418348451692544e+38,
+        3.4028235e38,
+      );
+      stack[sp++] = result;
     }
 
     void f64_convert_i32_s(Bytecode code) {
@@ -1506,7 +1568,7 @@ class CompiledFn {
 
     void f64_convert_i64_s(Bytecode code) {
       i64 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f64_convert_i64_s';
+      stack[sp++] = arg0.toDouble();
     }
 
     void f64_convert_i64_u(Bytecode code) {
@@ -1527,12 +1589,14 @@ class CompiledFn {
 
     void i64_reinterpret_f64(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_reinterpret_f64';
+      reinterpretData.setFloat64(0, arg0, Endian.little);
+      stack[sp++] = reinterpretData.getUint64(0, Endian.little);
     }
 
     void f32_reinterpret_i32(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: f32_reinterpret_i32';
+      reinterpretData.setUint32(0, arg0, Endian.little);
+      stack[sp++] = reinterpretData.getFloat32(0, Endian.little);
     }
 
     void f64_reinterpret_i64(Bytecode code) {
@@ -1607,43 +1671,57 @@ class CompiledFn {
     }
 
     void i32_trunc_sat_f32_s(Bytecode code) {
+      // f32 => i32
+      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_sat_f32_s';
+      stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f32_u(Bytecode code) {
+      // f32 => i32
+      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_sat_f32_u';
+      stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f64_s(Bytecode code) {
+      // f64 => i32
+      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_sat_f64_s';
+      stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f64_u(Bytecode code) {
+      // f64 => i32
+      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i32_trunc_sat_f64_u';
+      stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i64_trunc_sat_f32_s(Bytecode code) {
+      // f32 => i64
+      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_sat_f32_s';
+      stack[sp++] = arg0.toInt();
     }
 
     void i64_trunc_sat_f32_u(Bytecode code) {
+      // f32 => i64
+      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_sat_f32_u';
+      stack[sp++] = arg0.toInt();
     }
 
     void i64_trunc_sat_f64_s(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_sat_f64_s';
+      stack[sp++] = arg0.toInt();
     }
 
     void i64_trunc_sat_f64_u(Bytecode code) {
+      // f64 => i64
+      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
-      throw 'unimplemented: i64_trunc_sat_f64_u';
+      stack[sp++] = arg0.toInt();
     }
 
     void memory_init(Bytecode code) {
