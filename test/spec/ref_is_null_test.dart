@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('ref_is_null.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -16,7 +18,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/ref_is_null/ref_is_null.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('funcref_0', () => m.$('funcref', [null]), 1);

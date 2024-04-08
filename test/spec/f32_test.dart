@@ -9,13 +9,15 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('f32.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/f32/f32.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('add_0', () => m.$('add', [$f32('80000000'), $f32('80000000')]),

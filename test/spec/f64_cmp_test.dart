@@ -9,13 +9,15 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('f64_cmp.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/f64_cmp/f64_cmp.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(

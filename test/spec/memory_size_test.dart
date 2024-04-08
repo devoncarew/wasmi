@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('memory_size.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -16,7 +18,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('size_0', () => m.$('size', []), 0);
@@ -35,7 +37,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.1.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('size_0', () => m.$('size', []), 1);
@@ -54,7 +56,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.2.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('size_0', () => m.$('size', []), 0);
@@ -77,7 +79,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/memory_size/memory_size.3.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('size_0', () => m.$('size', []), 3);

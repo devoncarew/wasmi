@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('float_literals.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -16,7 +18,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/float_literals/float_literals.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('f32_nan_0', () => m.$('f32.nan', []), $i32('7FC00000'));
@@ -253,7 +255,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/float_literals/float_literals.1.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(
