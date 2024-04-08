@@ -103,7 +103,7 @@ enum Opcode {
   reserved_19,
   drop('any'),
   select('any any i32 => any'),
-  selectT('(u32 u32) any any i32 => any'),
+  selectT('(u32) any any i32 => any'),
   reserved_1D,
   reserved_1E,
   reserved_1F,

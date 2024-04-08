@@ -23,8 +23,6 @@ typedef reftype = Object?; // todo:
 
 // TODO: implement brTable
 
-// TODO: implement callIndirect
-
 class Module {
   final def.ModuleDefinition definition;
   final Map<String, ImportModule> imports;
@@ -238,13 +236,18 @@ class ImportTable<T> extends Table<T> {
 }
 
 abstract class WasmFunction {
+  List<ValueType> get args;
+  List<ValueType> get returns;
+
   Object? invoke([List<Object?> args = const []]);
 }
 
 class ImportFunction extends WasmFunction {
   final String name;
   final InvokeHandler invokeHandler;
+  @override
   final List<ValueType> args;
+  @override
   final List<ValueType> returns;
 
   ImportFunction(this.name, this.invokeHandler,
@@ -260,6 +263,12 @@ class DefinedFunction extends WasmFunction {
   CompiledFn? _compiledFn;
 
   DefinedFunction(this.module, this.definedFunction);
+
+  @override
+  List<ValueType> get args => definedFunction.functionType!.parameterTypes;
+
+  @override
+  List<ValueType> get returns => definedFunction.functionType!.resultTypes;
 
   @override
   Object? invoke([List<Object?> args = const []]) {
@@ -391,28 +400,53 @@ class CompiledFn {
       // todo: switch to invoking using the same stack
 
       i32 index = code.i0;
-      final function = module.definition.allFunctions[index];
-      final functionType = function.functionType!;
+      final function = functions[index];
 
       // get args
-      final len = functionType.parameterTypes.length;
+      final len = function.args.length;
       final args = stack.sublist(sp - len, sp);
       sp -= len;
 
       final func = functions[index];
       final result = func.invoke(args);
 
-      if (functionType.resultTypes.length > 1) {
+      if (function.returns.length > 1) {
         throw 'unsupported: multiple return values';
       }
 
-      if (functionType.resultTypes.length == 1) {
+      if (function.returns.length == 1) {
         stack[sp++] = result;
       }
     }
 
     void callIndirect(Bytecode code) {
-      throw 'unimplemented: callIndirect';
+      // Note: These immediates are reversed from what the documentation says.
+      var typeIndex = code.i0;
+      var tableNum = code.i1;
+
+      int index = stack[--sp] as int;
+
+      final func = tables[tableNum][index] as WasmFunction?;
+      if (func == null) {
+        throw Trap('uninitialized element');
+      }
+
+      // TODO: confirm that the func type is the same as typeIndex
+
+      // get args
+      final len = func.args.length;
+      final args = stack.sublist(sp - len, sp);
+      sp -= len;
+
+      final result = func.invoke(args);
+
+      if (func.returns.length > 1) {
+        throw 'unsupported: multiple return values';
+      }
+
+      if (func.returns.length == 1) {
+        stack[sp++] = result;
+      }
     }
 
     void drop(Bytecode code) {
@@ -430,7 +464,7 @@ class CompiledFn {
       i32 c = stack[--sp] as int;
       var arg1 = stack[--sp];
       var arg0 = stack[--sp];
-      stack.add(c != 0 ? arg0 : arg1);
+      stack[sp++] = c != 0 ? arg0 : arg1;
     }
 
     void localGet(Bytecode code) {
