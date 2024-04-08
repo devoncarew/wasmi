@@ -84,6 +84,30 @@ void assertInvalid(String testName, String filePath, String text) {
   });
 }
 
+ImportModule importModuleFrom(Module module) {
+  final importModule = ImportModule();
+
+  // functions
+  for (var export in module.definition.exportedFunctions) {
+    importModule.functions.add(ImportFunction(
+      export.name,
+      (List<Object?> args) {
+        return module.invoke(export.name, args);
+      },
+      export.func.functionType!.parameterTypes,
+      export.func.functionType!.resultTypes,
+    ));
+  }
+
+  // todo: tables
+
+  // todo: memory
+
+  // todo: globals
+
+  return importModule;
+}
+
 extension ModuleDefinitionExtension on Module {
   Object? $(String fnName, List args) => invoke(fnName, args);
 }

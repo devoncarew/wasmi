@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('int_exprs.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -16,7 +18,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_no_fold_cmp_s_offset_0',
@@ -40,7 +42,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.1.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(
@@ -60,7 +62,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.2.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(
@@ -76,7 +78,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.3.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_no_fold_shl_shr_s_0',
@@ -96,7 +98,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.4.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(
@@ -116,7 +118,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.5.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns(
@@ -136,7 +138,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.6.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     traps('i32_no_fold_div_s_self_0', () => m.$('i32.no_fold_div_s_self', [0]),
@@ -156,7 +158,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.7.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     traps('i32_no_fold_rem_s_self_0', () => m.$('i32.no_fold_rem_s_self', [0]),
@@ -176,7 +178,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.8.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_no_fold_mul_div_s_0',
@@ -196,7 +198,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.9.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_no_fold_div_s_2_0',
@@ -214,7 +216,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.10.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_no_fold_rem_s_2_0',
@@ -232,7 +234,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.11.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     traps('i32_div_s_0_0', () => m.$('i32.div_s_0', [0x47]),
@@ -252,7 +254,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.12.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_div_s_3_0', () => m.$('i32.div_s_3', [0x47]), 0x17);
@@ -282,7 +284,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.13.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_div_s_5_0', () => m.$('i32.div_s_5', [0x47]), 0xE);
@@ -312,7 +314,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.14.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_div_s_7_0', () => m.$('i32.div_s_7', [0x47]), 0xA);
@@ -342,7 +344,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.15.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_rem_s_3_0', () => m.$('i32.rem_s_3', [0x47]), 2);
@@ -368,7 +370,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.16.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_rem_s_5_0', () => m.$('i32.rem_s_5', [0x47]), 1);
@@ -394,7 +396,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.17.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_rem_s_7_0', () => m.$('i32.rem_s_7', [0x47]), 1);
@@ -420,7 +422,7 @@ void main() {
     setUpAll(() {
       def =
           ModuleDefinition.parse(File('test/spec/int_exprs/int_exprs.18.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     traps(

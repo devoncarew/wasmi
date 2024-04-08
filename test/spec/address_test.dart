@@ -9,13 +9,15 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('address.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/address/address.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('8u_good1_0', () => m.$('8u_good1', [0]), 0x61);
@@ -128,7 +130,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/address/address.2.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('8u_good1_0', () => m.$('8u_good1', [0]), 0x61);
@@ -281,7 +283,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/address/address.3.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('32_good1_0', () => m.$('32_good1', [0]), $f32('0'));
@@ -314,7 +316,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/address/address.4.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('64_good1_0', () => m.$('64_good1', [0]), $f64('0'));

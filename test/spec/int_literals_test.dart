@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   group('int_literals.0.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -16,7 +18,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(
           File('test/spec/int_literals/int_literals.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('i32_test_0', () => m.$('i32.test', []), $i32('BADD00D'));

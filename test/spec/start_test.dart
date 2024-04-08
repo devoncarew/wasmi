@@ -9,6 +9,8 @@ import 'package:wasmi/parse.dart';
 import '_framework.dart';
 
 void main() {
+  final Map<String, ImportModule> registered = {};
+
   // assertInvalid('invalid start.0.wasm', 'start/start.0.wasm', 'unknown function');
   // assertInvalid('invalid start.1.wasm', 'start/start.1.wasm', 'start function');
   // assertInvalid('invalid start.2.wasm', 'start/start.2.wasm', 'start function');
@@ -19,7 +21,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/start/start.3.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('get_0', () => m.$('get', []), 0x44);
@@ -35,7 +37,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/start/start.4.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
     returns('get_0', () => m.$('get', []), 0x44);
@@ -51,7 +53,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/start/start.5.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
 
@@ -61,7 +63,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/start/start.6.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
 
@@ -71,7 +73,7 @@ void main() {
 
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/start/start.7.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule()});
+      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
 }

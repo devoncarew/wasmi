@@ -17,11 +17,13 @@ import 'types.dart';
 typedef ImplFn = void Function(Bytecode code);
 typedef reftype = Object?; // todo:
 
-// TODO: import items come first in the index for func, table, mem, global
-
 // TODO: improve branching / stack handling
 
+// TODO: finish tables
+
 // TODO: implement brTable
+
+// TODO: implement callIndirect
 
 class Module {
   final def.ModuleDefinition definition;
@@ -275,6 +277,7 @@ class CompiledFn {
   final Memory? memory;
   final List<Global> globals;
   final List<Table> tables;
+  final List<WasmFunction> functions;
 
   CompiledFn(
     this.module,
@@ -284,7 +287,8 @@ class CompiledFn {
     this.stackHeight,
   )   : memory = module.memory,
         globals = module.globals,
-        tables = module.tables;
+        tables = module.tables,
+        functions = module.functions;
 
   List<def.DataSegment> get dataSegments =>
       module.definition.dataSegments.segments;
@@ -395,7 +399,7 @@ class CompiledFn {
       final args = stack.sublist(sp - len, sp);
       sp -= len;
 
-      final func = module.functions[index];
+      final func = functions[index];
       final result = func.invoke(args);
 
       if (functionType.resultTypes.length > 1) {
@@ -416,17 +420,17 @@ class CompiledFn {
     }
 
     void select(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      Object? arg1 = stack[--sp];
-      Object? arg0 = stack[--sp];
-      throw 'unimplemented: select';
+      i32 c = stack[--sp] as int;
+      var arg1 = stack[--sp];
+      var arg0 = stack[--sp];
+      stack[sp++] = c != 0 ? arg0 : arg1;
     }
 
     void selectT(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      Object? arg1 = stack[--sp];
-      Object? arg0 = stack[--sp];
-      throw 'unimplemented: selectT';
+      i32 c = stack[--sp] as int;
+      var arg1 = stack[--sp];
+      var arg0 = stack[--sp];
+      stack.add(c != 0 ? arg0 : arg1);
     }
 
     void localGet(Bytecode code) {
@@ -1720,7 +1724,9 @@ class CompiledFn {
     }
 
     void refFunc(Bytecode code) {
-      throw 'unimplemented: refFunc';
+      var funcIndex = code.i0;
+      var func = functions[funcIndex];
+      stack[sp++] = func;
     }
 
     void i32_trunc_sat_f32_s(Bytecode code) {
