@@ -4,12 +4,12 @@ import 'bytecode.dart';
 import 'execute.dart';
 import 'instructions.dart';
 import 'opcodes.dart';
-import 'parse.dart';
+import 'parse.dart' as def;
 import 'types.dart';
 
 CompiledFn compile(
   Module module,
-  DefinedFunction function, {
+  def.DefinedFunction function, {
   FunctionType? fnTypeOverride,
 }) {
   int stackHeight = 0;

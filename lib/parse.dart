@@ -564,9 +564,9 @@ class ModuleDefinition {
         elementKind: elementKind,
         segmentKind: segmentKind,
         tableIndex: tableIndex,
-        offsetInstrs: offsetInstrs,
+        offsetExpression: offsetInstrs,
         functionIndexs: functionIndexs,
-        functionInstrs: functionInstrs,
+        functionIndexExpressions: functionInstrs,
       ));
     }
   }
@@ -1177,16 +1177,16 @@ class ElementSegment {
   final SegmentKind segmentKind;
   final int tableIndex;
   final ValueType? elementKind;
-  final List<Instruction>? offsetInstrs;
+  final List<Instruction>? offsetExpression;
   final List<int>? functionIndexs;
-  final List<List<Instruction>>? functionInstrs;
+  final List<List<Instruction>>? functionIndexExpressions;
 
   ElementSegment({
     required this.segmentKind,
     required this.tableIndex,
     this.elementKind,
-    this.offsetInstrs,
+    this.offsetExpression,
     this.functionIndexs,
-    this.functionInstrs,
+    this.functionIndexExpressions,
   });
 }
