@@ -23,12 +23,18 @@ const Set<String> allowList = {
   'i64.wast',
   'int_exprs.wast',
   'int_literals.wast',
+  'load.wast',
+  'local_get.wast',
+  'local_set.wast',
+  'local_tee.wast',
   'memory_init.wast',
   'memory_size.wast',
   'memory.wast',
-  // 'ref_func.wast', // todo: 'register' action
+  'nop.wast',
+  'ref_func.wast',
   'ref_is_null.wast',
   'ref_null.wast',
+  'select.wast',
   'start.wast',
 };
 
@@ -98,6 +104,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
   final code = StringBuffer();
 
+  code.writeln('final Map<String, ImportModule> registered = {};');
+  code.writeln();
+
   final json = jsonDecode(jsonFile.readAsStringSync()) as Map;
   final commands = (json['commands'] as List).cast<Map>();
 
@@ -135,7 +144,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         code.writeln('setUpAll(() {');
         code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
         code.writeln(
-            "m = Module(def, imports: {'spectest': specTestModule()});");
+            "m = Module(def, imports: {'spectest': specTestModule(), ...registered});");
         code.writeln('});');
         code.writeln();
 
@@ -233,6 +242,16 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         code.writeln(
             "traps('$testName', () => m.\$('$field', [$argList]), '$text'$failText);");
 
+        break;
+
+      case 'register':
+
+        // {"type": "register", "line": 4, "as": "M"},
+
+        final asName = command['as'] as String;
+
+        code.writeln("action('register-$asName', "
+            "() => registered['$asName'] = importModuleFrom(m));");
         break;
 
       case 'assert_invalid':

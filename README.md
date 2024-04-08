@@ -16,14 +16,10 @@ https://github.com/WebAssembly/spec/tree/main/test/core.
 You need to have the wabt tools (wat2wasm, wasm2wat, ...) installed locally.
 
 ```shell
-wast2json --debug-names -o test/spec/align/align.json spec/test/core/align.wast
+dart tool/gen_spec_tests.dart
 ```
 
 ## Benchmarking
-
-todo:
-
-## Re-building
 
 todo:
 

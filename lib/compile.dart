@@ -173,8 +173,7 @@ Bytecode _translate(Instruction instr) {
     case Opcode.select:
       return Bytecode(Bytecode.select);
     case Opcode.selectT:
-      return Bytecode(Bytecode.selectT,
-          i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
+      return Bytecode(Bytecode.selectT, i0: instr.immediate_0 as int);
     case Opcode.localGet:
       return Bytecode(Bytecode.localGet, i0: instr.immediate_0 as int);
     case Opcode.localSet:
