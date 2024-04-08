@@ -26,6 +26,9 @@ const Set<String> allowList = {
   'memory_init.wast',
   'memory_size.wast',
   'memory.wast',
+  // 'ref_func.wast', // todo: 'register' action
+  'ref_is_null.wast',
+  'ref_null.wast',
   'start.wast',
 };
 
