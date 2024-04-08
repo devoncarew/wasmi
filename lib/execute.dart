@@ -21,8 +21,6 @@ typedef reftype = Object?; // todo:
 
 // TODO: improve branching / stack handling
 
-// TODO: implement tables
-
 // TODO: implement brTable
 
 class Module {
@@ -30,11 +28,10 @@ class Module {
   final Map<String, ImportModule> imports;
 
   final Map<String, int> _exportedFunctions = {};
-  final List<ImportFunction?> _importedFunctions = [];
-  final List<CompiledFn?> _compiledFunctions = [];
-
+  final List<WasmFunction> functions = [];
   Memory? memory;
   final List<Global> globals = [];
+  final List<Table> tables = [];
 
   bool _hasStarted = false;
 
@@ -53,9 +50,8 @@ class Module {
     for (var fn in definition.exportedFunctions) {
       _exportedFunctions[fn.name] = definition.allFunctions.indexOf(fn.func);
     }
-
-    for (var fn in definition.allFunctions) {
-      _compiledFunctions.add(null);
+    for (var fn in definition.definedFunctions) {
+      functions.add(DefinedFunction(this, fn));
     }
 
     // Init globals first - they can be referenced from other initializers (like
@@ -63,6 +59,9 @@ class Module {
     _initGlobals();
 
     _initDataSegments();
+
+    // init tables
+    _initTables();
   }
 
   void _initImports() {
@@ -78,9 +77,7 @@ class Module {
           throw 'import function not found: ${fn.name}';
         }
         // todo: validate params and return type
-        _importedFunctions.add(importFunction);
-      } else {
-        _importedFunctions.add(null);
+        functions.add(importFunction);
       }
     }
 
@@ -127,12 +124,53 @@ class Module {
     }
   }
 
+  void _initTables() {
+    for (var tableDef in definition.tables) {
+      if (tableDef is def.DefinedTable) {
+        if (tableDef.type == def.TableType.functype) {
+          tables.add(Table<WasmFunction>(tableDef.minSize, tableDef.maxSize));
+        } else {
+          tables.add(Table<Object?>(tableDef.minSize, tableDef.maxSize));
+        }
+      } else if (tableDef is def.ImportedTableDefinition) {
+        final importName = tableDef.parent.name;
+        final importModule = imports[importName];
+        if (importModule == null) throw 'import not found: $importName';
+        final table = importModule.tables
+            .firstWhereOrNull((f) => f.name == tableDef.name);
+        if (table == null) throw 'import table not found: ${tableDef.name}';
+        tables.add(table);
+      } else {
+        throw 'unhandled table type: $tableDef';
+      }
+    }
+
+    // init tables using active element segments
+    for (var segment in definition.elementSegments.segments) {
+      if (segment.segmentKind != def.SegmentKind.active) continue;
+
+      var offset =
+          _evaluateExpression(segment.offsetExpression!, ValueType.i32) as int;
+      final table = tables[segment.tableIndex];
+      var fnIndexes = segment.functionIndexs;
+      if (fnIndexes == null) {
+        fnIndexes = <int>[];
+        for (var expr in segment.functionIndexExpressions!) {
+          fnIndexes.add(_evaluateExpression(expr, ValueType.i32) as int);
+        }
+      }
+
+      final fns = fnIndexes.map((index) => functions[index]).toList();
+      table.copyFrom(fns, offset, fns.length);
+    }
+  }
+
   void start() {
     if (!_hasStarted) {
       _hasStarted = true;
 
       if (definition.startFunctionIndex != null) {
-        invokeByIndex(definition.startFunctionIndex!);
+        functions[definition.startFunctionIndex!].invoke();
       }
     }
   }
@@ -143,25 +181,7 @@ class Module {
 
     if (!_hasStarted) start();
 
-    return invokeByIndex(index, args);
-  }
-
-  Object? invokeByIndex(int functionIndex, [List<Object?> args = const []]) {
-    final importedFn = _importedFunctions[functionIndex];
-
-    if (importedFn != null) {
-      return importedFn.invoke(args);
-    } else {
-      var fn = _compiledFunctions[functionIndex];
-
-      if (fn == null) {
-        var function = definition.allFunctions[functionIndex];
-        fn = compile(this, function as def.DefinedFunction);
-        _compiledFunctions[functionIndex] = fn;
-      }
-
-      return fn.invoke(args);
-    }
+    return functions[index].invoke(args);
   }
 
   Object? _evaluateExpression(List<Instruction> expr, ValueType type) {
@@ -175,24 +195,12 @@ class Module {
 
 class ImportModule {
   final List<ImportFunction> functions = [];
-  // final List<ImportTable> tables = [];
+  final List<ImportTable> tables = [];
   Memory? memory;
   final List<ImportGlobal> globals = [];
 }
 
 typedef InvokeHandler = Object? Function(List<Object?> args);
-
-class ImportFunction {
-  final String name;
-  final InvokeHandler invokeHandler;
-  final List<ValueType> args;
-  final List<ValueType> returns;
-
-  ImportFunction(this.name, this.invokeHandler,
-      [this.args = const [], this.returns = const []]);
-
-  Object? invoke([List<Object?> args = const []]) => invokeHandler(args);
-}
 
 typedef GetHandler = Object? Function();
 typedef SetHandler = void Function(Object?);
@@ -221,6 +229,43 @@ class ImportGlobal extends Global {
   }
 }
 
+class ImportTable<T> extends Table<T> {
+  final String name;
+
+  ImportTable(this.name, super.minSize, [super.maxSize]);
+}
+
+abstract class WasmFunction {
+  Object? invoke([List<Object?> args = const []]);
+}
+
+class ImportFunction extends WasmFunction {
+  final String name;
+  final InvokeHandler invokeHandler;
+  final List<ValueType> args;
+  final List<ValueType> returns;
+
+  ImportFunction(this.name, this.invokeHandler,
+      [this.args = const [], this.returns = const []]);
+
+  @override
+  Object? invoke([List<Object?> args = const []]) => invokeHandler(args);
+}
+
+class DefinedFunction extends WasmFunction {
+  final Module module;
+  final def.DefinedFunction definedFunction;
+  CompiledFn? _compiledFn;
+
+  DefinedFunction(this.module, this.definedFunction);
+
+  @override
+  Object? invoke([List<Object?> args = const []]) {
+    _compiledFn ??= compile(module, definedFunction);
+    return _compiledFn!.invoke(args);
+  }
+}
+
 class CompiledFn {
   final Module module;
   final def.DefinedFunction function;
@@ -229,6 +274,7 @@ class CompiledFn {
   final int stackHeight;
   final Memory? memory;
   final List<Global> globals;
+  final List<Table> tables;
 
   CompiledFn(
     this.module,
@@ -237,7 +283,8 @@ class CompiledFn {
     this.bytecodes,
     this.stackHeight,
   )   : memory = module.memory,
-        globals = module.globals;
+        globals = module.globals,
+        tables = module.tables;
 
   List<def.DataSegment> get dataSegments =>
       module.definition.dataSegments.segments;
@@ -348,7 +395,8 @@ class CompiledFn {
       final args = stack.sublist(sp - len, sp);
       sp -= len;
 
-      final result = module.invokeByIndex(index, args);
+      final func = module.functions[index];
+      final result = func.invoke(args);
 
       if (functionType.resultTypes.length > 1) {
         throw 'unsupported: multiple return values';
@@ -405,13 +453,18 @@ class CompiledFn {
     }
 
     void tableGet(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: tableGet';
+      int tableNum = code.i0;
+      i32 index = stack[--sp] as int;
+      stack[sp++] = tables[tableNum][index];
     }
 
     void tableSet(Bytecode code) {
-      Function? arg0 = stack[--sp] as Function?;
-      throw 'unimplemented: tableSet';
+      int tableNum = code.i0;
+      // This could be a WasmFunction? for function tables or an Object?
+      // ref for externref tables.
+      final ref = stack[--sp];
+      i32 index = stack[--sp] as int;
+      tables[tableNum][index] = ref;
     }
 
     void i32_load(Bytecode code) {
@@ -2151,6 +2204,34 @@ class DefinedGlobal extends Global {
     if (!mutable) throw 'value not mutable';
 
     _value = v;
+  }
+}
+
+// TODO: specialize tables to function refs (Table<WasmFunction?>) and extern
+// refs (Table<Object?>)?
+
+class Table<T> {
+  final int minSize;
+  final int? maxSize;
+
+  final List<T?> _table;
+
+  Table(this.minSize, [this.maxSize]) : _table = List.filled(minSize, null);
+
+  T? operator [](int index) => _table[index];
+
+  void operator []=(int index, T? value) {
+    _table[index] = value;
+  }
+
+  void copyFrom(List<T> data, int offset, int count) {
+    if (count > data.length || offset + count > _table.length) {
+      throw Trap('out of bounds table access');
+    }
+
+    for (int i = 0; i < count; i++) {
+      _table[offset + i] = data[i];
+    }
   }
 }
 

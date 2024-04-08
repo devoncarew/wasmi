@@ -141,10 +141,6 @@ ImportModule specTestModule() {
 
   module.memory = Memory(1, 2);
 
-  // todo: tables
-  // final Table table0 = Table(10,20);
-  // late final List<Table> tables = [table0];
-
   module.globals.add(_GlobalValue('global_i32', ValueType.i32, 0));
   module.globals.add(_GlobalValue('global_i64', ValueType.i64, 0));
   module.globals.add(_GlobalValue('global_f32', ValueType.f32, 0.0));
@@ -168,6 +164,11 @@ ImportModule specTestModule() {
   module.functions.add(ImportFunction('print_i32_f32', voidHandler));
   // void print_i64(i64 arg0) {}
   module.functions.add(ImportFunction('print_i64', voidHandler));
+
+  // tables
+  final table = ImportTable<WasmFunction>('table', 10, 20);
+  // todo: fill in values?
+  module.tables.add(table);
 
   return module;
 }
