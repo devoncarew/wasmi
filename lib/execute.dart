@@ -410,7 +410,7 @@ class CompiledFn {
     }
 
     void tableSet(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
+      Function? arg0 = stack[--sp] as Function?;
       throw 'unimplemented: tableSet';
     }
 
@@ -1662,8 +1662,8 @@ class CompiledFn {
     }
 
     void ref_is_null(Bytecode code) {
-      reftype arg0 = stack[--sp];
-      throw 'unimplemented: ref_is_null';
+      reftype ref = stack[--sp];
+      stack[sp++] = ref == null ? 1 : 0;
     }
 
     void refFunc(Bytecode code) {
