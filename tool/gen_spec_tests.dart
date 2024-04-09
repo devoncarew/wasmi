@@ -36,6 +36,15 @@ const Set<String> allowList = {
   'ref_null.wast',
   'select.wast',
   'start.wast',
+  'table_copy.wast',
+  'table_fill.wast',
+  'table_get.wast',
+  'table_grow.wast',
+  'table_init.wast',
+  'table_set.wast',
+  'table_size.wast',
+  'table-sub.wast',
+  'table.wast',
 };
 
 void main(List<String> args) {
@@ -58,7 +67,8 @@ void main(List<String> args) {
 
 void generateSpecTests(File wastFile) {
   final specName = p.basenameWithoutExtension(wastFile.path);
-  final destDartFile = File('test/spec/${specName}_test.dart');
+  final destDartFile =
+      File('test/spec/${specName.replaceAll('-', '_')}_test.dart');
   print('generating ${destDartFile.path}');
 
   final destJsonFile = File('test/spec/$specName/$specName.json');

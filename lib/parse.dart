@@ -485,6 +485,7 @@ class ModuleDefinition {
       var sectionType = r.leb128();
       late SegmentKind segmentKind;
       ValueType? elementKind;
+      // todo: make this nullable
       int tableIndex = 0;
       List<Instruction>? offsetInstrs;
       List<int>? functionIndexs;
@@ -561,9 +562,9 @@ class ModuleDefinition {
       }
 
       elementSegments.addElementSegment(ElementSegment(
-        elementKind: elementKind,
         segmentKind: segmentKind,
         tableIndex: tableIndex,
+        elementKind: elementKind,
         offsetExpression: offsetInstrs,
         functionIndexs: functionIndexs,
         functionIndexExpressions: functionInstrs,
@@ -1189,4 +1190,6 @@ class ElementSegment {
     this.functionIndexs,
     this.functionIndexExpressions,
   });
+
+  bool get passive => segmentKind == SegmentKind.passive;
 }

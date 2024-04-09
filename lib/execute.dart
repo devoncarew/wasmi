@@ -32,6 +32,7 @@ class Module {
   Memory? memory;
   final List<Global> globals = [];
   final List<Table> tables = [];
+  final List<PassiveSegment?> segments = [];
 
   bool _hasStarted = false;
 
@@ -59,6 +60,9 @@ class Module {
     _initGlobals();
 
     _initDataSegments();
+
+    // init segments
+    _initSegments();
 
     // init tables
     _initTables();
@@ -124,6 +128,24 @@ class Module {
     }
   }
 
+  void _initSegments() {
+    for (var segmentDef in definition.elementSegments.segments) {
+      if (segmentDef.passive) {
+        var fnIndexes = segmentDef.functionIndexs;
+        if (fnIndexes == null) {
+          fnIndexes = <int>[];
+          for (var expr in segmentDef.functionIndexExpressions!) {
+            fnIndexes.add(_evaluateExpression(expr, ValueType.i32) as int);
+          }
+        }
+        final fns = fnIndexes.map((index) => functions[index]).toList();
+        segments.add(PassiveSegment(segmentDef.elementKind, fns));
+      } else {
+        segments.add(null);
+      }
+    }
+  }
+
   void _initTables() {
     for (var tableDef in definition.tables) {
       if (tableDef is def.DefinedTable) {
@@ -161,7 +183,7 @@ class Module {
       }
 
       final fns = fnIndexes.map((index) => functions[index]).toList();
-      table.copyFrom(fns, offset, fns.length);
+      table.copyFrom(fns, 0, offset, fns.length);
     }
   }
 
@@ -191,6 +213,13 @@ class Module {
         compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
     return func.invoke();
   }
+}
+
+class PassiveSegment {
+  final ValueType? elementKind;
+  final List<WasmFunction> elements;
+
+  PassiveSegment(this.elementKind, this.elements);
 }
 
 class ImportModule {
@@ -1853,38 +1882,70 @@ class CompiledFn {
     }
 
     void table_init(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: table_init';
+      // Note: the spec docs have this as elementidx, tableidx.
+      var tableIndex = code.i0;
+      var segmentIndex = code.i1;
+
+      if (tableIndex < 0 || tableIndex >= tables.length) {
+        throw Trap('out of bounds table access');
+      }
+
+      i32 count = stack[--sp] as int;
+      i32 srcOffset = stack[--sp] as int;
+      i32 dstOffset = stack[--sp] as int;
+
+      final segment = module.segments[segmentIndex];
+      if (segment == null) {
+        throw Trap('out of bounds table access');
+      }
+
+      tables[tableIndex]
+          .copyFrom(segment.elements, srcOffset, dstOffset, count);
     }
 
     void elem_drop(Bytecode code) {
-      throw 'unimplemented: elem_drop';
+      // optionally, drop the given element segment
+      u32 index = code.i0;
+      module.segments[index] = null;
     }
 
     void table_copy(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: table_copy';
+      u32 destTable = code.i0;
+      u32 srcTable = code.i1;
+
+      i32 count = stack[--sp] as int;
+      i32 srcOffset = stack[--sp] as int;
+      i32 dstOffset = stack[--sp] as int;
+
+      tables[srcTable].copyTo(tables[destTable], srcOffset, dstOffset, count);
     }
 
     void table_grow(Bytecode code) {
-      i32 arg1 = stack[--sp] as int;
-      reftype arg0 = stack[--sp];
-      throw 'unimplemented: table_grow';
+      i32 growBy = stack[--sp] as int;
+      var ref = stack[--sp];
+
+      var table = tables[code.i0];
+      var oldSize = table.size;
+      if (table.grow(growBy, ref)) {
+        stack[sp++] = oldSize;
+      } else {
+        stack[sp++] = -1;
+      }
     }
 
     void table_size(Bytecode code) {
-      throw 'unimplemented: table_size';
+      int index = code.i0;
+      stack[sp++] = tables[index].size;
     }
 
     void table_fill(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      reftype arg1 = stack[--sp];
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: table_fill';
+      i32 index = code.i0;
+
+      i32 n = stack[--sp] as int;
+      var val = stack[--sp];
+      i32 offset = stack[--sp] as int;
+
+      tables[index].fill(val, offset, n);
     }
 
     /* bytecode implementations */
@@ -2254,23 +2315,81 @@ class Table<T> {
   final int minSize;
   final int? maxSize;
 
-  final List<T?> _table;
+  final List<T?> refs;
 
-  Table(this.minSize, [this.maxSize]) : _table = List.filled(minSize, null);
+  Table(this.minSize, [this.maxSize])
+      : refs = List.filled(minSize, null, growable: true);
 
-  T? operator [](int index) => _table[index];
+  int get size => refs.length;
 
-  void operator []=(int index, T? value) {
-    _table[index] = value;
+  T? operator [](int index) {
+    try {
+      return refs[index];
+    } on RangeError {
+      throw Trap('out of bounds table access');
+    }
   }
 
-  void copyFrom(List<T> data, int offset, int count) {
-    if (count > data.length || offset + count > _table.length) {
+  void operator []=(int index, T? value) {
+    try {
+      refs[index] = value;
+    } on RangeError {
+      throw Trap('out of bounds table access');
+    }
+  }
+
+  void copyTo(Table<T> dest, int sourceOffset, int destOffset, int count) {
+    if (sourceOffset < 0 || destOffset < 0 || count < 0) {
+      throw Trap('out of bounds table access');
+    }
+
+    if (sourceOffset + count > refs.length ||
+        destOffset + count > dest.refs.length) {
+      throw Trap('out of bounds table access');
+    }
+
+    if (sourceOffset > destOffset) {
+      for (int i = 0; i < count; i++) {
+        dest.refs[destOffset + i] = refs[sourceOffset + i];
+      }
+    } else {
+      for (int i = count - 1; i >= 0; i--) {
+        dest.refs[destOffset + i] = refs[sourceOffset + i];
+      }
+    }
+  }
+
+  void fill(T? val, i32 offset, i32 count) {
+    if (offset < 0 || (offset + count > refs.length)) {
       throw Trap('out of bounds table access');
     }
 
     for (int i = 0; i < count; i++) {
-      _table[offset + i] = data[i];
+      refs[offset + i] = val;
+    }
+  }
+
+  bool grow(int growBy, T? fillRef) {
+    var newSize = refs.length + growBy;
+    if (growBy < 0 || newSize > (maxSize ?? _mask32)) {
+      return false;
+    }
+
+    refs.length = newSize;
+    for (int i = 0; i < growBy; i++) {
+      refs[newSize - i - 1] = fillRef;
+    }
+
+    return true;
+  }
+
+  void copyFrom(List<T> data, int srcOffset, int dstOffset, int count) {
+    if (srcOffset + count > data.length || dstOffset + count > refs.length) {
+      throw Trap('out of bounds table access');
+    }
+
+    for (int i = 0; i < count; i++) {
+      refs[dstOffset + i] = data[srcOffset + i];
     }
   }
 }
