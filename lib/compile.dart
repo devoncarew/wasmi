@@ -561,17 +561,19 @@ Bytecode _translate(Instruction instr) {
         case OverflowOpcode.memory_fill:
           throw 'unhandled overflow ${instr.opcode2}';
         case OverflowOpcode.table_init:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.table_init,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
         case OverflowOpcode.elem_drop:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.elem_drop, i0: instr.immediate_0 as int);
         case OverflowOpcode.table_copy:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.table_copy,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
         case OverflowOpcode.table_grow:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.table_grow, i0: instr.immediate_0 as int);
         case OverflowOpcode.table_size:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.table_size, i0: instr.immediate_0 as int);
         case OverflowOpcode.table_fill:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.table_fill, i0: instr.immediate_0 as int);
 
         default:
           throw 'unhandled overflow ${instr.opcode2}';

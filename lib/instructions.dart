@@ -406,19 +406,19 @@ class Instruction {
       case OverflowOpcode.memory_fill:
         return Instruction(Opcode.overflow, [r.u32()], opcode2);
       case OverflowOpcode.table_init:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
       case OverflowOpcode.elem_drop:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32()], opcode2);
       case OverflowOpcode.table_copy:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
       case OverflowOpcode.table_grow:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32()], opcode2);
 
       // 0xFC 0x10
       case OverflowOpcode.table_size:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32()], opcode2);
       case OverflowOpcode.table_fill:
-        throw 'unhandled overflow $opcode2';
+        return Instruction(Opcode.overflow, [r.u32()], opcode2);
     }
   }
 }

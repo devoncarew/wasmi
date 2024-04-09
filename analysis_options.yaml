@@ -11,6 +11,8 @@ linter:
     - comment_references
     - directives_ordering
     - library_annotations
+    # TODO: consider adding this
+    # - only_throw_errors
     - prefer_relative_imports
     - prefer_single_quotes
     - sort_pub_dependencies
