@@ -48,8 +48,6 @@ CompiledFn compile(
       // ignore: unused_local_variable
       final blockType = blockTypes.pop();
 
-      // print('  blocktype = $blockType');
-
       if (labels.peek?.ifInstr == true ||
           labels.peek?.blockInstr == true ||
           labels.peek?.loopInstr == true) {
@@ -66,7 +64,6 @@ CompiledFn compile(
       final blockType = code < 0
           ? FunctionType.fromBlockType(code)!
           : function.module.functionTypes[code];
-      // print('  blocktype = $blockType');
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.$else) {
       if (labels.last.ifInstr) {
@@ -85,17 +82,20 @@ CompiledFn compile(
       final blockType = code < 0
           ? FunctionType.fromBlockType(code)!
           : function.module.functionTypes[code];
-      // print('  blocktype = $blockType');
       blockTypes.push(blockType);
     } else if (instruction.brInstr || instruction.brIfInstr) {
-      final labelTarget = instruction.labelTarget;
-      final target = labels[labels.length - labelTarget - 1];
-      instruction.targetInstr = target;
+      instruction.targetInstr =
+          labels[labels.length - instruction.labelTarget - 1];
+    } else if (instruction.opcode == Opcode.brTable) {
+      // Store the instructions that brTable branches to.
+      final brTableInstr = instruction as InstructionBrTable;
+      brTableInstr.defaultInstr =
+          labels[labels.length - brTableInstr.defaultLabel - 1];
+      for (var label in brTableInstr.labels) {
+        brTableInstr.labelsInstr.add(labels[labels.length - label - 1]);
+      }
     }
   }
-
-  // print('\nend stack height: $stackHeight');
-  // print('max stack height: $maxHeight');
 
   // Calculate the branches.
   for (final instruction in function.instructions) {
@@ -121,16 +121,17 @@ CompiledFn compile(
         elseBytecode.endFollow = followPc;
       }
     } else if (instruction.brInstr || instruction.brIfInstr) {
-      final target = instruction.targetInstr!;
-      final targetBytecode = target.bytecode!;
+      final targetInstr = instruction.targetInstr!;
+      instruction.bytecode!.targetPc = targetInstr.calcJumpTargetPc(bytecodes);
+    } else if (instruction.opcode == Opcode.brTable) {
+      // From the bytecode instrution targets, calculate PCs.
+      final brTableInstr = instruction as InstructionBrTable;
+      final brTableBytecode = instruction.bytecode! as BytecodeBrTable;
 
-      if (target.loopInstr) {
-        // jump to the start
-        instruction.bytecode!.targetPc = bytecodes.indexOf(targetBytecode);
-      } else {
-        // jump to after the end
-        final endByteCode = target.endInstr!.bytecode!;
-        instruction.bytecode!.targetPc = bytecodes.indexOf(endByteCode) + 1;
+      brTableBytecode.defaultPcTarget =
+          brTableInstr.defaultInstr!.calcJumpTargetPc(bytecodes);
+      for (var targetInstr in brTableInstr.labelsInstr) {
+        brTableBytecode.pcTargets.add(targetInstr.calcJumpTargetPc(bytecodes));
       }
     }
   }
@@ -159,7 +160,7 @@ Bytecode _translate(Instruction instr) {
     case Opcode.brIf:
       return Bytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
     case Opcode.brTable:
-      return BytecodeTable(
+      return BytecodeBrTable(
           instr.immediate_0 as List<int>, instr.immediate_1 as int);
     case Opcode.$return:
       return Bytecode(Bytecode.$return);

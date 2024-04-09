@@ -67,7 +67,7 @@ class Instruction {
           labels.add(r.leb128_u());
         }
         int defaultLabel = r.leb128_u();
-        return Instruction(opcode, [labels, defaultLabel]);
+        return InstructionBrTable([labels, defaultLabel]);
       case Opcode.$return:
         return Instruction(opcode);
 
@@ -421,4 +421,24 @@ class Instruction {
         return Instruction(Opcode.overflow, [r.u32()], opcode2);
     }
   }
+
+  int calcJumpTargetPc(List<Bytecode> bytecodes) {
+    if (loopInstr) {
+      // jump to the start
+      return bytecodes.indexOf(bytecode!);
+    } else {
+      // jump to after the end
+      return bytecodes.indexOf(endInstr!.bytecode!) + 1;
+    }
+  }
+}
+
+class InstructionBrTable extends Instruction {
+  final List<Instruction> labelsInstr = [];
+  Instruction? defaultInstr;
+
+  InstructionBrTable(List<Object> args) : super(Opcode.brTable, args);
+
+  List<int> get labels => args[0] as List<int>;
+  int get defaultLabel => args[1] as int;
 }

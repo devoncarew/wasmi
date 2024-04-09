@@ -19,10 +19,6 @@ typedef reftype = Object?; // todo:
 
 // TODO: improve branching / stack handling
 
-// TODO: finish tables
-
-// TODO: implement brTable
-
 class Module {
   final def.ModuleDefinition definition;
   final Map<String, ImportModule> imports;
@@ -404,14 +400,16 @@ class CompiledFn {
     }
 
     void brTable(Bytecode code) {
-      final table = code as BytecodeTable;
-
-      var labelIndexes = table.indexes;
-      var defaultIndex = table.i1;
+      final table = code as BytecodeBrTable;
 
       i32 arg0 = stack[--sp] as int;
 
-      throw 'unimplemented: brTable';
+      // TODO: update stack heights and such
+      if (arg0 < code.pcTargets.length) {
+        pc = code.pcTargets[arg0];
+      } else {
+        pc = code.defaultPcTarget;
+      }
     }
 
     void $return(Bytecode code) {
