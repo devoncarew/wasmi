@@ -57,6 +57,14 @@ void main(List<String> args) async {
     file.writeAsStringSync(buf.toString());
     print('Test status written to ${file.path}; '
         "re-run 'dart tool/gen_tests.dart to apply changes.'");
+  } else if (failed > 0) {
+    print('');
+
+    for (final result in results) {
+      if (result.failed) {
+        print('✖ ${result.name}');
+      }
+    }
   }
 }
 
@@ -107,7 +115,7 @@ void processJson(String line) {
       } else if (test.passed) {
         print('✓ ${test.name}');
       } else {
-        print('x ${test.name}');
+        print('✖ ${test.name}');
 
         results.add(TestResult(
           name: test.name,

@@ -1,0 +1,4 @@
+# Configuration file for the dart test runner.
+# See https://github.com/dart-lang/test/blob/master/pkgs/test/doc/configuration.md.
+
+concurrency: 1

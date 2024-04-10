@@ -28,8 +28,12 @@ const Set<String> allowList = {
   'local_get.wast',
   'local_set.wast',
   'local_tee.wast',
+  'memory_copy.wast',
+  'memory_fill.wast',
+  'memory_grow.wast',
   'memory_init.wast',
   'memory_size.wast',
+  // 'memory_trap.wast', # investigate
   'memory.wast',
   'nop.wast',
   'ref_func.wast',

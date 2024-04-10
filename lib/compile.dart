@@ -560,7 +560,7 @@ Bytecode _translate(Instruction instr) {
           return Bytecode(Bytecode.memory_copy,
               i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
         case OverflowOpcode.memory_fill:
-          throw 'unhandled overflow ${instr.opcode2}';
+          return Bytecode(Bytecode.memory_fill, i0: instr.immediate_0 as int);
         case OverflowOpcode.table_init:
           return Bytecode(Bytecode.table_init,
               i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
