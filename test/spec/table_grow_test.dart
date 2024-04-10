@@ -33,7 +33,7 @@ void main() {
     traps('set_2', () => m.$('set', [1, $externref('2')]),
         'out of bounds table access');
     traps('get_3', () => m.$('get', [1]), 'out of bounds table access');
-    returns('grow-abbrev_0', () => m.$('grow-abbrev', [4, $externref('3')]), 1);
+    returns('grow_abbrev_0', () => m.$('grow-abbrev', [4, $externref('3')]), 1);
     returns('size_2', () => m.$('size', []), 5);
     returns('get_4', () => m.$('get', [0]), $externref('2'));
     returns('set_3', () => m.$('set', [0, $externref('2')]), null /*void*/);
@@ -107,10 +107,10 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns('check-table-null_0', () => m.$('check-table-null', [0, 9]), null);
+    returns('check_table_null_0', () => m.$('check-table-null', [0, 9]), null);
     returns('grow_0', () => m.$('grow', [0xA]), 0xA);
     returns(
-        'check-table-null_1', () => m.$('check-table-null', [0, 0x13]), null);
+        'check_table_null_1', () => m.$('check-table-null', [0, 0x13]), null);
   });
 
   // assertInvalid('invalid table_grow.5.wasm', 'table_grow/table_grow.5.wasm', 'type mismatch');

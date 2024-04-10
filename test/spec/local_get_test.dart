@@ -21,30 +21,30 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns('type-local-i32_0', () => m.$('type-local-i32', []), 0);
-    returns('type-local-i64_0', () => m.$('type-local-i64', []), 0);
-    returns('type-local-f32_0', () => m.$('type-local-f32', []), $f32('0'));
-    returns('type-local-f64_0', () => m.$('type-local-f64', []), $f64('0'));
-    returns('type-param-i32_0', () => m.$('type-param-i32', [2]), 2);
-    returns('type-param-i64_0', () => m.$('type-param-i64', [3]), 3);
-    returns('type-param-f32_0', () => m.$('type-param-f32', [$f32('408CCCCD')]),
+    returns('type_local_i32_0', () => m.$('type-local-i32', []), 0);
+    returns('type_local_i64_0', () => m.$('type-local-i64', []), 0);
+    returns('type_local_f32_0', () => m.$('type-local-f32', []), $f32('0'));
+    returns('type_local_f64_0', () => m.$('type-local-f64', []), $f64('0'));
+    returns('type_param_i32_0', () => m.$('type-param-i32', [2]), 2);
+    returns('type_param_i64_0', () => m.$('type-param-i64', [3]), 3);
+    returns('type_param_f32_0', () => m.$('type-param-f32', [$f32('408CCCCD')]),
         $f32('408CCCCD'));
     returns(
-        'type-param-f64_0',
+        'type_param_f64_0',
         () => m.$('type-param-f64', [$f64('4016000000000000')]),
         $f64('4016000000000000'));
-    returns('as-block-value_0', () => m.$('as-block-value', [6]), 6);
-    returns('as-loop-value_0', () => m.$('as-loop-value', [7]), 7);
-    returns('as-br-value_0', () => m.$('as-br-value', [8]), 8);
-    returns('as-br_if-value_0', () => m.$('as-br_if-value', [9]), 9);
+    returns('as_block_value_0', () => m.$('as-block-value', [6]), 6);
+    returns('as_loop_value_0', () => m.$('as-loop-value', [7]), 7);
+    returns('as_br_value_0', () => m.$('as-br-value', [8]), 8);
+    returns('as_br_if_value_0', () => m.$('as-br_if-value', [9]), 9);
     returns(
-        'as-br_if-value-cond_0', () => m.$('as-br_if-value-cond', [0xA]), 0xA);
-    returns('as-br_table-value_0', () => m.$('as-br_table-value', [1]), 2);
-    returns('as-return-value_0', () => m.$('as-return-value', [0]), 0);
-    returns('as-if-then_0', () => m.$('as-if-then', [1]), 1);
-    returns('as-if-else_0', () => m.$('as-if-else', [0]), 0);
+        'as_br_if_value_cond_0', () => m.$('as-br_if-value-cond', [0xA]), 0xA);
+    returns('as_br_table_value_0', () => m.$('as-br_table-value', [1]), 2);
+    returns('as_return_value_0', () => m.$('as-return-value', [0]), 0);
+    returns('as_if_then_0', () => m.$('as-if-then', [1]), 1);
+    returns('as_if_else_0', () => m.$('as-if-else', [0]), 0);
     returns(
-        'type-mixed_0',
+        'type_mixed_0',
         () => m.$('type-mixed',
             [1, $f32('400CCCCD'), $f64('400A666666666666'), 4, 5]),
         null /*void*/);

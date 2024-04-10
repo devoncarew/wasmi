@@ -15,7 +15,7 @@ import 'parse.dart' as def;
 import 'types.dart';
 
 typedef ImplFn = void Function(Bytecode code);
-typedef reftype = Object?; // todo:
+typedef reftype = Object?;
 
 // TODO: improve branching / stack handling
 
@@ -148,7 +148,7 @@ class Module {
         if (tableDef.type == def.TableType.functype) {
           tables.add(Table<WasmFunction>(tableDef.minSize, tableDef.maxSize));
         } else {
-          tables.add(Table<Object?>(tableDef.minSize, tableDef.maxSize));
+          tables.add(Table<reftype>(tableDef.minSize, tableDef.maxSize));
         }
       } else if (tableDef is def.ImportedTableDefinition) {
         final importName = tableDef.parent.name;
@@ -1880,9 +1880,8 @@ class CompiledFn {
     }
 
     void table_init(Bytecode code) {
-      // Note: the spec docs have this as elementidx, tableidx.
-      var tableIndex = code.i0;
-      var segmentIndex = code.i1;
+      var segmentIndex = code.i0;
+      var tableIndex = code.i1;
 
       if (tableIndex < 0 || tableIndex >= tables.length) {
         throw Trap('out of bounds table access');
@@ -2307,7 +2306,7 @@ class DefinedGlobal extends Global {
 }
 
 // TODO: specialize tables to function refs (Table<WasmFunction?>) and extern
-// refs (Table<Object?>)?
+// refs (Table<Object?> / Table<reftype>)?
 
 class Table<T> {
   final int minSize;

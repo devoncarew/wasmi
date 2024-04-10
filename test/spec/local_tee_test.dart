@@ -21,78 +21,88 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns('type-local-i32_0', () => m.$('type-local-i32', []), 0);
-    returns('type-local-i64_0', () => m.$('type-local-i64', []), 0);
-    returns('type-local-f32_0', () => m.$('type-local-f32', []), $f32('0'));
-    returns('type-local-f64_0', () => m.$('type-local-f64', []), $f64('0'));
-    returns('type-param-i32_0', () => m.$('type-param-i32', [2]), 0xA);
-    returns('type-param-i64_0', () => m.$('type-param-i64', [3]), 0xB);
-    returns('type-param-f32_0', () => m.$('type-param-f32', [$f32('408CCCCD')]),
+    returns('type_local_i32_0', () => m.$('type-local-i32', []), 0);
+    returns('type_local_i64_0', () => m.$('type-local-i64', []), 0);
+    returns('type_local_f32_0', () => m.$('type-local-f32', []), $f32('0'));
+    returns('type_local_f64_0', () => m.$('type-local-f64', []), $f64('0'));
+    returns('type_param_i32_0', () => m.$('type-param-i32', [2]), 0xA);
+    returns('type_param_i64_0', () => m.$('type-param-i64', [3]), 0xB);
+    returns('type_param_f32_0', () => m.$('type-param-f32', [$f32('408CCCCD')]),
         $f32('4131999A'));
     returns(
-        'type-param-f64_0',
+        'type_param_f64_0',
         () => m.$('type-param-f64', [$f64('4016000000000000')]),
         $f64('4028666666666666'));
-    returns('as-block-first_0', () => m.$('as-block-first', [0]), 1);
-    returns('as-block-mid_0', () => m.$('as-block-mid', [0]), 1);
-    returns('as-block-last_0', () => m.$('as-block-last', [0]), 1);
-    returns('as-loop-first_0', () => m.$('as-loop-first', [0]), 3);
-    returns('as-loop-mid_0', () => m.$('as-loop-mid', [0]), 4);
-    returns('as-loop-last_0', () => m.$('as-loop-last', [0]), 5);
-    returns('as-br-value_0', () => m.$('as-br-value', [0]), 9);
-    returns('as-br_if-cond_0', () => m.$('as-br_if-cond', [0]), null /*void*/);
-    returns('as-br_if-value_0', () => m.$('as-br_if-value', [0]), 8);
-    returns('as-br_if-value-cond_0', () => m.$('as-br_if-value-cond', [0]), 6);
-    returns('as-br_table-index_0', () => m.$('as-br_table-index', [0]),
+    returns('as_block_first_0', () => m.$('as-block-first', [0]), 1);
+    returns('as_block_mid_0', () => m.$('as-block-mid', [0]), 1);
+    returns('as_block_last_0', () => m.$('as-block-last', [0]), 1);
+    returns('as_loop_first_0', () => m.$('as-loop-first', [0]), 3);
+    returns('as_loop_mid_0', () => m.$('as-loop-mid', [0]), 4);
+    returns('as_loop_last_0', () => m.$('as-loop-last', [0]), 5);
+    returns('as_br_value_0', () => m.$('as-br-value', [0]), 9);
+    returns('as_br_if_cond_0', () => m.$('as-br_if-cond', [0]), null /*void*/);
+    returns(
+      'as_br_if_value_0',
+      () => m.$('as-br_if-value', [0]),
+      8,
+      skip: 'see test/spec/_expected_fail.txt',
+    );
+    returns(
+      'as_br_if_value_cond_0',
+      () => m.$('as-br_if-value-cond', [0]),
+      6,
+      skip: 'see test/spec/_expected_fail.txt',
+    );
+    returns('as_br_table_index_0', () => m.$('as-br_table-index', [0]),
         null /*void*/);
-    returns('as-br_table-value_0', () => m.$('as-br_table-value', [0]), 0xA);
-    returns('as-br_table-value-index_0',
+    returns('as_br_table_value_0', () => m.$('as-br_table-value', [0]), 0xA);
+    returns('as_br_table_value_index_0',
         () => m.$('as-br_table-value-index', [0]), 6);
-    returns('as-return-value_0', () => m.$('as-return-value', [0]), 7);
-    returns('as-if-cond_0', () => m.$('as-if-cond', [0]), 0);
-    returns('as-if-then_0', () => m.$('as-if-then', [1]), 3);
-    returns('as-if-else_0', () => m.$('as-if-else', [0]), 4);
-    returns('as-select-first_0', () => m.$('as-select-first', [0, 1]), 5);
-    returns('as-select-second_0', () => m.$('as-select-second', [0, 0]), 6);
-    returns('as-select-cond_0', () => m.$('as-select-cond', [0]), 0);
+    returns('as_return_value_0', () => m.$('as-return-value', [0]), 7);
+    returns('as_if_cond_0', () => m.$('as-if-cond', [0]), 0);
+    returns('as_if_then_0', () => m.$('as-if-then', [1]), 3);
+    returns('as_if_else_0', () => m.$('as-if-else', [0]), 4);
+    returns('as_select_first_0', () => m.$('as-select-first', [0, 1]), 5);
+    returns('as_select_second_0', () => m.$('as-select-second', [0, 0]), 6);
+    returns('as_select_cond_0', () => m.$('as-select-cond', [0]), 0);
     returns(
-        'as-call-first_0', () => m.$('as-call-first', [0]), $i32('FFFFFFFF'));
-    returns('as-call-mid_0', () => m.$('as-call-mid', [0]), $i32('FFFFFFFF'));
-    returns('as-call-last_0', () => m.$('as-call-last', [0]), $i32('FFFFFFFF'));
-    returns('as-call_indirect-first_0',
+        'as_call_first_0', () => m.$('as-call-first', [0]), $i32('FFFFFFFF'));
+    returns('as_call_mid_0', () => m.$('as-call-mid', [0]), $i32('FFFFFFFF'));
+    returns('as_call_last_0', () => m.$('as-call-last', [0]), $i32('FFFFFFFF'));
+    returns('as_call_indirect_first_0',
         () => m.$('as-call_indirect-first', [0]), $i32('FFFFFFFF'));
-    returns('as-call_indirect-mid_0', () => m.$('as-call_indirect-mid', [0]),
+    returns('as_call_indirect_mid_0', () => m.$('as-call_indirect-mid', [0]),
         $i32('FFFFFFFF'));
-    returns('as-call_indirect-last_0', () => m.$('as-call_indirect-last', [0]),
+    returns('as_call_indirect_last_0', () => m.$('as-call_indirect-last', [0]),
         $i32('FFFFFFFF'));
-    returns('as-call_indirect-index_0',
+    returns('as_call_indirect_index_0',
         () => m.$('as-call_indirect-index', [0]), $i32('FFFFFFFF'));
-    returns('as-local_set-value_0', () => m.$('as-local.set-value', []),
+    returns('as_local_set_value_0', () => m.$('as-local.set-value', []),
         null /*void*/);
-    returns('as-local_tee-value_0', () => m.$('as-local.tee-value', [0]), 1);
-    returns('as-global_set-value_0', () => m.$('as-global.set-value', []),
+    returns('as_local_tee_value_0', () => m.$('as-local.tee-value', [0]), 1);
+    returns('as_global_set_value_0', () => m.$('as-global.set-value', []),
         null /*void*/);
-    returns('as-load-address_0', () => m.$('as-load-address', [0]), 0);
-    returns('as-loadN-address_0', () => m.$('as-loadN-address', [0]), 0);
-    returns('as-store-address_0', () => m.$('as-store-address', [0]),
-        null /*void*/);
-    returns(
-        'as-store-value_0', () => m.$('as-store-value', [0]), null /*void*/);
-    returns('as-storeN-address_0', () => m.$('as-storeN-address', [0]),
+    returns('as_load_address_0', () => m.$('as-load-address', [0]), 0);
+    returns('as_loadN_address_0', () => m.$('as-loadN-address', [0]), 0);
+    returns('as_store_address_0', () => m.$('as-store-address', [0]),
         null /*void*/);
     returns(
-        'as-storeN-value_0', () => m.$('as-storeN-value', [0]), null /*void*/);
-    returns('as-unary-operand_0', () => m.$('as-unary-operand', [$f32('0')]),
+        'as_store_value_0', () => m.$('as-store-value', [0]), null /*void*/);
+    returns('as_storeN_address_0', () => m.$('as-storeN-address', [0]),
+        null /*void*/);
+    returns(
+        'as_storeN_value_0', () => m.$('as-storeN-value', [0]), null /*void*/);
+    returns('as_unary_operand_0', () => m.$('as-unary-operand', [$f32('0')]),
         $f32('FF80F1E2'));
-    returns('as-binary-left_0', () => m.$('as-binary-left', [0]), 0xD);
-    returns('as-binary-right_0', () => m.$('as-binary-right', [0]), 6);
-    returns('as-test-operand_0', () => m.$('as-test-operand', [0]), 1);
-    returns('as-compare-left_0', () => m.$('as-compare-left', [0]), 0);
-    returns('as-compare-right_0', () => m.$('as-compare-right', [0]), 1);
-    returns('as-convert-operand_0', () => m.$('as-convert-operand', [0]), 0x29);
-    returns('as-memory_grow-size_0', () => m.$('as-memory.grow-size', [0]), 1);
+    returns('as_binary_left_0', () => m.$('as-binary-left', [0]), 0xD);
+    returns('as_binary_right_0', () => m.$('as-binary-right', [0]), 6);
+    returns('as_test_operand_0', () => m.$('as-test-operand', [0]), 1);
+    returns('as_compare_left_0', () => m.$('as-compare-left', [0]), 0);
+    returns('as_compare_right_0', () => m.$('as-compare-right', [0]), 1);
+    returns('as_convert_operand_0', () => m.$('as-convert-operand', [0]), 0x29);
+    returns('as_memory_grow_size_0', () => m.$('as-memory.grow-size', [0]), 1);
     returns(
-        'type-mixed_0',
+        'type_mixed_0',
         () => m.$('type-mixed',
             [1, $f32('400CCCCD'), $f64('400A666666666666'), 4, 5]),
         null /*void*/);

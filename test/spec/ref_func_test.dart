@@ -32,16 +32,16 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns('is_null-f_0', () => m.$('is_null-f', []), 0);
-    returns('is_null-g_0', () => m.$('is_null-g', []), 0);
-    returns('is_null-v_0', () => m.$('is_null-v', []), 0);
-    returns('call-f_0', () => m.$('call-f', [4]), 4);
-    returns('call-g_0', () => m.$('call-g', [4]), 5);
-    returns('call-v_0', () => m.$('call-v', [4]), 4);
-    action('set-g_0', () => m.$('set-g', []));
-    returns('call-v_1', () => m.$('call-v', [4]), 5);
-    action('set-f_0', () => m.$('set-f', []));
-    returns('call-v_2', () => m.$('call-v', [4]), 4);
+    returns('is_null_f_0', () => m.$('is_null-f', []), 0);
+    returns('is_null_g_0', () => m.$('is_null-g', []), 0);
+    returns('is_null_v_0', () => m.$('is_null-v', []), 0);
+    returns('call_f_0', () => m.$('call-f', [4]), 4);
+    returns('call_g_0', () => m.$('call-g', [4]), 5);
+    returns('call_v_0', () => m.$('call-v', [4]), 4);
+    action('set_g_0', () => m.$('set-g', []));
+    returns('call_v_1', () => m.$('call-v', [4]), 5);
+    action('set_f_0', () => m.$('set-f', []));
+    returns('call_v_2', () => m.$('call-v', [4]), 4);
   });
 
   // assertInvalid('invalid ref_func.2.wasm', 'ref_func/ref_func.2.wasm', 'unknown function 7');

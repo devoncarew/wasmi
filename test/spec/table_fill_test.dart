@@ -50,7 +50,7 @@ void main() {
     returns('get_18', () => m.$('get', [8]), $externref('4'));
     returns('get_19', () => m.$('get', [9]), $externref('4'));
     returns(
-        'fill-abbrev_0', () => m.$('fill-abbrev', [9, null, 1]), null /*void*/);
+        'fill_abbrev_0', () => m.$('fill-abbrev', [9, null, 1]), null /*void*/);
     returns('get_20', () => m.$('get', [8]), $externref('4'));
     returns('get_21', () => m.$('get', [9]), null);
     returns(

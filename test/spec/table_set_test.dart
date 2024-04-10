@@ -21,41 +21,41 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns('get-externref_0', () => m.$('get-externref', [0]), null);
-    returns('set-externref_0', () => m.$('set-externref', [0, $externref('1')]),
+    returns('get_externref_0', () => m.$('get-externref', [0]), null);
+    returns('set_externref_0', () => m.$('set-externref', [0, $externref('1')]),
         null /*void*/);
     returns(
-        'get-externref_1', () => m.$('get-externref', [0]), $externref('1'));
-    returns('set-externref_1', () => m.$('set-externref', [0, null]),
+        'get_externref_1', () => m.$('get-externref', [0]), $externref('1'));
+    returns('set_externref_1', () => m.$('set-externref', [0, null]),
         null /*void*/);
-    returns('get-externref_2', () => m.$('get-externref', [0]), null);
-    returns('get-funcref_0', () => m.$('get-funcref', [0]), null);
-    returns('set-funcref-from_0', () => m.$('set-funcref-from', [0, 1]),
+    returns('get_externref_2', () => m.$('get-externref', [0]), null);
+    returns('get_funcref_0', () => m.$('get-funcref', [0]), null);
+    returns('set_funcref_from_0', () => m.$('set-funcref-from', [0, 1]),
         null /*void*/);
-    returns('is_null-funcref_0', () => m.$('is_null-funcref', [0]), 0);
+    returns('is_null_funcref_0', () => m.$('is_null-funcref', [0]), 0);
     returns(
-        'set-funcref_0', () => m.$('set-funcref', [0, null]), null /*void*/);
-    returns('get-funcref_1', () => m.$('get-funcref', [0]), null);
-    traps('set-externref_2', () => m.$('set-externref', [2, null]),
+        'set_funcref_0', () => m.$('set-funcref', [0, null]), null /*void*/);
+    returns('get_funcref_1', () => m.$('get-funcref', [0]), null);
+    traps('set_externref_2', () => m.$('set-externref', [2, null]),
         'out of bounds table access');
-    traps('set-funcref_1', () => m.$('set-funcref', [3, null]),
+    traps('set_funcref_1', () => m.$('set-funcref', [3, null]),
         'out of bounds table access');
     traps(
-        'set-externref_3',
+        'set_externref_3',
         () => m.$('set-externref', [$i32('FFFFFFFF'), null]),
         'out of bounds table access');
-    traps('set-funcref_2', () => m.$('set-funcref', [$i32('FFFFFFFF'), null]),
+    traps('set_funcref_2', () => m.$('set-funcref', [$i32('FFFFFFFF'), null]),
         'out of bounds table access');
-    traps('set-externref_4', () => m.$('set-externref', [2, $externref('0')]),
+    traps('set_externref_4', () => m.$('set-externref', [2, $externref('0')]),
         'out of bounds table access');
-    traps('set-funcref-from_1', () => m.$('set-funcref-from', [3, 1]),
+    traps('set_funcref_from_1', () => m.$('set-funcref-from', [3, 1]),
         'out of bounds table access');
     traps(
-        'set-externref_5',
+        'set_externref_5',
         () => m.$('set-externref', [$i32('FFFFFFFF'), $externref('0')]),
         'out of bounds table access');
     traps(
-        'set-funcref-from_2',
+        'set_funcref_from_2',
         () => m.$('set-funcref-from', [$i32('FFFFFFFF'), 1]),
         'out of bounds table access');
   });
