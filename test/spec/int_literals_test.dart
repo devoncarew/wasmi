@@ -48,14 +48,14 @@ void main() {
     returns('i64_unsigned_decimal_0', () => m.$('i64.unsigned_decimal', []),
         $i64('FFFFFFFFFFFFFFFF'));
     returns('i64_plus_sign_0', () => m.$('i64.plus_sign', []), 0x2A);
-    returns('i32-dec-sep1_0', () => m.$('i32-dec-sep1', []), $i32('F4240'));
-    returns('i32-dec-sep2_0', () => m.$('i32-dec-sep2', []), 0x3E8);
-    returns('i32-hex-sep1_0', () => m.$('i32-hex-sep1', []), $i32('A0F0099'));
-    returns('i32-hex-sep2_0', () => m.$('i32-hex-sep2', []), 0x1AA0F);
-    returns('i64-dec-sep1_0', () => m.$('i64-dec-sep1', []), $i64('F4240'));
-    returns('i64-dec-sep2_0', () => m.$('i64-dec-sep2', []), 0x3E8);
+    returns('i32_dec_sep1_0', () => m.$('i32-dec-sep1', []), $i32('F4240'));
+    returns('i32_dec_sep2_0', () => m.$('i32-dec-sep2', []), 0x3E8);
+    returns('i32_hex_sep1_0', () => m.$('i32-hex-sep1', []), $i32('A0F0099'));
+    returns('i32_hex_sep2_0', () => m.$('i32-hex-sep2', []), 0x1AA0F);
+    returns('i64_dec_sep1_0', () => m.$('i64-dec-sep1', []), $i64('F4240'));
+    returns('i64_dec_sep2_0', () => m.$('i64-dec-sep2', []), 0x3E8);
     returns(
-        'i64-hex-sep1_0', () => m.$('i64-hex-sep1', []), $i64('AF00F00009999'));
-    returns('i64-hex-sep2_0', () => m.$('i64-hex-sep2', []), 0x1AA0F);
+        'i64_hex_sep1_0', () => m.$('i64-hex-sep1', []), $i64('AF00F00009999'));
+    returns('i64_hex_sep2_0', () => m.$('i64-hex-sep2', []), 0x1AA0F);
   });
 }

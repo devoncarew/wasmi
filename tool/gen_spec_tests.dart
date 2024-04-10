@@ -177,7 +177,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         final field = action['field'];
 
         nameCount.putIfAbsent(field, () => 0);
-        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        final testName = '${field}_${nameCount[field]}'
+            .replaceAll('.', '_')
+            .replaceAll('-', '_');
         nameCount[field] = nameCount[field]! + 1;
 
         final testId = '$spec $testName';
@@ -218,7 +220,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         final field = action['field'];
 
         nameCount.putIfAbsent(field, () => 0);
-        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        final testName = '${field}_${nameCount[field]}'
+            .replaceAll('.', '_')
+            .replaceAll('-', '_');
         nameCount[field] = nameCount[field]! + 1;
 
         code.writeln("action('$testName', () => m.\$('$field', [$argList]));");
@@ -237,7 +241,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         final field = action['field'];
 
         nameCount.putIfAbsent(field, () => 0);
-        final testName = '${field}_${nameCount[field]}'.replaceAll('.', '_');
+        final testName = '${field}_${nameCount[field]}'
+            .replaceAll('.', '_')
+            .replaceAll('-', '_');
         nameCount[field] = nameCount[field]! + 1;
 
         final testId = '$spec $testName';
@@ -335,8 +341,8 @@ Set<String> readExpectedFails() {
   final file = File('test/spec/_expected_fail.txt');
   return file
       .readAsLinesSync()
+      .map((l) => l.contains('#') ? l.substring(0, l.indexOf('#')) : l)
       .map((l) => l.trim())
       .where((l) => l.isNotEmpty)
-      .where((l) => !l.startsWith('#'))
       .toSet();
 }

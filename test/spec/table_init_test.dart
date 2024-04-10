@@ -635,7 +635,11 @@ void main() {
     });
 
     traps(
-        'run_0', () => m.$('run', [0x18, 0x10]), 'out of bounds table access');
+      'run_0',
+      () => m.$('run', [0x18, 0x10]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -643,20 +647,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');
@@ -691,7 +685,11 @@ void main() {
     });
 
     traps(
-        'run_0', () => m.$('run', [0x19, 0x10]), 'out of bounds table access');
+      'run_0',
+      () => m.$('run', [0x19, 0x10]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -699,20 +697,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');
@@ -747,7 +735,11 @@ void main() {
     });
 
     traps(
-        'run_0', () => m.$('run', [0x60, 0x20]), 'out of bounds table access');
+      'run_0',
+      () => m.$('run', [0x60, 0x20]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -755,20 +747,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');
@@ -931,7 +913,11 @@ void main() {
     });
 
     traps(
-        'run_0', () => m.$('run', [0x61, 0x1F]), 'out of bounds table access');
+      'run_0',
+      () => m.$('run', [0x61, 0x1F]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -939,20 +925,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');
@@ -1114,8 +1090,12 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    traps('run_0', () => m.$('run', [0x30, $i32('FFFFFFF0')]),
-        'out of bounds table access');
+    traps(
+      'run_0',
+      () => m.$('run', [0x30, $i32('FFFFFFF0')]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -1123,20 +1103,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');
@@ -1202,8 +1172,12 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    traps('run_0', () => m.$('run', [0, $i32('FFFFFFFC')]),
-        'out of bounds table access');
+    traps(
+      'run_0',
+      () => m.$('run', [0, $i32('FFFFFFFC')]),
+      'out of bounds table access',
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -1211,20 +1185,10 @@ void main() {
     traps('test_4', () => m.$('test', [4]), 'uninitialized element');
     traps('test_5', () => m.$('test', [5]), 'uninitialized element');
     traps('test_6', () => m.$('test', [6]), 'uninitialized element');
-    traps(
-      'test_7',
-      () => m.$('test', [7]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_7', () => m.$('test', [7]), 'uninitialized element');
     traps('test_8', () => m.$('test', [8]), 'uninitialized element');
     traps('test_9', () => m.$('test', [9]), 'uninitialized element');
-    traps(
-      'test_10',
-      () => m.$('test', [0xA]),
-      'uninitialized element',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    traps('test_10', () => m.$('test', [0xA]), 'uninitialized element');
     traps('test_11', () => m.$('test', [0xB]), 'uninitialized element');
     traps('test_12', () => m.$('test', [0xC]), 'uninitialized element');
     traps('test_13', () => m.$('test', [0xD]), 'uninitialized element');

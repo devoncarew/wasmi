@@ -25,15 +25,15 @@ void main() {
     returns('externref_0', () => m.$('externref', [null]), 1);
     returns('externref_1', () => m.$('externref', [$externref('1')]), 0);
     action('init_0', () => m.$('init', [$externref('0')]));
-    returns('funcref-elem_0', () => m.$('funcref-elem', [0]), 1);
-    returns('externref-elem_0', () => m.$('externref-elem', [0]), 1);
-    returns('funcref-elem_1', () => m.$('funcref-elem', [1]), 0);
-    returns('externref-elem_1', () => m.$('externref-elem', [1]), 0);
+    returns('funcref_elem_0', () => m.$('funcref-elem', [0]), 1);
+    returns('externref_elem_0', () => m.$('externref-elem', [0]), 1);
+    returns('funcref_elem_1', () => m.$('funcref-elem', [1]), 0);
+    returns('externref_elem_1', () => m.$('externref-elem', [1]), 0);
     action('deinit_0', () => m.$('deinit', []));
-    returns('funcref-elem_2', () => m.$('funcref-elem', [0]), 1);
-    returns('externref-elem_2', () => m.$('externref-elem', [0]), 1);
-    returns('funcref-elem_3', () => m.$('funcref-elem', [1]), 1);
-    returns('externref-elem_3', () => m.$('externref-elem', [1]), 1);
+    returns('funcref_elem_2', () => m.$('funcref-elem', [0]), 1);
+    returns('externref_elem_2', () => m.$('externref-elem', [0]), 1);
+    returns('funcref_elem_3', () => m.$('funcref-elem', [1]), 1);
+    returns('externref_elem_3', () => m.$('externref-elem', [1]), 1);
   });
 
   // assertInvalid('invalid ref_is_null.1.wasm', 'ref_is_null/ref_is_null.1.wasm', 'type mismatch');

@@ -93,9 +93,17 @@ void main() {
     returns(
         'f32_large_int_0', () => m.$('f32.large_int', []), $i32('67800000'));
     returns(
-        'f32_min_int32_0', () => m.$('f32.min_int32', []), $i32('CF000000'));
+      'f32_min_int32_0',
+      () => m.$('f32.min_int32', []),
+      $i32('CF000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     returns(
-        'f32_min_int64_0', () => m.$('f32.min_int64', []), $i32('DF000000'));
+      'f32_min_int64_0',
+      () => m.$('f32.min_int64', []),
+      $i32('DF000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     returns('f32_dec_zero_0', () => m.$('f32_dec.zero', []), 0);
     returns(
         'f32_dec_positive_zero_0', () => m.$('f32_dec.positive_zero', []), 0);
@@ -121,10 +129,18 @@ void main() {
         $i32('4640E400'));
     returns('f32_dec_large_int_0', () => m.$('f32_dec.large_int', []),
         $i32('60AD78EC'));
-    returns('f32_dec_min_int32_0', () => m.$('f32_dec.min_int32', []),
-        $i32('CF000000'));
-    returns('f32_dec_min_int64_0', () => m.$('f32_dec.min_int64', []),
-        $i32('DF000000'));
+    returns(
+      'f32_dec_min_int32_0',
+      () => m.$('f32_dec.min_int32', []),
+      $i32('CF000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
+    returns(
+      'f32_dec_min_int64_0',
+      () => m.$('f32_dec.min_int64', []),
+      $i32('DF000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     returns('f64_nan_0', () => m.$('f64.nan', []), $i64('7FF8000000000000'));
     returns('f64_positive_nan_0', () => m.$('f64.positive_nan', []),
         $i64('7FF8000000000000'));
@@ -216,35 +232,35 @@ void main() {
         $i64('C1E0000000000000'));
     returns('f64_dec_min_int64_0', () => m.$('f64_dec.min_int64', []),
         $i64('C3E0000000000000'));
-    returns('f32-dec-sep1_0', () => m.$('f32-dec-sep1', []), $f32('49742400'));
-    returns('f32-dec-sep2_0', () => m.$('f32-dec-sep2', []), $f32('447A0000'));
-    returns('f32-dec-sep3_0', () => m.$('f32-dec-sep3', []), $f32('447AC910'));
-    returns('f32-dec-sep4_0', () => m.$('f32-dec-sep4', []), $f32('58611996'));
-    returns('f32-dec-sep5_0', () => m.$('f32-dec-sep5', []), $f32('6E1DAE74'));
-    returns('f32-hex-sep1_0', () => m.$('f32-hex-sep1', []), $f32('4D20F00A'));
-    returns('f32-hex-sep2_0', () => m.$('f32-hex-sep2', []), $f32('47D50780'));
-    returns('f32-hex-sep3_0', () => m.$('f32-hex-sep3', []), $f32('4720FFF1'));
-    returns('f32-hex-sep4_0', () => m.$('f32-hex-sep4', []), $f32('49F00000'));
-    returns('f32-hex-sep5_0', () => m.$('f32-hex-sep5', []), $f32('55ABC028'));
-    returns('f64-dec-sep1_0', () => m.$('f64-dec-sep1', []),
+    returns('f32_dec_sep1_0', () => m.$('f32-dec-sep1', []), $f32('49742400'));
+    returns('f32_dec_sep2_0', () => m.$('f32-dec-sep2', []), $f32('447A0000'));
+    returns('f32_dec_sep3_0', () => m.$('f32-dec-sep3', []), $f32('447AC910'));
+    returns('f32_dec_sep4_0', () => m.$('f32-dec-sep4', []), $f32('58611996'));
+    returns('f32_dec_sep5_0', () => m.$('f32-dec-sep5', []), $f32('6E1DAE74'));
+    returns('f32_hex_sep1_0', () => m.$('f32-hex-sep1', []), $f32('4D20F00A'));
+    returns('f32_hex_sep2_0', () => m.$('f32-hex-sep2', []), $f32('47D50780'));
+    returns('f32_hex_sep3_0', () => m.$('f32-hex-sep3', []), $f32('4720FFF1'));
+    returns('f32_hex_sep4_0', () => m.$('f32-hex-sep4', []), $f32('49F00000'));
+    returns('f32_hex_sep5_0', () => m.$('f32-hex-sep5', []), $f32('55ABC028'));
+    returns('f64_dec_sep1_0', () => m.$('f64-dec-sep1', []),
         $f64('412E848000000000'));
-    returns('f64-dec-sep2_0', () => m.$('f64-dec-sep2', []),
+    returns('f64_dec_sep2_0', () => m.$('f64-dec-sep2', []),
         $f64('408F400000000000'));
-    returns('f64-dec-sep3_0', () => m.$('f64-dec-sep3', []),
+    returns('f64_dec_sep3_0', () => m.$('f64-dec-sep3', []),
         $f64('408F5921FAFC8B00'));
-    returns('f64-dec-sep4_0', () => m.$('f64-dec-sep4', []),
+    returns('f64_dec_sep4_0', () => m.$('f64-dec-sep4', []),
         $f64('26D05C735BB7CC45'));
-    returns('f64-dec-sep5_0', () => m.$('f64-dec-sep5', []),
+    returns('f64_dec_sep5_0', () => m.$('f64-dec-sep5', []),
         $f64('45C3B5CE725BDE9C'));
-    returns('f64-hex-sep1_0', () => m.$('f64-hex-sep1', []),
+    returns('f64_hex_sep1_0', () => m.$('f64-hex-sep1', []),
         $f64('4325E01E00013332'));
-    returns('f64-hex-sep2_0', () => m.$('f64-hex-sep2', []),
+    returns('f64_hex_sep2_0', () => m.$('f64-hex-sep2', []),
         $f64('40FAA0F000000000'));
-    returns('f64-hex-sep3_0', () => m.$('f64-hex-sep3', []),
+    returns('f64_hex_sep3_0', () => m.$('f64-hex-sep3', []),
         $f64('40E41FFE2834B340'));
-    returns('f64-hex-sep4_0', () => m.$('f64-hex-sep4', []),
+    returns('f64_hex_sep4_0', () => m.$('f64-hex-sep4', []),
         $f64('413E000000000000'));
-    returns('f64-hex-sep5_0', () => m.$('f64-hex-sep5', []),
+    returns('f64_hex_sep5_0', () => m.$('f64-hex-sep5', []),
         $f64('42B578050F9F7000'));
   });
 

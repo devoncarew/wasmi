@@ -22,19 +22,19 @@ void main() {
     });
 
     action('init_0', () => m.$('init', [$externref('1')]));
-    returns('get-externref_0', () => m.$('get-externref', [0]), null);
+    returns('get_externref_0', () => m.$('get-externref', [0]), null);
     returns(
-        'get-externref_1', () => m.$('get-externref', [1]), $externref('1'));
-    returns('get-funcref_0', () => m.$('get-funcref', [0]), null);
-    returns('is_null-funcref_0', () => m.$('is_null-funcref', [1]), 0);
-    returns('is_null-funcref_1', () => m.$('is_null-funcref', [2]), 0);
-    traps('get-externref_2', () => m.$('get-externref', [2]),
+        'get_externref_1', () => m.$('get-externref', [1]), $externref('1'));
+    returns('get_funcref_0', () => m.$('get-funcref', [0]), null);
+    returns('is_null_funcref_0', () => m.$('is_null-funcref', [1]), 0);
+    returns('is_null_funcref_1', () => m.$('is_null-funcref', [2]), 0);
+    traps('get_externref_2', () => m.$('get-externref', [2]),
         'out of bounds table access');
-    traps('get-funcref_1', () => m.$('get-funcref', [3]),
+    traps('get_funcref_1', () => m.$('get-funcref', [3]),
         'out of bounds table access');
-    traps('get-externref_3', () => m.$('get-externref', [$i32('FFFFFFFF')]),
+    traps('get_externref_3', () => m.$('get-externref', [$i32('FFFFFFFF')]),
         'out of bounds table access');
-    traps('get-funcref_2', () => m.$('get-funcref', [$i32('FFFFFFFF')]),
+    traps('get_funcref_2', () => m.$('get-funcref', [$i32('FFFFFFFF')]),
         'out of bounds table access');
   });
 

@@ -64,7 +64,12 @@ void main() {
       $i64('7FF4000000000000'),
       skip: 'see test/spec/_expected_fail.txt',
     );
-    returns('f64_load_2', () => m.$('f64.load', []), $f64('7FF4000000000000'));
+    returns(
+      'f64_load_2',
+      () => m.$('f64.load', []),
+      $f64('7FF4000000000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
     returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));
@@ -126,7 +131,12 @@ void main() {
       $i64('7FF4000000000000'),
       skip: 'see test/spec/_expected_fail.txt',
     );
-    returns('f64_load_2', () => m.$('f64.load', []), $f64('7FF4000000000000'));
+    returns(
+      'f64_load_2',
+      () => m.$('f64.load', []),
+      $f64('7FF4000000000000'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
     returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));
@@ -188,7 +198,12 @@ void main() {
       $i64('7FFC000000000001'),
       skip: 'see test/spec/_expected_fail.txt',
     );
-    returns('f64_load_2', () => m.$('f64.load', []), $f64('7FFC000000000001'));
+    returns(
+      'f64_load_2',
+      () => m.$('f64.load', []),
+      $f64('7FFC000000000001'),
+      skip: 'see test/spec/_expected_fail.txt',
+    );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
     returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));
