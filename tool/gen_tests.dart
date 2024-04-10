@@ -10,6 +10,7 @@ const Set<String> allowList = {
   'align.wast',
   'conversions.wast',
   'data.wast',
+  'endianness.wast',
   'f32_bitwise.wast',
   'f32_cmp.wast',
   'f32.wast',
