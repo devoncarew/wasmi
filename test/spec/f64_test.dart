@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -8851,13 +8851,13 @@ void main() {
       'nearest_6',
       () => m.$('nearest', [$f64('BFE0000000000000')]),
       $f64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'nearest_7',
       () => m.$('nearest', [$f64('3FE0000000000000')]),
       $f64('0'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('nearest_8', () => m.$('nearest', [$f64('BFF0000000000000')]),
         $f64('BFF0000000000000'));

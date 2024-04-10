@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -252,13 +252,13 @@ void main() {
       'as_call_indirect_last_0',
       () => m.$('as-call_indirect-last', [0]),
       'undefined element',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'as_call_indirect_last_1',
       () => m.$('as-call_indirect-last', [1]),
       'undefined element',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'as_store_first_0', () => m.$('as-store-first', [0]), null /*void*/);

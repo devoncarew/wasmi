@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -57,7 +57,7 @@ void main() {
       'div_s_2',
       () => m.$('div_s', [$i32('80000000'), $i32('FFFFFFFF')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('div_s_3', () => m.$('div_s', [$i32('80000000'), 0]),
         'integer divide by zero');

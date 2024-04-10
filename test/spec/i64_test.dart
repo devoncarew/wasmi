@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -88,7 +88,7 @@ void main() {
       'div_s_2',
       () => m.$('div_s', [$i64('8000000000000000'), $i64('FFFFFFFFFFFFFFFF')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('div_s_3', () => m.$('div_s', [$i64('8000000000000000'), 0]),
         'integer divide by zero');
@@ -139,44 +139,44 @@ void main() {
       'div_u_5',
       () => m.$('div_u', [$i64('8000000000000000'), $i64('FFFFFFFFFFFFFFFF')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_u_6',
       () => m.$('div_u', [$i64('8000000000000000'), 2]),
       $i64('4000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_u_7',
       () => m.$('div_u', [$i64('8FF00FF00FF00FF0'), $i64('100000001')]),
       $i64('8FF00FEF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_u_8',
       () => m.$('div_u', [$i64('8000000000000001'), 0x3E8]),
       $i64('20C49BA5E353F7'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_u_9', () => m.$('div_u', [5, 2]), 2);
     returns(
       'div_u_10',
       () => m.$('div_u', [$i64('FFFFFFFFFFFFFFFB'), 2]),
       $i64('7FFFFFFFFFFFFFFD'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_u_11',
       () => m.$('div_u', [5, $i64('FFFFFFFFFFFFFFFE')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_u_12',
       () => m.$('div_u', [$i64('FFFFFFFFFFFFFFFB'), $i64('FFFFFFFFFFFFFFFE')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_u_13', () => m.$('div_u', [7, 3]), 2);
     returns('div_u_14', () => m.$('div_u', [0xB, 5]), 2);
@@ -237,39 +237,39 @@ void main() {
       'rem_u_5',
       () => m.$('rem_u', [$i64('8000000000000000'), $i64('FFFFFFFFFFFFFFFF')]),
       $i64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('rem_u_6', () => m.$('rem_u', [$i64('8000000000000000'), 2]), 0);
     returns(
       'rem_u_7',
       () => m.$('rem_u', [$i64('8FF00FF00FF00FF0'), $i64('100000001')]),
       $i64('80000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'rem_u_8',
       () => m.$('rem_u', [$i64('8000000000000001'), 0x3E8]),
       0x329,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('rem_u_9', () => m.$('rem_u', [5, 2]), 1);
     returns(
       'rem_u_10',
       () => m.$('rem_u', [$i64('FFFFFFFFFFFFFFFB'), 2]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'rem_u_11',
       () => m.$('rem_u', [5, $i64('FFFFFFFFFFFFFFFE')]),
       5,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'rem_u_12',
       () => m.$('rem_u', [$i64('FFFFFFFFFFFFFFFB'), $i64('FFFFFFFFFFFFFFFE')]),
       $i64('FFFFFFFFFFFFFFFB'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('rem_u_13', () => m.$('rem_u', [7, 3]), 1);
     returns('rem_u_14', () => m.$('rem_u', [0xB, 5]), 1);
@@ -648,7 +648,7 @@ void main() {
       'lt_u_2',
       () => m.$('lt_u', [$i64('FFFFFFFFFFFFFFFF'), 1]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'lt_u_3',
@@ -668,13 +668,13 @@ void main() {
       'lt_u_8',
       () => m.$('lt_u', [$i64('8000000000000000'), 0]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'lt_u_9',
       () => m.$('lt_u', [0, $i64('8000000000000000')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'lt_u_10',
@@ -688,13 +688,13 @@ void main() {
       'lt_u_12',
       () => m.$('lt_u', [$i64('8000000000000000'), $i64('7FFFFFFFFFFFFFFF')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'lt_u_13',
       () => m.$('lt_u', [$i64('7FFFFFFFFFFFFFFF'), $i64('8000000000000000')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('le_s_0', () => m.$('le_s', [0, 0]), 1);
     returns('le_s_1', () => m.$('le_s', [1, 1]), 1);
@@ -737,7 +737,7 @@ void main() {
       'le_u_2',
       () => m.$('le_u', [$i64('FFFFFFFFFFFFFFFF'), 1]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'le_u_3',
@@ -757,13 +757,13 @@ void main() {
       'le_u_8',
       () => m.$('le_u', [$i64('8000000000000000'), 0]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'le_u_9',
       () => m.$('le_u', [0, $i64('8000000000000000')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'le_u_10',
@@ -777,13 +777,13 @@ void main() {
       'le_u_12',
       () => m.$('le_u', [$i64('8000000000000000'), $i64('7FFFFFFFFFFFFFFF')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'le_u_13',
       () => m.$('le_u', [$i64('7FFFFFFFFFFFFFFF'), $i64('8000000000000000')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('gt_s_0', () => m.$('gt_s', [0, 0]), 0);
     returns('gt_s_1', () => m.$('gt_s', [1, 1]), 0);
@@ -826,7 +826,7 @@ void main() {
       'gt_u_2',
       () => m.$('gt_u', [$i64('FFFFFFFFFFFFFFFF'), 1]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'gt_u_3',
@@ -846,13 +846,13 @@ void main() {
       'gt_u_8',
       () => m.$('gt_u', [$i64('8000000000000000'), 0]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'gt_u_9',
       () => m.$('gt_u', [0, $i64('8000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'gt_u_10',
@@ -866,13 +866,13 @@ void main() {
       'gt_u_12',
       () => m.$('gt_u', [$i64('8000000000000000'), $i64('7FFFFFFFFFFFFFFF')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'gt_u_13',
       () => m.$('gt_u', [$i64('7FFFFFFFFFFFFFFF'), $i64('8000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('ge_s_0', () => m.$('ge_s', [0, 0]), 1);
     returns('ge_s_1', () => m.$('ge_s', [1, 1]), 1);
@@ -915,7 +915,7 @@ void main() {
       'ge_u_2',
       () => m.$('ge_u', [$i64('FFFFFFFFFFFFFFFF'), 1]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'ge_u_3',
@@ -935,13 +935,13 @@ void main() {
       'ge_u_8',
       () => m.$('ge_u', [$i64('8000000000000000'), 0]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'ge_u_9',
       () => m.$('ge_u', [0, $i64('8000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'ge_u_10',
@@ -955,13 +955,13 @@ void main() {
       'ge_u_12',
       () => m.$('ge_u', [$i64('8000000000000000'), $i64('7FFFFFFFFFFFFFFF')]),
       1,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'ge_u_13',
       () => m.$('ge_u', [$i64('7FFFFFFFFFFFFFFF'), $i64('8000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 

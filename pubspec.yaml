@@ -10,6 +10,7 @@ dependencies:
   collection: any
 
 dev_dependencies:
+  args: ^2.4.0
   code_builder: ^4.10.0
   dart_style: ^2.3.0
   lints: ^3.0.0

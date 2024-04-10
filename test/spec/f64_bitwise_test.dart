@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -316,7 +316,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('8000000000000001'), $f64('FFF8000000000000')]),
       $f64('8000000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_69',
@@ -327,7 +327,7 @@ void main() {
       'copysign_70',
       () => m.$('copysign', [$f64('1'), $f64('FFF8000000000000')]),
       $f64('8000000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_71',
@@ -493,7 +493,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('8010000000000000'), $f64('FFF8000000000000')]),
       $f64('8010000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_105',
@@ -504,7 +504,7 @@ void main() {
       'copysign_106',
       () => m.$('copysign', [$f64('10000000000000'), $f64('FFF8000000000000')]),
       $f64('8010000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_107',
@@ -672,7 +672,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('BFE0000000000000'), $f64('FFF8000000000000')]),
       $f64('BFE0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_141',
@@ -684,7 +684,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('3FE0000000000000'), $f64('FFF8000000000000')]),
       $f64('BFE0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_143',
@@ -852,7 +852,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('BFF0000000000000'), $f64('FFF8000000000000')]),
       $f64('BFF0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_177',
@@ -864,7 +864,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('3FF0000000000000'), $f64('FFF8000000000000')]),
       $f64('BFF0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_179',
@@ -1032,7 +1032,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('C01921FB54442D18'), $f64('FFF8000000000000')]),
       $f64('C01921FB54442D18'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_213',
@@ -1044,7 +1044,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('401921FB54442D18'), $f64('FFF8000000000000')]),
       $f64('C01921FB54442D18'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_215',
@@ -1212,7 +1212,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('FFEFFFFFFFFFFFFF'), $f64('FFF8000000000000')]),
       $f64('FFEFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_249',
@@ -1224,7 +1224,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('7FEFFFFFFFFFFFFF'), $f64('FFF8000000000000')]),
       $f64('FFEFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_251',
@@ -1392,7 +1392,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('FFF0000000000000'), $f64('FFF8000000000000')]),
       $f64('FFF0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_285',
@@ -1404,7 +1404,7 @@ void main() {
       () =>
           m.$('copysign', [$f64('7FF0000000000000'), $f64('FFF8000000000000')]),
       $f64('FFF0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'copysign_287',

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -548,7 +548,7 @@ void main() {
       'add_264',
       () => m.$('add', [$f32('FF7FFFFF'), $f32('FF7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('add_265', () => m.$('add', [$f32('FF7FFFFF'), $f32('7F7FFFFF')]),
         $f32('0'));
@@ -558,7 +558,7 @@ void main() {
       'add_267',
       () => m.$('add', [$f32('7F7FFFFF'), $f32('7F7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('add_268', () => m.$('add', [$f32('FF7FFFFF'), $f32('FF800000')]),
         $f32('FF800000'));
@@ -1355,13 +1355,13 @@ void main() {
       'sub_265',
       () => m.$('sub', [$f32('FF7FFFFF'), $f32('7F7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'sub_266',
       () => m.$('sub', [$f32('7F7FFFFF'), $f32('FF7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('sub_267', () => m.$('sub', [$f32('7F7FFFFF'), $f32('7F7FFFFF')]),
         $f32('0'));
@@ -1747,25 +1747,25 @@ void main() {
       'mul_60',
       () => m.$('mul', [$f32('80000001'), $f32('C0C90FDB')]),
       $f32('6'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_61',
       () => m.$('mul', [$f32('80000001'), $f32('40C90FDB')]),
       $f32('80000006'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_62',
       () => m.$('mul', [$f32('1'), $f32('C0C90FDB')]),
       $f32('80000006'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_63',
       () => m.$('mul', [$f32('1'), $f32('40C90FDB')]),
       $f32('6'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('mul_64', () => m.$('mul', [$f32('80000001'), $f32('FF7FFFFF')]),
         $f32('34FFFFFF'));
@@ -2049,25 +2049,25 @@ void main() {
       'mul_204',
       () => m.$('mul', [$f32('C0C90FDB'), $f32('80000001')]),
       $f32('6'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_205',
       () => m.$('mul', [$f32('C0C90FDB'), $f32('1')]),
       $f32('80000006'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_206',
       () => m.$('mul', [$f32('40C90FDB'), $f32('80000001')]),
       $f32('80000006'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_207',
       () => m.$('mul', [$f32('40C90FDB'), $f32('1')]),
       $f32('6'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('mul_208', () => m.$('mul', [$f32('C0C90FDB'), $f32('80800000')]),
         $f32('1C90FDB'));
@@ -2105,25 +2105,25 @@ void main() {
       'mul_224',
       () => m.$('mul', [$f32('C0C90FDB'), $f32('FF7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_225',
       () => m.$('mul', [$f32('C0C90FDB'), $f32('7F7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_226',
       () => m.$('mul', [$f32('40C90FDB'), $f32('FF7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_227',
       () => m.$('mul', [$f32('40C90FDB'), $f32('7F7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('mul_228', () => m.$('mul', [$f32('C0C90FDB'), $f32('FF800000')]),
         $f32('7F800000'));
@@ -2193,49 +2193,49 @@ void main() {
       'mul_260',
       () => m.$('mul', [$f32('FF7FFFFF'), $f32('C0C90FDB')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_261',
       () => m.$('mul', [$f32('FF7FFFFF'), $f32('40C90FDB')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_262',
       () => m.$('mul', [$f32('7F7FFFFF'), $f32('C0C90FDB')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_263',
       () => m.$('mul', [$f32('7F7FFFFF'), $f32('40C90FDB')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_264',
       () => m.$('mul', [$f32('FF7FFFFF'), $f32('FF7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_265',
       () => m.$('mul', [$f32('FF7FFFFF'), $f32('7F7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_266',
       () => m.$('mul', [$f32('7F7FFFFF'), $f32('FF7FFFFF')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'mul_267',
       () => m.$('mul', [$f32('7F7FFFFF'), $f32('7F7FFFFF')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('mul_268', () => m.$('mul', [$f32('FF7FFFFF'), $f32('FF800000')]),
         $f32('7F800000'));
@@ -2750,25 +2750,25 @@ void main() {
       'div_124',
       () => m.$('div', [$f32('BF000000'), $f32('80000001')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_125',
       () => m.$('div', [$f32('BF000000'), $f32('1')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_126',
       () => m.$('div', [$f32('3F000000'), $f32('80000001')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_127',
       () => m.$('div', [$f32('3F000000'), $f32('1')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_128', () => m.$('div', [$f32('BF000000'), $f32('80800000')]),
         $f32('7E000000'));
@@ -2846,25 +2846,25 @@ void main() {
       'div_164',
       () => m.$('div', [$f32('BF800000'), $f32('80000001')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_165',
       () => m.$('div', [$f32('BF800000'), $f32('1')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_166',
       () => m.$('div', [$f32('3F800000'), $f32('80000001')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_167',
       () => m.$('div', [$f32('3F800000'), $f32('1')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_168', () => m.$('div', [$f32('BF800000'), $f32('80800000')]),
         $f32('7E800000'));
@@ -2942,49 +2942,49 @@ void main() {
       'div_204',
       () => m.$('div', [$f32('C0C90FDB'), $f32('80000001')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_205',
       () => m.$('div', [$f32('C0C90FDB'), $f32('1')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_206',
       () => m.$('div', [$f32('40C90FDB'), $f32('80000001')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_207',
       () => m.$('div', [$f32('40C90FDB'), $f32('1')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_208',
       () => m.$('div', [$f32('C0C90FDB'), $f32('80800000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_209',
       () => m.$('div', [$f32('C0C90FDB'), $f32('800000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_210',
       () => m.$('div', [$f32('40C90FDB'), $f32('80800000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_211',
       () => m.$('div', [$f32('40C90FDB'), $f32('800000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_212', () => m.$('div', [$f32('C0C90FDB'), $f32('BF000000')]),
         $f32('41490FDB'));
@@ -3054,73 +3054,73 @@ void main() {
       'div_244',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('80000001')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_245',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('1')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_246',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('80000001')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_247',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('1')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_248',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('80800000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_249',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('800000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_250',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('80800000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_251',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('800000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_252',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('BF000000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_253',
       () => m.$('div', [$f32('FF7FFFFF'), $f32('3F000000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_254',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('BF000000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'div_255',
       () => m.$('div', [$f32('7F7FFFFF'), $f32('3F000000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('div_256', () => m.$('div', [$f32('FF7FFFFF'), $f32('BF800000')]),
         $f32('7F7FFFFF'));
@@ -5115,13 +5115,13 @@ void main() {
       'nearest_6',
       () => m.$('nearest', [$f32('BF000000')]),
       $f32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'nearest_7',
       () => m.$('nearest', [$f32('3F000000')]),
       $f32('0'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('nearest_8', () => m.$('nearest', [$f32('BF800000')]),
         $f32('BF800000'));

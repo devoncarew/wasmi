@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -635,11 +635,7 @@ void main() {
     });
 
     traps(
-      'run_0',
-      () => m.$('run', [0x18, 0x10]),
-      'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+        'run_0', () => m.$('run', [0x18, 0x10]), 'out of bounds table access');
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -685,11 +681,7 @@ void main() {
     });
 
     traps(
-      'run_0',
-      () => m.$('run', [0x19, 0x10]),
-      'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+        'run_0', () => m.$('run', [0x19, 0x10]), 'out of bounds table access');
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -735,11 +727,7 @@ void main() {
     });
 
     traps(
-      'run_0',
-      () => m.$('run', [0x60, 0x20]),
-      'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+        'run_0', () => m.$('run', [0x60, 0x20]), 'out of bounds table access');
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -913,11 +901,7 @@ void main() {
     });
 
     traps(
-      'run_0',
-      () => m.$('run', [0x61, 0x1F]),
-      'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+        'run_0', () => m.$('run', [0x61, 0x1F]), 'out of bounds table access');
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
     traps('test_2', () => m.$('test', [2]), 'uninitialized element');
@@ -1094,7 +1078,7 @@ void main() {
       'run_0',
       () => m.$('run', [0x30, $i32('FFFFFFF0')]),
       'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
@@ -1176,7 +1160,7 @@ void main() {
       'run_0',
       () => m.$('run', [0, $i32('FFFFFFFC')]),
       'out of bounds table access',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('test_0', () => m.$('test', [0]), 'uninitialized element');
     traps('test_1', () => m.$('test', [1]), 'uninitialized element');
