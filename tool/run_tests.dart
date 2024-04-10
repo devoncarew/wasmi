@@ -55,7 +55,8 @@ void main(List<String> args) async {
 
     final file = io.File('test/status.properties');
     file.writeAsStringSync(buf.toString());
-    print('Test status written to ${file.path}.');
+    print('Test status written to ${file.path}; '
+        "re-run 'dart tool/gen_tests.dart to apply changes.'");
   }
 }
 
