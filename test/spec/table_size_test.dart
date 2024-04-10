@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};

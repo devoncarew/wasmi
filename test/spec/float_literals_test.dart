@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -28,7 +28,7 @@ void main() {
       'f32_negative_nan_0',
       () => m.$('f32.negative_nan', []),
       $i32('FFC00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'f32_plain_nan_0', () => m.$('f32.plain_nan', []), $i32('7FC00000'));
@@ -36,31 +36,31 @@ void main() {
       'f32_informally_known_as_plain_snan_0',
       () => m.$('f32.informally_known_as_plain_snan', []),
       $i32('7FA00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_all_ones_nan_0',
       () => m.$('f32.all_ones_nan', []),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_misc_nan_0',
       () => m.$('f32.misc_nan', []),
       $i32('7F812345'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_misc_positive_nan_0',
       () => m.$('f32.misc_positive_nan', []),
       $i32('7FB04050'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_misc_negative_nan_0',
       () => m.$('f32.misc_negative_nan', []),
       $i32('FFAABCDE'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_infinity_0', () => m.$('f32.infinity', []), $i32('7F800000'));
     returns('f32_positive_infinity_0', () => m.$('f32.positive_infinity', []),
@@ -69,7 +69,7 @@ void main() {
       'f32_negative_infinity_0',
       () => m.$('f32.negative_infinity', []),
       $i32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_zero_0', () => m.$('f32.zero', []), 0);
     returns('f32_positive_zero_0', () => m.$('f32.positive_zero', []), 0);
@@ -77,7 +77,7 @@ void main() {
       'f32_negative_zero_0',
       () => m.$('f32.negative_zero', []),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_misc_0', () => m.$('f32.misc', []), $i32('40C90FDB'));
     returns('f32_min_positive_0', () => m.$('f32.min_positive', []), 1);
@@ -96,13 +96,13 @@ void main() {
       'f32_min_int32_0',
       () => m.$('f32.min_int32', []),
       $i32('CF000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_min_int64_0',
       () => m.$('f32.min_int64', []),
       $i32('DF000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_dec_zero_0', () => m.$('f32_dec.zero', []), 0);
     returns(
@@ -111,7 +111,7 @@ void main() {
       'f32_dec_negative_zero_0',
       () => m.$('f32_dec.negative_zero', []),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_dec_misc_0', () => m.$('f32_dec.misc', []), $i32('40C90FDB'));
     returns('f32_dec_min_positive_0', () => m.$('f32_dec.min_positive', []), 1);
@@ -133,13 +133,13 @@ void main() {
       'f32_dec_min_int32_0',
       () => m.$('f32_dec.min_int32', []),
       $i32('CF000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_dec_min_int64_0',
       () => m.$('f32_dec.min_int64', []),
       $i32('DF000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f64_nan_0', () => m.$('f64.nan', []), $i64('7FF8000000000000'));
     returns('f64_positive_nan_0', () => m.$('f64.positive_nan', []),
@@ -149,35 +149,17 @@ void main() {
     returns('f64_plain_nan_0', () => m.$('f64.plain_nan', []),
         $i64('7FF8000000000000'));
     returns(
-      'f64_informally_known_as_plain_snan_0',
-      () => m.$('f64.informally_known_as_plain_snan', []),
-      $i64('7FF4000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
-    returns(
-      'f64_all_ones_nan_0',
-      () => m.$('f64.all_ones_nan', []),
-      $i64('FFFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
-    returns(
-      'f64_misc_nan_0',
-      () => m.$('f64.misc_nan', []),
-      $i64('7FF0123456789ABC'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
-    returns(
-      'f64_misc_positive_nan_0',
-      () => m.$('f64.misc_positive_nan', []),
-      $i64('7FF3040506070809'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
-    returns(
-      'f64_misc_negative_nan_0',
-      () => m.$('f64.misc_negative_nan', []),
-      $i64('FFF2ABCDEF012345'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+        'f64_informally_known_as_plain_snan_0',
+        () => m.$('f64.informally_known_as_plain_snan', []),
+        $i64('7FF4000000000000'));
+    returns('f64_all_ones_nan_0', () => m.$('f64.all_ones_nan', []),
+        $i64('FFFFFFFFFFFFFFFF'));
+    returns('f64_misc_nan_0', () => m.$('f64.misc_nan', []),
+        $i64('7FF0123456789ABC'));
+    returns('f64_misc_positive_nan_0', () => m.$('f64.misc_positive_nan', []),
+        $i64('7FF3040506070809'));
+    returns('f64_misc_negative_nan_0', () => m.$('f64.misc_negative_nan', []),
+        $i64('FFF2ABCDEF012345'));
     returns('f64_infinity_0', () => m.$('f64.infinity', []),
         $i64('7FF0000000000000'));
     returns('f64_positive_infinity_0', () => m.$('f64.positive_infinity', []),

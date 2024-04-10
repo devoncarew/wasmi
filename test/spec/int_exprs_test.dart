@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -273,7 +273,7 @@ void main() {
       'i64_div_u_3_1',
       () => m.$('i64.div_u_3', [$i64('C000000000000000')]),
       $i64('4000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -303,7 +303,7 @@ void main() {
       'i64_div_u_5_1',
       () => m.$('i64.div_u_5', [$i64('A000000000000000')]),
       $i64('2000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -333,7 +333,7 @@ void main() {
       'i64_div_u_7_1',
       () => m.$('i64.div_u_7', [$i64('E000000000000000')]),
       $i64('2000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -359,7 +359,7 @@ void main() {
       'i64_rem_u_3_1',
       () => m.$('i64.rem_u_3', [$i64('C000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -385,7 +385,7 @@ void main() {
       'i64_rem_u_5_1',
       () => m.$('i64.rem_u_5', [$i64('A000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -411,7 +411,7 @@ void main() {
       'i64_rem_u_7_1',
       () => m.$('i64.rem_u_7', [$i64('E000000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 
@@ -429,13 +429,13 @@ void main() {
       'i32_no_fold_div_neg1_0',
       () => m.$('i32.no_fold_div_neg1', [$i32('80000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_no_fold_div_neg1_0',
       () => m.$('i64.no_fold_div_neg1', [$i64('8000000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
   });
 }

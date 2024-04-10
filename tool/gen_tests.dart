@@ -105,7 +105,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
     Directive.import('package:wasmi/execute.dart'),
     Directive.import('package:wasmi/parse.dart'),
     //
-    Directive.import('_framework.dart'),
+    Directive.import('../framework.dart'),
   ]);
 
   final mainMethod = MethodBuilder()
@@ -123,11 +123,13 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   final nameCount = <String, int>{};
 
   bool inGroup = false;
+  String? groupName;
 
   void closeGroup() {
     if (inGroup) {
       code.writeln('});\n');
       inGroup = false;
+      groupName = null;
     }
   }
 
@@ -136,6 +138,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
     code.writeln("\ngroup('$name', () {");
     inGroup = true;
+    groupName = name;
   }
 
   for (final command in commands) {
@@ -182,10 +185,8 @@ Library createLibraryFor(File wastFile, File jsonFile) {
             .replaceAll('-', '_');
         nameCount[field] = nameCount[field]! + 1;
 
-        final testId = '$spec $testName';
-        final expectedFail = expectedFails.contains(testId);
-        final failText =
-            expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
+        final expectedFail = expectedFails['$groupName $testName'];
+        final failText = expectedFail != null ? ", skip: '$expectedFail'," : '';
 
         var expected =
             (command['expected'] as List? ?? []).cast<Map<String, dynamic>>();
@@ -246,10 +247,8 @@ Library createLibraryFor(File wastFile, File jsonFile) {
             .replaceAll('-', '_');
         nameCount[field] = nameCount[field]! + 1;
 
-        final testId = '$spec $testName';
-        final expectedFail = expectedFails.contains(testId);
-        final failText =
-            expectedFail ? ", skip: 'see test/spec/_expected_fail.txt'," : '';
+        final expectedFail = expectedFails['$groupName $testName'];
+        final failText = expectedFail != null ? ", skip: '$expectedFail'," : '';
 
         final argList = args.map((arg) {
           return encodeType(arg['type'], arg['value']);
@@ -337,12 +336,21 @@ String encodeType(String type, String value) {
   }
 }
 
-Set<String> readExpectedFails() {
-  final file = File('test/spec/_expected_fail.txt');
-  return file
+Map<String, String> readExpectedFails() {
+  final file = File('test/status.properties');
+
+  final results = <String, String>{};
+
+  final lines = file
       .readAsLinesSync()
       .map((l) => l.contains('#') ? l.substring(0, l.indexOf('#')) : l)
       .map((l) => l.trim())
-      .where((l) => l.isNotEmpty)
-      .toSet();
+      .where((l) => l.isNotEmpty);
+
+  for (final line in lines) {
+    final v = line.split(':');
+    results[v[0].trim()] = v[1].trim();
+  }
+
+  return results;
 }

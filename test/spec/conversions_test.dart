@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -112,13 +112,13 @@ void main() {
       'i32_trunc_f32_s_14',
       () => m.$('i32.trunc_f32_s', [$f32('4F000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f32_s_15',
       () => m.$('i32.trunc_f32_s', [$f32('CF000001')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('i32_trunc_f32_s_16',
         () => m.$('i32.trunc_f32_s', [$f32('7F800000')]), 'integer overflow');
@@ -160,13 +160,13 @@ void main() {
       'i32_trunc_f32_u_9',
       () => m.$('i32.trunc_f32_u', [$f32('4F000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_f32_u_10',
       () => m.$('i32.trunc_f32_u', [$f32('4F7FFFFF')]),
       $i32('FFFFFF00'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_f32_u_11',
         () => m.$('i32.trunc_f32_u', [$f32('BF666666')]), 0);
@@ -176,13 +176,13 @@ void main() {
       'i32_trunc_f32_u_13',
       () => m.$('i32.trunc_f32_u', [$f32('4F800000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f32_u_14',
       () => m.$('i32.trunc_f32_u', [$f32('BF800000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('i32_trunc_f32_u_15',
         () => m.$('i32.trunc_f32_u', [$f32('7F800000')]), 'integer overflow');
@@ -256,13 +256,13 @@ void main() {
       'i32_trunc_f64_s_16',
       () => m.$('i32.trunc_f64_s', [$f64('41E0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_s_17',
       () => m.$('i32.trunc_f64_s', [$f64('C1E0000000200000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
         'i32_trunc_f64_s_18',
@@ -308,13 +308,13 @@ void main() {
       'i32_trunc_f64_u_9',
       () => m.$('i32.trunc_f64_u', [$f64('41E0000000000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_f64_u_10',
       () => m.$('i32.trunc_f64_u', [$f64('41EFFFFFFFE00000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_f64_u_11',
         () => m.$('i32.trunc_f64_u', [$f64('BFECCCCCCCCCCCCD')]), 0);
@@ -330,37 +330,37 @@ void main() {
       'i32_trunc_f64_u_15',
       () => m.$('i32.trunc_f64_u', [$f64('41EFFFFFFFFCCCCD')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_u_16',
       () => m.$('i32.trunc_f64_u', [$f64('41F0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_u_17',
       () => m.$('i32.trunc_f64_u', [$f64('BFF0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_u_18',
       () => m.$('i32.trunc_f64_u', [$f64('4341C37937E08000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_u_19',
       () => m.$('i32.trunc_f64_u', [$f64('46293E5939A08CEA')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i32_trunc_f64_u_20',
       () => m.$('i32.trunc_f64_u', [$f64('43E0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
         'i32_trunc_f64_u_21',
@@ -436,13 +436,13 @@ void main() {
       'i64_trunc_f32_s_16',
       () => m.$('i64.trunc_f32_s', [$f32('5F000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_trunc_f32_s_17',
       () => m.$('i64.trunc_f32_s', [$f32('DF000001')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('i64_trunc_f32_s_18',
         () => m.$('i64.trunc_f32_s', [$f32('7F800000')]), 'integer overflow');
@@ -482,7 +482,7 @@ void main() {
       'i64_trunc_f32_u_8',
       () => m.$('i64.trunc_f32_u', [$f32('5F7FFFFF')]),
       $i64('FFFFFF0000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_f32_u_9',
         () => m.$('i64.trunc_f32_u', [$f32('BF666666')]), 0);
@@ -492,13 +492,13 @@ void main() {
       'i64_trunc_f32_u_11',
       () => m.$('i64.trunc_f32_u', [$f32('5F800000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_trunc_f32_u_12',
       () => m.$('i64.trunc_f32_u', [$f32('BF800000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps('i64_trunc_f32_u_13',
         () => m.$('i64.trunc_f32_u', [$f32('7F800000')]), 'integer overflow');
@@ -572,13 +572,13 @@ void main() {
       'i64_trunc_f64_s_16',
       () => m.$('i64.trunc_f64_s', [$f64('43E0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_trunc_f64_s_17',
       () => m.$('i64.trunc_f64_s', [$f64('C3E0000000000001')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
         'i64_trunc_f64_s_18',
@@ -628,7 +628,7 @@ void main() {
       'i64_trunc_f64_u_9',
       () => m.$('i64.trunc_f64_u', [$f64('43EFFFFFFFFFFFFF')]),
       $i64('FFFFFFFFFFFFF800'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_f64_u_10',
         () => m.$('i64.trunc_f64_u', [$f64('BFECCCCCCCCCCCCD')]), 0);
@@ -646,19 +646,19 @@ void main() {
       'i64_trunc_f64_u_14',
       () => m.$('i64.trunc_f64_u', [$f64('43E0000000000000')]),
       $i64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_trunc_f64_u_15',
       () => m.$('i64.trunc_f64_u', [$f64('43F0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
       'i64_trunc_f64_u_16',
       () => m.$('i64.trunc_f64_u', [$f64('BFF0000000000000')]),
       'integer overflow',
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     traps(
         'i64_trunc_f64_u_17',
@@ -714,31 +714,31 @@ void main() {
       'i32_trunc_sat_f32_s_7',
       () => m.$('i32.trunc_sat_f32_s', [$f32('BF800000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_8',
       () => m.$('i32.trunc_sat_f32_s', [$f32('BF8CCCCD')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_9',
       () => m.$('i32.trunc_sat_f32_s', [$f32('BFC00000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_10',
       () => m.$('i32.trunc_sat_f32_s', [$f32('BFF33333')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_11',
       () => m.$('i32.trunc_sat_f32_s', [$f32('C0000000')]),
       $i32('FFFFFFFE'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f32_s_12',
         () => m.$('i32.trunc_sat_f32_s', [$f32('4EFFFFFF')]), $i32('7FFFFF80'));
@@ -746,55 +746,55 @@ void main() {
       'i32_trunc_sat_f32_s_13',
       () => m.$('i32.trunc_sat_f32_s', [$f32('CF000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_14',
       () => m.$('i32.trunc_sat_f32_s', [$f32('4F000000')]),
       $i32('7FFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_15',
       () => m.$('i32.trunc_sat_f32_s', [$f32('CF000001')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_16',
       () => m.$('i32.trunc_sat_f32_s', [$f32('7F800000')]),
       $i32('7FFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_17',
       () => m.$('i32.trunc_sat_f32_s', [$f32('FF800000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_18',
       () => m.$('i32.trunc_sat_f32_s', [$f32('7FC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_19',
       () => m.$('i32.trunc_sat_f32_s', [$f32('7FA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_20',
       () => m.$('i32.trunc_sat_f32_s', [$f32('FFC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_s_21',
       () => m.$('i32.trunc_sat_f32_s', [$f32('FFA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f32_u_0',
         () => m.$('i32.trunc_sat_f32_u', [$f32('0')]), 0);
@@ -818,13 +818,13 @@ void main() {
       'i32_trunc_sat_f32_u_9',
       () => m.$('i32.trunc_sat_f32_u', [$f32('4F000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_10',
       () => m.$('i32.trunc_sat_f32_u', [$f32('4F7FFFFF')]),
       $i32('FFFFFF00'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f32_u_11',
         () => m.$('i32.trunc_sat_f32_u', [$f32('BF666666')]), 0);
@@ -834,49 +834,49 @@ void main() {
       'i32_trunc_sat_f32_u_13',
       () => m.$('i32.trunc_sat_f32_u', [$f32('4F800000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_14',
       () => m.$('i32.trunc_sat_f32_u', [$f32('BF800000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_15',
       () => m.$('i32.trunc_sat_f32_u', [$f32('7F800000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_16',
       () => m.$('i32.trunc_sat_f32_u', [$f32('FF800000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_17',
       () => m.$('i32.trunc_sat_f32_u', [$f32('7FC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_18',
       () => m.$('i32.trunc_sat_f32_u', [$f32('7FA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_19',
       () => m.$('i32.trunc_sat_f32_u', [$f32('FFC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f32_u_20',
       () => m.$('i32.trunc_sat_f32_u', [$f32('FFA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f64_s_0',
         () => m.$('i32.trunc_sat_f64_s', [$f64('0')]), 0);
@@ -896,31 +896,31 @@ void main() {
       'i32_trunc_sat_f64_s_7',
       () => m.$('i32.trunc_sat_f64_s', [$f64('BFF0000000000000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_8',
       () => m.$('i32.trunc_sat_f64_s', [$f64('BFF199999999999A')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_9',
       () => m.$('i32.trunc_sat_f64_s', [$f64('BFF8000000000000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_10',
       () => m.$('i32.trunc_sat_f64_s', [$f64('BFFE666666666666')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_11',
       () => m.$('i32.trunc_sat_f64_s', [$f64('C000000000000000')]),
       $i32('FFFFFFFE'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'i32_trunc_sat_f64_s_12',
@@ -930,55 +930,55 @@ void main() {
       'i32_trunc_sat_f64_s_13',
       () => m.$('i32.trunc_sat_f64_s', [$f64('C1E0000000000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_14',
       () => m.$('i32.trunc_sat_f64_s', [$f64('41E0000000000000')]),
       $i32('7FFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_15',
       () => m.$('i32.trunc_sat_f64_s', [$f64('C1E0000000200000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_16',
       () => m.$('i32.trunc_sat_f64_s', [$f64('7FF0000000000000')]),
       $i32('7FFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_17',
       () => m.$('i32.trunc_sat_f64_s', [$f64('FFF0000000000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_18',
       () => m.$('i32.trunc_sat_f64_s', [$f64('7FF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_19',
       () => m.$('i32.trunc_sat_f64_s', [$f64('7FF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_20',
       () => m.$('i32.trunc_sat_f64_s', [$f64('FFF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_s_21',
       () => m.$('i32.trunc_sat_f64_s', [$f64('FFF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f64_u_0',
         () => m.$('i32.trunc_sat_f64_u', [$f64('0')]), 0);
@@ -1002,13 +1002,13 @@ void main() {
       'i32_trunc_sat_f64_u_9',
       () => m.$('i32.trunc_sat_f64_u', [$f64('41E0000000000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_10',
       () => m.$('i32.trunc_sat_f64_u', [$f64('41EFFFFFFFE00000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_trunc_sat_f64_u_11',
         () => m.$('i32.trunc_sat_f64_u', [$f64('BFECCCCCCCCCCCCD')]), 0);
@@ -1022,67 +1022,67 @@ void main() {
       'i32_trunc_sat_f64_u_14',
       () => m.$('i32.trunc_sat_f64_u', [$f64('41F0000000000000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_15',
       () => m.$('i32.trunc_sat_f64_u', [$f64('BFF0000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_16',
       () => m.$('i32.trunc_sat_f64_u', [$f64('4341C37937E08000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_17',
       () => m.$('i32.trunc_sat_f64_u', [$f64('46293E5939A08CEA')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_18',
       () => m.$('i32.trunc_sat_f64_u', [$f64('43E0000000000000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_19',
       () => m.$('i32.trunc_sat_f64_u', [$f64('7FF0000000000000')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_20',
       () => m.$('i32.trunc_sat_f64_u', [$f64('FFF0000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_21',
       () => m.$('i32.trunc_sat_f64_u', [$f64('7FF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_22',
       () => m.$('i32.trunc_sat_f64_u', [$f64('7FF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_23',
       () => m.$('i32.trunc_sat_f64_u', [$f64('FFF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_trunc_sat_f64_u_24',
       () => m.$('i32.trunc_sat_f64_u', [$f64('FFF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f32_s_0',
         () => m.$('i64.trunc_sat_f32_s', [$f32('0')]), 0);
@@ -1146,37 +1146,37 @@ void main() {
       'i64_trunc_sat_f32_s_18',
       () => m.$('i64.trunc_sat_f32_s', [$f32('7F800000')]),
       $i64('7FFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_s_19',
       () => m.$('i64.trunc_sat_f32_s', [$f32('FF800000')]),
       $i64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_s_20',
       () => m.$('i64.trunc_sat_f32_s', [$f32('7FC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_s_21',
       () => m.$('i64.trunc_sat_f32_s', [$f32('7FA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_s_22',
       () => m.$('i64.trunc_sat_f32_s', [$f32('FFC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_s_23',
       () => m.$('i64.trunc_sat_f32_s', [$f32('FFA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f32_u_0',
         () => m.$('i64.trunc_sat_f32_u', [$f32('0')]), 0);
@@ -1200,7 +1200,7 @@ void main() {
       'i64_trunc_sat_f32_u_8',
       () => m.$('i64.trunc_sat_f32_u', [$f32('5F7FFFFF')]),
       $i64('FFFFFF0000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f32_u_9',
         () => m.$('i64.trunc_sat_f32_u', [$f32('BF666666')]), 0);
@@ -1210,49 +1210,49 @@ void main() {
       'i64_trunc_sat_f32_u_11',
       () => m.$('i64.trunc_sat_f32_u', [$f32('5F800000')]),
       $i64('FFFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_12',
       () => m.$('i64.trunc_sat_f32_u', [$f32('BF800000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_13',
       () => m.$('i64.trunc_sat_f32_u', [$f32('7F800000')]),
       $i64('FFFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_14',
       () => m.$('i64.trunc_sat_f32_u', [$f32('FF800000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_15',
       () => m.$('i64.trunc_sat_f32_u', [$f32('7FC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_16',
       () => m.$('i64.trunc_sat_f32_u', [$f32('7FA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_17',
       () => m.$('i64.trunc_sat_f32_u', [$f32('FFC00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f32_u_18',
       () => m.$('i64.trunc_sat_f32_u', [$f32('FFA00000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f64_s_0',
         () => m.$('i64.trunc_sat_f64_s', [$f64('0')]), 0);
@@ -1316,37 +1316,37 @@ void main() {
       'i64_trunc_sat_f64_s_18',
       () => m.$('i64.trunc_sat_f64_s', [$f64('7FF0000000000000')]),
       $i64('7FFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_s_19',
       () => m.$('i64.trunc_sat_f64_s', [$f64('FFF0000000000000')]),
       $i64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_s_20',
       () => m.$('i64.trunc_sat_f64_s', [$f64('7FF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_s_21',
       () => m.$('i64.trunc_sat_f64_s', [$f64('7FF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_s_22',
       () => m.$('i64.trunc_sat_f64_s', [$f64('FFF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_s_23',
       () => m.$('i64.trunc_sat_f64_s', [$f64('FFF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f64_u_0',
         () => m.$('i64.trunc_sat_f64_u', [$f64('0')]), 0);
@@ -1374,7 +1374,7 @@ void main() {
       'i64_trunc_sat_f64_u_9',
       () => m.$('i64.trunc_sat_f64_u', [$f64('43EFFFFFFFFFFFFF')]),
       $i64('FFFFFFFFFFFFF800'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_trunc_sat_f64_u_10',
         () => m.$('i64.trunc_sat_f64_u', [$f64('BFECCCCCCCCCCCCD')]), 0);
@@ -1392,55 +1392,55 @@ void main() {
       'i64_trunc_sat_f64_u_14',
       () => m.$('i64.trunc_sat_f64_u', [$f64('43E0000000000000')]),
       $i64('8000000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_15',
       () => m.$('i64.trunc_sat_f64_u', [$f64('43F0000000000000')]),
       $i64('FFFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_16',
       () => m.$('i64.trunc_sat_f64_u', [$f64('BFF0000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_17',
       () => m.$('i64.trunc_sat_f64_u', [$f64('7FF0000000000000')]),
       $i64('FFFFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_18',
       () => m.$('i64.trunc_sat_f64_u', [$f64('FFF0000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_19',
       () => m.$('i64.trunc_sat_f64_u', [$f64('7FF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_20',
       () => m.$('i64.trunc_sat_f64_u', [$f64('7FF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_21',
       () => m.$('i64.trunc_sat_f64_u', [$f64('FFF8000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i64_trunc_sat_f64_u_22',
       () => m.$('i64.trunc_sat_f64_u', [$f64('FFF4000000000000')]),
       0,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_convert_i32_s_6',
         () => m.$('f32.convert_i32_s', [$i32('1000001')]), $f32('4B800000'));
@@ -1594,13 +1594,13 @@ void main() {
       'f32_convert_i64_u_3',
       () => m.$('f32.convert_i64_u', [$i64('8000000000000000')]),
       $f32('5F000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_convert_i64_u_4',
       () => m.$('f32.convert_i64_u', [$i64('FFFFFFFFFFFFFFFF')]),
       $f32('5F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_convert_i64_u_5',
         () => m.$('f32.convert_i64_u', [$i64('1000001')]), $f32('4B800000'));
@@ -1618,13 +1618,13 @@ void main() {
       'f32_convert_i64_u_9',
       () => m.$('f32.convert_i64_u', [$i64('8000008000000001')]),
       $f32('5F000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_convert_i64_u_10',
       () => m.$('f32.convert_i64_u', [$i64('FFFFFE8000000001')]),
       $f32('5F7FFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f64_convert_i32_u_0', () => m.$('f64.convert_i32_u', [1]),
         $f64('3FF0000000000000'));
@@ -1654,49 +1654,49 @@ void main() {
       'f64_convert_i64_u_3',
       () => m.$('f64.convert_i64_u', [$i64('8000000000000000')]),
       $f64('43E0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_4',
       () => m.$('f64.convert_i64_u', [$i64('FFFFFFFFFFFFFFFF')]),
       $f64('43F0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_5',
       () => m.$('f64.convert_i64_u', [$i64('8000000000000400')]),
       $f64('43E0000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_6',
       () => m.$('f64.convert_i64_u', [$i64('8000000000000401')]),
       $f64('43E0000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_7',
       () => m.$('f64.convert_i64_u', [$i64('8000000000000402')]),
       $f64('43E0000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_8',
       () => m.$('f64.convert_i64_u', [$i64('FFFFFFFFFFFFF400')]),
       $f64('43EFFFFFFFFFFFFE'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_9',
       () => m.$('f64.convert_i64_u', [$i64('FFFFFFFFFFFFF401')]),
       $f64('43EFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_convert_i64_u_10',
       () => m.$('f64.convert_i64_u', [$i64('FFFFFFFFFFFFF402')]),
       $f64('43EFFFFFFFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'f64_convert_i64_u_11',
@@ -1836,13 +1836,13 @@ void main() {
       'f32_demote_f64_20',
       () => m.$('f32.demote_f64', [$f64('47EFFFFFF0000000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_21',
       () => m.$('f32.demote_f64', [$f64('C7EFFFFFF0000000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'f32_demote_f64_22',
@@ -1856,13 +1856,13 @@ void main() {
       'f32_demote_f64_24',
       () => m.$('f32.demote_f64', [$f64('7FF0000000000000')]),
       $f32('7F800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_25',
       () => m.$('f32.demote_f64', [$f64('FFF0000000000000')]),
       $f32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
         'f32_demote_f64_26',
@@ -1932,25 +1932,25 @@ void main() {
       'f32_demote_f64_42',
       () => m.$('f32.demote_f64', [$f64('7FF8000000000000')]),
       double.nan,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_43',
       () => m.$('f32.demote_f64', [$f64('7FF4000000000000')]),
       double.nan,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_44',
       () => m.$('f32.demote_f64', [$f64('FFF8000000000000')]),
       double.nan,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_45',
       () => m.$('f32.demote_f64', [$f64('FFF4000000000000')]),
       double.nan,
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_demote_f64_46',
         () => m.$('f32.demote_f64', [$f64('10000000000000')]), $f32('0'));
@@ -1968,13 +1968,13 @@ void main() {
       'f32_demote_f64_50',
       () => m.$('f32.demote_f64', [$f64('3690000000000001')]),
       $f32('1'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f32_demote_f64_51',
       () => m.$('f32.demote_f64', [$f64('B690000000000001')]),
       $f32('80000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_reinterpret_i32_0', () => m.$('f32.reinterpret_i32', [0]),
         $f32('0'));
@@ -2048,7 +2048,7 @@ void main() {
       'i32_reinterpret_f32_1',
       () => m.$('i32.reinterpret_f32', [$f32('80000000')]),
       $i32('80000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_reinterpret_f32_2',
         () => m.$('i32.reinterpret_f32', [$f32('1')]), 1);
@@ -2056,13 +2056,13 @@ void main() {
       'i32_reinterpret_f32_3',
       () => m.$('i32.reinterpret_f32', [$f32('FFFFFFFF')]),
       $i32('FFFFFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_reinterpret_f32_4',
       () => m.$('i32.reinterpret_f32', [$f32('80000001')]),
       $i32('80000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_reinterpret_f32_5',
         () => m.$('i32.reinterpret_f32', [$f32('3F800000')]), $i32('3F800000'));
@@ -2074,7 +2074,7 @@ void main() {
       'i32_reinterpret_f32_8',
       () => m.$('i32.reinterpret_f32', [$f32('FF7FFFFF')]),
       $i32('FF7FFFFF'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_reinterpret_f32_9',
         () => m.$('i32.reinterpret_f32', [$f32('7F800000')]), $i32('7F800000'));
@@ -2082,7 +2082,7 @@ void main() {
       'i32_reinterpret_f32_10',
       () => m.$('i32.reinterpret_f32', [$f32('FF800000')]),
       $i32('FF800000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_reinterpret_f32_11',
         () => m.$('i32.reinterpret_f32', [$f32('7FC00000')]), $i32('7FC00000'));
@@ -2090,19 +2090,19 @@ void main() {
       'i32_reinterpret_f32_12',
       () => m.$('i32.reinterpret_f32', [$f32('FFC00000')]),
       $i32('FFC00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_reinterpret_f32_13',
       () => m.$('i32.reinterpret_f32', [$f32('7FA00000')]),
       $i32('7FA00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'i32_reinterpret_f32_14',
       () => m.$('i32.reinterpret_f32', [$f32('FFA00000')]),
       $i32('FFA00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i64_reinterpret_f64_0',
         () => m.$('i64.reinterpret_f64', [$f64('0')]), 0);

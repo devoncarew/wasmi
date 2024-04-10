@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -300,7 +300,7 @@ void main() {
       'f64_align_switch_0',
       () => m.$('f64_align_switch', [0]),
       $f64('4024000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f64_align_switch_1', () => m.$('f64_align_switch', [1]),
         $f64('4024000000000000'));
@@ -308,19 +308,19 @@ void main() {
       'f64_align_switch_2',
       () => m.$('f64_align_switch', [2]),
       $f64('4024000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_align_switch_3',
       () => m.$('f64_align_switch', [3]),
       $f64('4024000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_align_switch_4',
       () => m.$('f64_align_switch', [4]),
       $f64('4024000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('i32_align_switch_0', () => m.$('i32_align_switch', [0, 0]), 0xA);
     returns('i32_align_switch_1', () => m.$('i32_align_switch', [0, 1]), 0xA);

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
-import '_framework.dart';
+import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
@@ -31,7 +31,7 @@ void main() {
       'i32_load_2',
       () => m.$('i32.load', []),
       $i32('7FA00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_load_2', () => m.$('f32.load', []), $f32('7FA00000'));
     action('reset_1', () => m.$('reset', []));
@@ -62,13 +62,13 @@ void main() {
       'i64_load_2',
       () => m.$('i64.load', []),
       $i64('7FF4000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_load_2',
       () => m.$('f64.load', []),
       $f64('7FF4000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
@@ -98,7 +98,7 @@ void main() {
       'i32_load_2',
       () => m.$('i32.load', []),
       $i32('7FA00000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns('f32_load_2', () => m.$('f32.load', []), $f32('7FA00000'));
     action('reset_1', () => m.$('reset', []));
@@ -129,13 +129,13 @@ void main() {
       'i64_load_2',
       () => m.$('i64.load', []),
       $i64('7FF4000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_load_2',
       () => m.$('f64.load', []),
       $f64('7FF4000000000000'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
@@ -161,12 +161,7 @@ void main() {
     returns('i32_load_1', () => m.$('i32.load', []), 0);
     returns('f32_load_1', () => m.$('f32.load', []), $f32('0'));
     action('f32_store_0', () => m.$('f32.store', []));
-    returns(
-      'i32_load_2',
-      () => m.$('i32.load', []),
-      $i32('7FD00001'),
-      skip: 'see test/spec/_expected_fail.txt',
-    );
+    returns('i32_load_2', () => m.$('i32.load', []), $i32('7FD00001'));
     returns('f32_load_2', () => m.$('f32.load', []), $f32('7FD00001'));
     action('reset_1', () => m.$('reset', []));
     returns('i32_load_3', () => m.$('i32.load', []), 0);
@@ -196,13 +191,13 @@ void main() {
       'i64_load_2',
       () => m.$('i64.load', []),
       $i64('7FFC000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     returns(
       'f64_load_2',
       () => m.$('f64.load', []),
       $f64('7FFC000000000001'),
-      skip: 'see test/spec/_expected_fail.txt',
+      skip: 'failed',
     );
     action('reset_1', () => m.$('reset', []));
     returns('i64_load_3', () => m.$('i64.load', []), 0);
