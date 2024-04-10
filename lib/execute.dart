@@ -1873,10 +1873,10 @@ class CompiledFn {
     }
 
     void memory_fill(Bytecode code) {
-      i32 arg2 = stack[--sp] as int;
-      i32 arg1 = stack[--sp] as int;
-      i32 arg0 = stack[--sp] as int;
-      throw 'unimplemented: memory_fill';
+      i32 count = stack[--sp] as int;
+      i32 value = stack[--sp] as int;
+      i32 offset = stack[--sp] as int;
+      memory!.fill(value, offset, count);
     }
 
     void table_init(Bytecode code) {
@@ -2258,12 +2258,20 @@ class Memory {
     }
 
     if (sourceOffset > destOffset) {
-      for (int i = 0; i < count; i++) {
-        data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+      try {
+        for (int i = 0; i < count; i++) {
+          data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+        }
+      } on RangeError {
+        throw Trap('out of bounds memory access');
       }
     } else {
-      for (int i = count - 1; i >= 0; i--) {
-        data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+      try {
+        for (int i = count - 1; i >= 0; i--) {
+          data.setUint8(destOffset + i, data.getUint8(sourceOffset + i));
+        }
+      } on RangeError {
+        throw Trap('out of bounds memory access');
       }
     }
   }
