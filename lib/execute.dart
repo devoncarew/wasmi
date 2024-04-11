@@ -393,7 +393,7 @@ class CompiledFn {
 
     void brIf(Bytecode code) {
       i32 arg0 = stack[--sp] as int;
-      if (arg0 == 0) {
+      if (arg0 != 0) {
         // todo: update the stack
         pc = code.targetPc!;
       }

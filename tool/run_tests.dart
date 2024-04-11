@@ -17,7 +17,14 @@ void main(List<String> args) async {
   // 'dart test --reporter json -j1 test/spec'
   final process = await io.Process.start(
     io.Platform.resolvedExecutable,
-    ['test', '--reporter', 'json', '-j1', 'test/spec'],
+    [
+      'test',
+      '--reporter',
+      'json',
+      '-j1',
+      if (updateStatus) '--run-skipped',
+      'test/spec',
+    ],
   );
 
   process.stdout

@@ -7,6 +7,8 @@ import 'opcodes.dart';
 import 'parse.dart' as def;
 import 'types.dart';
 
+const printDebug = false;
+
 CompiledFn compile(
   Module module,
   def.DefinedFunction function, {
@@ -34,7 +36,11 @@ CompiledFn compile(
     }
     maxHeight = math.max(maxHeight, stackHeight);
 
-    // print('${opcode.name.padRight(16)} [stack: $stackHeight]');
+    if (printDebug) {
+      final index =
+          (function.instructions.indexOf(instruction)).toString().padLeft(2);
+      print('[$index] ${opcode.name.padRight(16)} [stack: $stackHeight]');
+    }
 
     // translate to bytecode
     final bytecode = _translate(instruction);
@@ -64,6 +70,9 @@ CompiledFn compile(
       final blockType = code < 0
           ? FunctionType.fromBlockType(code)!
           : function.module.functionTypes[code];
+      if (printDebug) {
+        print('     $instruction: $blockType');
+      }
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.$else) {
       if (labels.last.ifInstr) {
@@ -75,6 +84,9 @@ CompiledFn compile(
       final blockType = code < 0
           ? FunctionType.fromBlockType(code)!
           : function.module.functionTypes[code];
+      if (printDebug) {
+        print('     $instruction: $blockType');
+      }
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.loop) {
       labels.push(instruction);
@@ -82,10 +94,16 @@ CompiledFn compile(
       final blockType = code < 0
           ? FunctionType.fromBlockType(code)!
           : function.module.functionTypes[code];
+      if (printDebug) {
+        print('     $instruction: $blockType');
+      }
       blockTypes.push(blockType);
     } else if (instruction.brInstr || instruction.brIfInstr) {
       instruction.targetInstr =
           labels[labels.length - instruction.labelTarget - 1];
+      if (printDebug) {
+        print('     $instruction => ${instruction.targetInstr}');
+      }
     } else if (instruction.opcode == Opcode.brTable) {
       // Store the instructions that brTable branches to.
       final brTableInstr = instruction as InstructionBrTable;
@@ -123,6 +141,11 @@ CompiledFn compile(
     } else if (instruction.brInstr || instruction.brIfInstr) {
       final targetInstr = instruction.targetInstr!;
       instruction.bytecode!.targetPc = targetInstr.calcJumpTargetPc(bytecodes);
+
+      if (printDebug) {
+        final index = function.instructions.indexOf(instruction);
+        print('  $instruction [$index] => ${instruction.bytecode!.targetPc}');
+      }
     } else if (instruction.opcode == Opcode.brTable) {
       // From the bytecode instrution targets, calculate PCs.
       final brTableInstr = instruction as InstructionBrTable;
@@ -134,6 +157,10 @@ CompiledFn compile(
         brTableBytecode.pcTargets.add(targetInstr.calcJumpTargetPc(bytecodes));
       }
     }
+  }
+
+  if (printDebug) {
+    print('');
   }
 
   return CompiledFn(module, function, functionType, bytecodes, maxHeight);
