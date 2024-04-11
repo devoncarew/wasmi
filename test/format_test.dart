@@ -20,14 +20,14 @@ void main() {
     test('SectionKind.type', () {
       expect(module.functionTypes, hasLength(1));
       final type = module.functionTypes.first;
-      expect(type.displayText, 'i32 => i32');
+      expect(type.displayText, '(i32) => i32');
     });
 
     test('SectionKind.function', () {
       expect(module.definedFunctions, hasLength(1));
       final fn = module.definedFunctions.first;
       final type = module.functionTypes[fn.typeIndex];
-      expect(type.displayText, 'i32 => i32');
+      expect(type.displayText, '(i32) => i32');
     });
 
     test('SectionKind.memory', () {
@@ -44,7 +44,7 @@ void main() {
 
       final fn = export.func;
       final type = fn.functionType;
-      expect(type?.displayText, 'i32 => i32');
+      expect(type?.displayText, '(i32) => i32');
     });
 
     test('SectionKind.code', () {
@@ -95,7 +95,7 @@ void main() {
       expect(export.name, 'fac');
 
       final type = export.func.functionType;
-      expect(type!.displayText, 'i32 => i32');
+      expect(type!.displayText, '(i32) => i32');
     });
 
     test('gcd.wasm', () {
@@ -106,7 +106,7 @@ void main() {
       expect(export.name, 'gcd');
 
       final type = export.func.functionType;
-      expect(type!.displayText, 'i32, i32 => i32');
+      expect(type!.displayText, '(i32, i32) => i32');
     });
 
     test('hello.wasm', () {

@@ -431,6 +431,15 @@ class Instruction {
       return bytecodes.indexOf(endInstr!.bytecode!) + 1;
     }
   }
+
+  @override
+  String toString() {
+    if (opcode == Opcode.overflow) {
+      return '${opcode.name}:${opcode2!.name}';
+    } else {
+      return opcode.name;
+    }
+  }
 }
 
 class InstructionBrTable extends Instruction {

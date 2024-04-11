@@ -101,7 +101,7 @@ class FunctionType {
 
   String get displayText {
     var params = parameterTypes.map((e) => e.name).join(', ');
-    return '$params => $resultTypeDisplayText';
+    return '($params) => $resultTypeDisplayText';
   }
 
   @override
