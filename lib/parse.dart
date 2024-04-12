@@ -92,6 +92,7 @@ class ModuleDefinition {
 
   DebugInfo? debugInfo;
   MemoryInfo? memoryInfo;
+  bool memoryExported = false;
   int? startFunctionIndex;
 
   ModuleDefinition({
@@ -690,6 +691,7 @@ class ModuleDefinition {
 
   void _exportMemory(String name, int memoryIndex) {
     // we make the memory field visible by default
+    memoryExported = true;
   }
 
   void _addDefinedTable(TableType type, int minSize, [int? maxSize]) {

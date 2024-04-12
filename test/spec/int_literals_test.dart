@@ -3,9 +3,11 @@
 // ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
+
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
+
 import '../framework.dart';
 
 void main() {

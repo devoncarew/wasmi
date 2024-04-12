@@ -136,7 +136,7 @@ void generateSpecTests(File wastFile) {
   }
 
   final library = createLibraryFor(wastFile, destJsonFile);
-  final emitter = DartEmitter.scoped();
+  final emitter = DartEmitter(orderDirectives: true);
   destDartFile
       .writeAsStringSync(DartFormatter().format('${library.accept(emitter)}'));
 }
