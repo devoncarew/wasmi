@@ -3,9 +3,11 @@
 // ignore_for_file: unused_import, unused_local_variable
 
 import 'dart:io';
+
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
 import 'package:wasmi/parse.dart';
+
 import '../framework.dart';
 
 void main() {
@@ -41,18 +43,8 @@ void main() {
     returns('as_loop_last_0', () => m.$('as-loop-last', [0]), 5);
     returns('as_br_value_0', () => m.$('as-br-value', [0]), 9);
     returns('as_br_if_cond_0', () => m.$('as-br_if-cond', [0]), null /*void*/);
-    returns(
-      'as_br_if_value_0',
-      () => m.$('as-br_if-value', [0]),
-      8,
-      skip: 'failed',
-    );
-    returns(
-      'as_br_if_value_cond_0',
-      () => m.$('as-br_if-value-cond', [0]),
-      6,
-      skip: 'failed',
-    );
+    returns('as_br_if_value_0', () => m.$('as-br_if-value', [0]), 8);
+    returns('as_br_if_value_cond_0', () => m.$('as-br_if-value-cond', [0]), 6);
     returns('as_br_table_index_0', () => m.$('as-br_table-index', [0]),
         null /*void*/);
     returns('as_br_table_value_0', () => m.$('as-br_table-value', [0]), 0xA);
