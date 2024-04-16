@@ -387,24 +387,35 @@ class CompiledFn {
       // throw 'unimplemented: end';
     }
 
-    void br(Bytecode code) {
+    void br(Bytecode $code) {
+      final code = $code as BranchBytecode;
       pc = code.targetPc!;
-    }
 
-    void brIf(Bytecode code) {
-      i32 arg0 = stack[--sp] as int;
-      if (arg0 != 0) {
-        // todo: update the stack
-        pc = code.targetPc!;
+      if (code.stackEdit != null) {
+        sp = code.stackEdit!.apply(stack, sp);
       }
     }
 
-    void brTable(Bytecode code) {
-      final table = code as BytecodeBrTable;
+    void brIf(Bytecode $code) {
+      final code = $code as BranchBytecode;
+      i32 arg0 = stack[--sp] as int;
+      if (arg0 != 0) {
+        pc = code.targetPc!;
+
+        if (code.stackEdit != null) {
+          sp = code.stackEdit!.apply(stack, sp);
+        }
+      }
+    }
+
+    void brTable(Bytecode $code) {
+      final code = $code as BrTableBytecode;
 
       i32 arg0 = stack[--sp] as int;
 
       // TODO: update stack heights and such
+      // TODO: use any calculated stackEdits
+
       if (arg0 < code.pcTargets.length) {
         pc = code.pcTargets[arg0];
       } else {
@@ -2163,9 +2174,10 @@ class CompiledFn {
       impl(code);
     }
 
-    // todo: use the fn return type
-    if (sp > 0) {
+    if (functionType.resultTypes.length == 1) {
       return stack[--sp];
+    } else if (functionType.resultTypes.length > 1) {
+      return stack.sublist(sp - functionType.resultTypes.length, sp);
     } else {
       return null;
     }

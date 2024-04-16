@@ -10,9 +10,20 @@ void main(List<String> args) async {
     negatable: false,
     help: 'Write test results to the status file.',
   );
+  argParser.addFlag(
+    'help',
+    abbr: 'h',
+    negatable: false,
+    help: 'Print this usage information.',
+  );
 
   final argResults = argParser.parse(args);
-  final updateStatus = argResults['update'] as bool;
+  if (argResults.flag('help')) {
+    print(argParser.usage);
+    io.exit(0);
+  }
+
+  final updateStatus = argResults.flag('update');
 
   // 'dart test --reporter json -j1 test/spec'
   final process = await io.Process.start(
