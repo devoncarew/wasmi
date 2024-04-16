@@ -10,7 +10,7 @@ const Set<String> allowList = {
   'align.wast',
   // 'binary-leb128.wast',
   // 'binary.wast',
-  // 'block.wast',
+  'block.wast',
   'br.wast',
   'br_if.wast',
   // 'br_table.wast',

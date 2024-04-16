@@ -79,7 +79,8 @@ CompiledFn compile(
       if (printDebug) {
         print('     $instruction: $blockType');
       }
-      instruction.startingStackHeight = stackHeight;
+      instruction.startingStackHeight =
+          stackHeight - blockType.parameterTypes.length;
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.loop) {
       labels.push(instruction);
