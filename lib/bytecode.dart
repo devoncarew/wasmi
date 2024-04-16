@@ -216,9 +216,6 @@ class Bytecode {
   // Ths pc of the instructions following the end block, if any.
   int? endFollow;
 
-  // The target of a branch instruction.
-  int? targetPc;
-
   Bytecode(
     this.code, {
     this.i0 = 0,
@@ -232,14 +229,44 @@ class Bytecode {
   String toString() => hex(code);
 }
 
-class BytecodeBrTable extends Bytecode {
+class BranchBytecode extends Bytecode {
+  // The target of a branch instruction.
+  int? targetPc;
+
+  StackEdit? stackEdit;
+
+  BranchBytecode(
+    super.code, {
+    super.i0 = 0,
+    super.i1 = 0,
+  });
+}
+
+class BrTableBytecode extends Bytecode {
   final List<int> indexes;
 
   List<int> pcTargets = [];
   int defaultPcTarget = 0;
 
-  BytecodeBrTable(this.indexes, int defaultIndex)
+  BrTableBytecode(this.indexes, int defaultIndex)
       : super(Bytecode.brTable, i1: defaultIndex);
+}
+
+class StackEdit {
+  final int dest;
+  final int count;
+
+  StackEdit({required this.dest, required this.count});
+
+  int apply(List stack, int sp) {
+    final src = sp - count;
+
+    for (int i = 0; i < count; i++) {
+      stack[dest + i] = stack[src + i];
+    }
+
+    return dest + count;
+  }
 }
 
 const Map<int, String> _opcodeNames = {

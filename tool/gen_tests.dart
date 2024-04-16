@@ -11,8 +11,8 @@ const Set<String> allowList = {
   // 'binary-leb128.wast',
   // 'binary.wast',
   // 'block.wast',
-  // 'br.wast',
-  // 'br_if.wast',
+  'br.wast',
+  'br_if.wast',
   // 'br_table.wast',
   // 'bulk.wast',
   // 'call.wast',
@@ -241,11 +241,13 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
         var expected =
             (command['expected'] as List? ?? []).cast<Map<String, dynamic>>();
-        if (expected.length > 1) {
-          throw 'todo: support more than one return value';
-        }
         final String expectedValue;
-        if (expected.isNotEmpty) {
+        if (expected.length > 1) {
+          final value = expected
+              .map((arg) => encodeType(arg['type'], arg['value']))
+              .join(', ');
+          expectedValue = '[$value]';
+        } else if (expected.isNotEmpty) {
           expectedValue = expected.map((arg) {
             return encodeType(arg['type'], arg['value']);
           }).join(', ');

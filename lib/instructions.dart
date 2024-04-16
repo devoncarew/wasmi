@@ -24,6 +24,9 @@ class Instruction {
   Instruction? endInstr;
   Instruction? targetInstr;
 
+  /// The starting stack height for structured instructions (block, loop, if).
+  int? startingStackHeight;
+
   bool get ifInstr => opcode == Opcode.$if;
   bool get blockInstr => opcode == Opcode.block;
   bool get loopInstr => opcode == Opcode.loop;

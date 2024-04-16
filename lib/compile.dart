@@ -36,6 +36,9 @@ CompiledFn compile(
     }
     maxHeight = math.max(maxHeight, stackHeight);
 
+    // TODO: verify correct stackHeight calculation for the variable stack
+    // operations
+
     if (printDebug) {
       final index =
           (function.instructions.indexOf(instruction)).toString().padLeft(2);
@@ -47,70 +50,130 @@ CompiledFn compile(
     instruction.bytecode = bytecode;
     bytecodes.add(bytecode);
 
-    // TODO: handle manipulating the stack when branching
+    // "In case of `block` or `if` it is a forward jump, resuming execution
+    // after the matching `end`. In case of `loop` it is a backward jump to the
+    // beginning of the loop."
 
-    if (instruction.opcode == Opcode.end) {
-      // TODO: use this value
-      // ignore: unused_local_variable
-      final blockType = blockTypes.pop();
+    // "Taking a branch unwinds the operand stack up to the height where the
+    // targeted structured control instruction was entered. However, branches
+    // may additionally consume operands themselves, which they push back on the
+    // operand stack after unwinding. Forward branches require operands
+    // according to the output of the targeted block’s type, i.e., represent the
+    // values produced by the terminated block. Backward branches require
+    // operands according to the input of the targeted block’s type, i.e.,
+    // represent the values consumed by the restarted block."
 
-      if (labels.peek?.ifInstr == true ||
-          labels.peek?.blockInstr == true ||
-          labels.peek?.loopInstr == true) {
-        labels.last.endInstr = instruction;
-      }
-
-      // TODO: this is special casing the method block end
-      if (labels.isNotEmpty) {
-        labels.pop();
-      }
-    } else if (instruction.opcode == Opcode.$if) {
+    // Structured instructions - `block`, `loop`, and `if`.
+    if (instruction.opcode == Opcode.block) {
       labels.push(instruction);
-      final code = instruction.blockType;
-      final blockType = code < 0
-          ? FunctionType.fromBlockType(code)!
-          : function.module.functionTypes[code];
+      final blockType = instruction.blockType < 0
+          ? FunctionType.fromBlockType(instruction.blockType)!
+          : function.module.functionTypes[instruction.blockType];
       if (printDebug) {
         print('     $instruction: $blockType');
       }
+      instruction.startingStackHeight = stackHeight;
+      blockTypes.push(blockType);
+    } else if (instruction.opcode == Opcode.loop) {
+      labels.push(instruction);
+      final blockType = instruction.blockType < 0
+          ? FunctionType.fromBlockType(instruction.blockType)!
+          : function.module.functionTypes[instruction.blockType];
+      if (printDebug) {
+        print('     $instruction: $blockType');
+      }
+      instruction.startingStackHeight = stackHeight;
+      blockTypes.push(blockType);
+    } else if (instruction.opcode == Opcode.$if) {
+      labels.push(instruction);
+      final blockType = instruction.blockType < 0
+          ? FunctionType.fromBlockType(instruction.blockType)!
+          : function.module.functionTypes[instruction.blockType];
+      if (printDebug) {
+        print('     $instruction: $blockType');
+      }
+      instruction.startingStackHeight = stackHeight;
       blockTypes.push(blockType);
     } else if (instruction.opcode == Opcode.$else) {
       if (labels.last.ifInstr) {
         labels.last.elseInstr = instruction;
       }
-    } else if (instruction.opcode == Opcode.block) {
-      labels.push(instruction);
-      final code = instruction.blockType;
-      final blockType = code < 0
-          ? FunctionType.fromBlockType(code)!
-          : function.module.functionTypes[code];
-      if (printDebug) {
-        print('     $instruction: $blockType');
+      final ifInstruction = labels.last;
+      stackHeight = ifInstruction.startingStackHeight!;
+    } else if (instruction.opcode == Opcode.end) {
+      final blockType = blockTypes.pop();
+
+      if (labels.peek?.ifInstr == true ||
+          labels.peek?.blockInstr == true ||
+          labels.peek?.loopInstr == true) {
+        final structuredInstruction = labels.last;
+
+        structuredInstruction.endInstr = instruction;
+
+        if (structuredInstruction.ifInstr || structuredInstruction.blockInstr) {
+          // Restore the stack height to what it was when we entered the
+          // structured instruction.
+          stackHeight = structuredInstruction.startingStackHeight!;
+
+          // If the structured instruction indicates that it leaves values on
+          // the stack, adjust the stack height accordingly.
+          stackHeight += blockType.resultTypes.length;
+        }
       }
-      blockTypes.push(blockType);
-    } else if (instruction.opcode == Opcode.loop) {
-      labels.push(instruction);
-      final code = instruction.blockType;
-      final blockType = code < 0
-          ? FunctionType.fromBlockType(code)!
-          : function.module.functionTypes[code];
-      if (printDebug) {
-        print('     $instruction: $blockType');
+
+      // This is special casing the method block end.
+      if (labels.isNotEmpty) {
+        labels.pop();
       }
-      blockTypes.push(blockType);
-    } else if (instruction.brInstr || instruction.brIfInstr) {
-      instruction.targetInstr =
-          labels[labels.length - instruction.labelTarget - 1];
+    }
+
+    // Branching instructions - `br`, `brIf`, and `brTable`.
+    if (instruction.brInstr || instruction.brIfInstr) {
+      final targetInstr = labels.reverseIndex(instruction.labelTarget);
+      instruction.targetInstr = targetInstr;
+      final blockTypeCode = targetInstr.blockType;
+      final blockType = blockTypeCode < 0
+          ? FunctionType.fromBlockType(blockTypeCode)!
+          : function.module.functionTypes[blockTypeCode];
       if (printDebug) {
-        print('     $instruction => ${instruction.targetInstr}');
+        print('     $instruction => $targetInstr');
+      }
+
+      // Determine if we need to apply a stack edit for this branch.
+      if (targetInstr.blockInstr || targetInstr.ifInstr) {
+        // This is a forward jump.
+        final blockParams = blockType.resultTypes;
+        if (targetInstr.startingStackHeight! + blockParams.length !=
+            stackHeight) {
+          final bytecode = instruction.bytecode as BranchBytecode;
+          bytecode.stackEdit = StackEdit(
+            dest: targetInstr.startingStackHeight!,
+            count: blockParams.length,
+          );
+        }
+      } else {
+        if (!targetInstr.loopInstr) {
+          throw StateError('expected a loop instruction');
+        }
+
+        // This is a backwards jump.
+        final blockParams = blockType.parameterTypes;
+        if (targetInstr.startingStackHeight! + blockParams.length !=
+            stackHeight) {
+          final bytecode = instruction.bytecode as BranchBytecode;
+          bytecode.stackEdit = StackEdit(
+            dest: targetInstr.startingStackHeight!,
+            count: blockParams.length,
+          );
+        }
       }
     } else if (instruction.opcode == Opcode.brTable) {
       // Store the instructions that brTable branches to.
       final brTableInstr = instruction as InstructionBrTable;
       brTableInstr.defaultInstr =
-          labels[labels.length - brTableInstr.defaultLabel - 1];
+          labels.reverseIndex(brTableInstr.defaultLabel);
       for (var label in brTableInstr.labels) {
-        brTableInstr.labelsInstr.add(labels[labels.length - label - 1]);
+        brTableInstr.labelsInstr.add(labels.reverseIndex(label));
       }
     }
   }
@@ -138,18 +201,21 @@ CompiledFn compile(
         // tell the else bytecode how to skip to the end of the if statement
         elseBytecode.endFollow = followPc;
       }
-    } else if (instruction.brInstr || instruction.brIfInstr) {
+    }
+
+    if (instruction.brInstr || instruction.brIfInstr) {
       final targetInstr = instruction.targetInstr!;
-      instruction.bytecode!.targetPc = targetInstr.calcJumpTargetPc(bytecodes);
+      final bytecode = instruction.bytecode as BranchBytecode;
+      bytecode.targetPc = targetInstr.calcJumpTargetPc(bytecodes);
 
       if (printDebug) {
         final index = function.instructions.indexOf(instruction);
-        print('  $instruction [$index] => ${instruction.bytecode!.targetPc}');
+        print('  $instruction [$index] => ${bytecode.targetPc}');
       }
     } else if (instruction.opcode == Opcode.brTable) {
       // From the bytecode instrution targets, calculate PCs.
       final brTableInstr = instruction as InstructionBrTable;
-      final brTableBytecode = instruction.bytecode! as BytecodeBrTable;
+      final brTableBytecode = instruction.bytecode! as BrTableBytecode;
 
       brTableBytecode.defaultPcTarget =
           brTableInstr.defaultInstr!.calcJumpTargetPc(bytecodes);
@@ -183,11 +249,11 @@ Bytecode _translate(Instruction instr) {
     case Opcode.end:
       return Bytecode(Bytecode.end);
     case Opcode.br:
-      return Bytecode(Bytecode.br, i0: instr.immediate_0 as int);
+      return BranchBytecode(Bytecode.br, i0: instr.immediate_0 as int);
     case Opcode.brIf:
-      return Bytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
+      return BranchBytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
     case Opcode.brTable:
-      return BytecodeBrTable(
+      return BrTableBytecode(
           instr.immediate_0 as List<int>, instr.immediate_1 as int);
     case Opcode.$return:
       return Bytecode(Bytecode.$return);
@@ -621,4 +687,9 @@ extension StackExt<T> on List<T> {
   T pop() => removeLast();
 
   T? get peek => isEmpty ? null : last;
+
+  /// The nth item from the list, counting backwards.
+  T reverseIndex(int index) {
+    return this[length - 1 - index];
+  }
 }

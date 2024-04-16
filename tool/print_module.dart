@@ -199,7 +199,7 @@ Class createClassFor(String className, ModuleDefinition module) {
     }
 
     final method = MethodBuilder();
-    method.name = function.name;
+    method.name = function.name.replaceAll('-', '_');
     method.docs.addAll([
       '\n  // ${function.name}$sig',
     ]);
