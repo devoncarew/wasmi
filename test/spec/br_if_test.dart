@@ -52,18 +52,8 @@ void main() {
     returns('as_loop_first_1', () => m.$('as-loop-first', [1]), 3);
     returns('as_loop_mid_0', () => m.$('as-loop-mid', [0]), 2);
     returns('as_loop_mid_1', () => m.$('as-loop-mid', [1]), 4);
-    returns(
-      'as_loop_last_0',
-      () => m.$('as-loop-last', [0]),
-      null /*void*/,
-      skip: 'failed',
-    );
-    returns(
-      'as_loop_last_1',
-      () => m.$('as-loop-last', [1]),
-      null /*void*/,
-      skip: 'failed',
-    );
+    returns('as_loop_last_0', () => m.$('as-loop-last', [0]), null /*void*/);
+    returns('as_loop_last_1', () => m.$('as-loop-last', [1]), null /*void*/);
     returns('as_br_value_0', () => m.$('as-br-value', []), 1);
     returns('as_br_if_cond_0', () => m.$('as-br_if-cond', []), null /*void*/);
     returns('as_br_if_value_0', () => m.$('as-br_if-value', []), 1);
