@@ -24,6 +24,13 @@ CompiledFn compile(
 
   blockTypes.push(functionType);
 
+  // Push on a synthetic instruction to represent the function's outer scope.
+  {
+    final outerScope = Instruction(Opcode.block, [function.typeIndex]);
+    outerScope.startingStackHeight = 0;
+    labels.push(outerScope);
+  }
+
   for (final instruction in function.instructions) {
     final opcode = instruction.opcode;
 
@@ -103,27 +110,17 @@ CompiledFn compile(
     } else if (instruction.opcode == Opcode.end) {
       final blockType = blockTypes.pop();
 
-      if (labels.peek?.ifInstr == true ||
-          labels.peek?.blockInstr == true ||
-          labels.peek?.loopInstr == true) {
-        final structuredInstruction = labels.last;
+      final structuredInstruction = labels.pop();
+      structuredInstruction.endInstr = instruction;
 
-        structuredInstruction.endInstr = instruction;
+      if (structuredInstruction.ifInstr || structuredInstruction.blockInstr) {
+        // Restore the stack height to what it was when we entered the
+        // structured instruction.
+        stackHeight = structuredInstruction.startingStackHeight!;
 
-        if (structuredInstruction.ifInstr || structuredInstruction.blockInstr) {
-          // Restore the stack height to what it was when we entered the
-          // structured instruction.
-          stackHeight = structuredInstruction.startingStackHeight!;
-
-          // If the structured instruction indicates that it leaves values on
-          // the stack, adjust the stack height accordingly.
-          stackHeight += blockType.resultTypes.length;
-        }
-      }
-
-      // This is special casing the method block end.
-      if (labels.isNotEmpty) {
-        labels.pop();
+        // If the structured instruction indicates that it leaves values on
+        // the stack, adjust the stack height accordingly.
+        stackHeight += blockType.resultTypes.length;
       }
     }
 
@@ -158,11 +155,10 @@ CompiledFn compile(
 
         // This is a backwards jump.
         final blockParams = blockType.parameterTypes;
-        if (targetInstr.startingStackHeight! + blockParams.length !=
-            stackHeight) {
+        if (targetInstr.startingStackHeight! != stackHeight) {
           final bytecode = instruction.bytecode as BranchBytecode;
           bytecode.stackEdit = StackEdit(
-            dest: targetInstr.startingStackHeight!,
+            dest: targetInstr.startingStackHeight! - blockParams.length,
             count: blockParams.length,
           );
         }

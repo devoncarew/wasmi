@@ -54,7 +54,7 @@ const Set<String> allowList = {
   'local_get.wast',
   'local_set.wast',
   'local_tee.wast',
-  // 'loop.wast',
+  'loop.wast',
   'memory.wast',
   'memory_copy.wast',
   'memory_fill.wast',
