@@ -29,6 +29,7 @@ class Module {
   final List<Global> globals = [];
   final List<Table> tables = [];
   final List<PassiveSegment?> segments = [];
+  final Set<int> droppedDataSegments = {};
 
   bool _hasStarted = false;
 
@@ -127,15 +128,19 @@ class Module {
   void _initSegments() {
     for (var segmentDef in definition.elementSegments.segments) {
       if (segmentDef.passive) {
-        var fnIndexes = segmentDef.functionIndexs;
-        if (fnIndexes == null) {
-          fnIndexes = <int>[];
+        if (segmentDef.functionIndexs != null) {
+          var fnIndexes = segmentDef.functionIndexs!;
+          final fns = fnIndexes.map((index) => functions[index]).toList();
+          segments.add(PassiveSegment(segmentDef.elementKind, fns));
+        } else {
+          var fns = <WasmFunction?>[];
           for (var expr in segmentDef.functionIndexExpressions!) {
-            fnIndexes.add(_evaluateExpression(expr, ValueType.i32) as int);
+            final fn =
+                _evaluateExpression(expr, ValueType.funcref) as WasmFunction?;
+            fns.add(fn);
           }
+          segments.add(PassiveSegment(segmentDef.elementKind, fns));
         }
-        final fns = fnIndexes.map((index) => functions[index]).toList();
-        segments.add(PassiveSegment(segmentDef.elementKind, fns));
       } else {
         segments.add(null);
       }
@@ -213,7 +218,7 @@ class Module {
 
 class PassiveSegment {
   final ValueType? elementKind;
-  final List<WasmFunction> elements;
+  final List<WasmFunction?> elements;
 
   PassiveSegment(this.elementKind, this.elements);
 }
@@ -326,6 +331,8 @@ class CompiledFn {
 
   List<def.DataSegment> get dataSegments =>
       module.definition.dataSegments.segments;
+
+  Set<int> get droppedDataSegments => module.droppedDataSegments;
 
   Object? invoke([List<Object?> args = const []]) {
     final paramTypes = functionType.parameterTypes;
@@ -1863,13 +1870,19 @@ class CompiledFn {
       i32 srcOffset = stack[--sp] as int;
       i32 dstOffset = stack[--sp] as int;
 
+      if (droppedDataSegments.contains(dataSegment) && count > 0) {
+        throw Trap('out of bounds memory access');
+      }
+
       memory!.copyFrom(
           dataSegments[dataSegment].bytes, srcOffset, dstOffset, count);
     }
 
     void data_drop(Bytecode code) {
-      // nothing to do (optionally drop data segment 'index')
+      // Drop data segment 'index'.
       i32 index = code.i0;
+
+      droppedDataSegments.add(index);
     }
 
     void memory_copy(Bytecode code) {
@@ -1904,6 +1917,8 @@ class CompiledFn {
 
       final segment = module.segments[segmentIndex];
       if (segment == null) {
+        if (count == 0) return;
+
         throw Trap('out of bounds table access');
       }
 
@@ -2166,8 +2181,6 @@ class CompiledFn {
 
     while (pc < len) {
       final code = bytecodes[pc++];
-
-      // print('[pc $pc] ${code.name} (sp: $sp)');
 
       // Call the implementation method for the given bytecode.
       final impl = dispatch[code.code];
