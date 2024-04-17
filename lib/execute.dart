@@ -456,10 +456,11 @@ class CompiledFn {
       final result = func.invoke(args);
 
       if (function.returns.length > 1) {
-        throw 'unsupported: multiple return values';
-      }
-
-      if (function.returns.length == 1) {
+        // TODO: Refactor once we start sharing the stack for functions.
+        for (final item in (result as List)) {
+          stack[sp++] = item;
+        }
+      } else if (function.returns.length == 1) {
         stack[sp++] = result;
       }
     }
@@ -476,7 +477,12 @@ class CompiledFn {
         throw Trap('uninitialized element');
       }
 
-      // TODO: confirm that the func type is the same as typeIndex
+      // Confirm that the func type is the same as typeIndex.
+      // TODO: We'll want to make this faster.
+      final expectedType = module.definition.functionTypes[typeIndex];
+      if (!expectedType.compatibleWith(func.args, func.returns)) {
+        throw Trap('indirect call type mismatch');
+      }
 
       // get args
       final len = func.args.length;
@@ -486,10 +492,11 @@ class CompiledFn {
       final result = func.invoke(args);
 
       if (func.returns.length > 1) {
-        throw 'unsupported: multiple return values';
-      }
-
-      if (func.returns.length == 1) {
+        // TODO: Refactor once we start sharing the stack for functions.
+        for (final item in (result as List)) {
+          stack[sp++] = item;
+        }
+      } else if (func.returns.length == 1) {
         stack[sp++] = result;
       }
     }
