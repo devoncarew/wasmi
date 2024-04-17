@@ -41,10 +41,23 @@ CompiledFn compile(
       final opcode2 = instruction.opcode2!;
       stackHeight += opcode2.returns.length - opcode2.params.length;
     }
-    maxHeight = math.max(maxHeight, stackHeight);
+
+    if (opcode == Opcode.call) {
+      final fn = module.definition.allFunctions[instruction.immediate_0 as int];
+      final typeIndex = fn.typeIndex;
+      final type = module.definition.functionTypes[typeIndex];
+      stackHeight += type.resultTypes.length - type.parameterTypes.length;
+    } else if (opcode == Opcode.callIndirect) {
+      final typeIndex = instruction.immediate_0 as int;
+      final type = module.definition.functionTypes[typeIndex];
+      stackHeight += type.resultTypes.length - type.parameterTypes.length;
+    }
 
     // TODO: verify correct stackHeight calculation for the variable stack
     // operations
+
+    // Update the max stack height.
+    maxHeight = math.max(maxHeight, stackHeight);
 
     if (printDebug) {
       final index =
@@ -71,7 +84,7 @@ CompiledFn compile(
     // represent the values consumed by the restarted block."
 
     // Structured instructions - `block`, `loop`, and `if`.
-    if (instruction.opcode == Opcode.block) {
+    if (opcode == Opcode.block) {
       labels.push(instruction);
       final blockType = instruction.blockType < 0
           ? FunctionType.fromBlockType(instruction.blockType)!
@@ -82,7 +95,7 @@ CompiledFn compile(
       instruction.startingStackHeight =
           stackHeight - blockType.parameterTypes.length;
       blockTypes.push(blockType);
-    } else if (instruction.opcode == Opcode.loop) {
+    } else if (opcode == Opcode.loop) {
       labels.push(instruction);
       final blockType = instruction.blockType < 0
           ? FunctionType.fromBlockType(instruction.blockType)!
@@ -92,7 +105,7 @@ CompiledFn compile(
       }
       instruction.startingStackHeight = stackHeight;
       blockTypes.push(blockType);
-    } else if (instruction.opcode == Opcode.$if) {
+    } else if (opcode == Opcode.$if) {
       labels.push(instruction);
       final blockType = instruction.blockType < 0
           ? FunctionType.fromBlockType(instruction.blockType)!
@@ -102,13 +115,13 @@ CompiledFn compile(
       }
       instruction.startingStackHeight = stackHeight;
       blockTypes.push(blockType);
-    } else if (instruction.opcode == Opcode.$else) {
+    } else if (opcode == Opcode.$else) {
       if (labels.last.ifInstr) {
         labels.last.elseInstr = instruction;
       }
       final ifInstruction = labels.last;
       stackHeight = ifInstruction.startingStackHeight!;
-    } else if (instruction.opcode == Opcode.end) {
+    } else if (opcode == Opcode.end) {
       final blockType = blockTypes.pop();
 
       final structuredInstruction = labels.pop();
@@ -164,7 +177,7 @@ CompiledFn compile(
           );
         }
       }
-    } else if (instruction.opcode == Opcode.brTable) {
+    } else if (opcode == Opcode.brTable) {
       // Store the instructions that brTable branches to.
       final brTableInstr = instruction as InstructionBrTable;
       brTableInstr.defaultInstr =

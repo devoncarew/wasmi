@@ -106,4 +106,23 @@ class FunctionType {
 
   @override
   String toString() => displayText;
+
+  bool compatibleWith(List<ValueType> args, List<ValueType> returns) {
+    if (parameterTypes.length != args.length) return false;
+    if (resultTypes.length != returns.length) return false;
+
+    for (int i = 0; i < parameterTypes.length; i++) {
+      if (parameterTypes[i] != args[i]) {
+        return false;
+      }
+    }
+
+    for (int i = 0; i < resultTypes.length; i++) {
+      if (resultTypes[i] != returns[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
