@@ -126,8 +126,8 @@ void main() {
         'select_funcref_0', () => m.$('select-funcref', [null, null, 1]), null);
     returns(
         'select_externref_0',
-        () => m.$('select-externref', [$externref('1'), $externref('2'), 1]),
-        $externref('1'));
+        () => m.$('select-externref', [m.$externref(1), m.$externref(2), 1]),
+        () => m.$externref(1));
     returns('select_i32_t_1', () => m.$('select-i32-t', [1, 2, 0]), 2);
     returns('select_i32_t_2', () => m.$('select-i32-t', [2, 1, 0]), 1);
     returns('select_i64_t_1',
@@ -136,12 +136,12 @@ void main() {
         () => m.$('select-i64-t', [2, 1, $i32('F0F0F0F0')]), 2);
     returns(
         'select_externref_1',
-        () => m.$('select-externref', [$externref('1'), $externref('2'), 0]),
-        $externref('2'));
+        () => m.$('select-externref', [m.$externref(1), m.$externref(2), 0]),
+        () => m.$externref(2));
     returns(
         'select_externref_2',
-        () => m.$('select-externref', [$externref('2'), $externref('1'), 0]),
-        $externref('1'));
+        () => m.$('select-externref', [m.$externref(2), m.$externref(1), 0]),
+        () => m.$externref(1));
     returns(
         'select_f32_t_1',
         () => m.$('select-f32-t', [$f32('7FC00000'), $f32('3F800000'), 1]),

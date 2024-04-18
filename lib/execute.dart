@@ -22,6 +22,7 @@ typedef reftype = Object?;
 class Module {
   final def.ModuleDefinition definition;
   final Map<String, ImportModule> imports;
+  final Exports exports = Exports();
 
   final Map<String, int> _exportedFunctions = {};
   final List<WasmFunction> functions = [];
@@ -97,20 +98,32 @@ class Module {
 
   void _initGlobals() {
     for (final g in definition.globals.globals) {
+      late final Global global;
+
       if (g is def.ImportedGlobalDefinition) {
         final importName = g.importModule.name;
         final importModule = imports[importName];
         if (importModule == null) throw 'import not found: $importName';
-        final global =
+        final import =
             importModule.globals.firstWhereOrNull((f) => f.name == g.name);
-        if (global == null) throw 'import global not found: ${g.name}';
-        globals.add(global);
+        if (import == null) throw 'import global not found: ${g.name}';
+        global = import;
       } else if (g is def.DefinedGlobal) {
         final startingValue = _evaluateExpression(g.initExpression, g.type);
-        globals.add(DefinedGlobal(g.type, g.mutable, startingValue));
+        global = DefinedGlobal(g.type, g.mutable, startingValue);
       } else {
         throw StateError('unknown global type: $g');
       }
+
+      // Update the exports.
+      final exportName = definition.globals.globalExports
+          .firstWhereOrNull((export) => export.global == g)
+          ?.name;
+      if (exportName != null) {
+        exports.globals[exportName] = global;
+      }
+
+      globals.add(global);
     }
   }
 
@@ -129,11 +142,11 @@ class Module {
     for (var segmentDef in definition.elementSegments.segments) {
       if (segmentDef.passive) {
         if (segmentDef.functionIndexs != null) {
-          var fnIndexes = segmentDef.functionIndexs!;
+          final fnIndexes = segmentDef.functionIndexs!;
           final fns = fnIndexes.map((index) => functions[index]).toList();
           segments.add(PassiveSegment(segmentDef.elementKind, fns));
         } else {
-          var fns = <WasmFunction?>[];
+          final fns = <WasmFunction?>[];
           for (var expr in segmentDef.functionIndexExpressions!) {
             final fn =
                 _evaluateExpression(expr, ValueType.funcref) as WasmFunction?;
@@ -149,23 +162,31 @@ class Module {
 
   void _initTables() {
     for (var tableDef in definition.tables) {
+      late final Table table;
+
       if (tableDef is def.DefinedTable) {
         if (tableDef.type == def.TableType.functype) {
-          tables.add(Table<WasmFunction>(tableDef.minSize, tableDef.maxSize));
+          table = Table<WasmFunction?>(tableDef.minSize, tableDef.maxSize);
         } else {
-          tables.add(Table<reftype>(tableDef.minSize, tableDef.maxSize));
+          table = Table<reftype>(tableDef.minSize, tableDef.maxSize);
         }
       } else if (tableDef is def.ImportedTableDefinition) {
         final importName = tableDef.parent.name;
         final importModule = imports[importName];
         if (importModule == null) throw 'import not found: $importName';
-        final table = importModule.tables
+        final import = importModule.tables
             .firstWhereOrNull((f) => f.name == tableDef.name);
-        if (table == null) throw 'import table not found: ${tableDef.name}';
-        tables.add(table);
+        if (import == null) throw 'import table not found: ${tableDef.name}';
+        table = import;
       } else {
         throw 'unhandled table type: $tableDef';
       }
+
+      if (tableDef.exportName != null) {
+        exports.tables[tableDef.exportName!] = table;
+      }
+
+      tables.add(table);
     }
 
     // init tables using active element segments
@@ -175,16 +196,18 @@ class Module {
       var offset =
           _evaluateExpression(segment.offsetExpression!, ValueType.i32) as int;
       final table = tables[segment.tableIndex];
-      var fnIndexes = segment.functionIndexs;
-      if (fnIndexes == null) {
-        fnIndexes = <int>[];
+      if (segment.functionIndexs != null) {
+        final fnIndexes = segment.functionIndexs!;
+        final fns = fnIndexes.map((index) => functions[index]).toList();
+        table.copyFrom(fns, 0, offset, fns.length);
+      } else {
+        final fns = <WasmFunction?>[];
         for (var expr in segment.functionIndexExpressions!) {
-          fnIndexes.add(_evaluateExpression(expr, ValueType.i32) as int);
+          fns.add(
+              _evaluateExpression(expr, ValueType.funcref) as WasmFunction?);
         }
+        table.copyFrom(fns, 0, offset, fns.length);
       }
-
-      final fns = fnIndexes.map((index) => functions[index]).toList();
-      table.copyFrom(fns, 0, offset, fns.length);
     }
   }
 
@@ -200,6 +223,7 @@ class Module {
 
   Object? invoke(String methodName, [List<Object?> args = const []]) {
     // todo: throw an exception if there is no such method
+    // todo: figure out why we're not seeing test exports here
     var index = _exportedFunctions[methodName]!;
 
     if (!_hasStarted) start();
@@ -214,6 +238,12 @@ class Module {
         compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
     return func.invoke();
   }
+}
+
+class Exports {
+  // todo: memory, tables, functions
+  final Map<String, Global> globals = {};
+  final Map<String, Table> tables = {};
 }
 
 class PassiveSegment {
@@ -262,7 +292,13 @@ class ImportGlobal extends Global {
 class ImportTable<T> extends Table<T> {
   final String name;
 
-  ImportTable(this.name, super.minSize, [super.maxSize]);
+  final List<T?> _refs;
+
+  ImportTable(this.name, super.minSize, super.maxSize, List<T?> refs)
+      : _refs = refs;
+
+  @override
+  List<T?> get refs => _refs;
 }
 
 abstract class WasmFunction {
@@ -2354,7 +2390,7 @@ class Table<T> {
 
   final List<T?> refs;
 
-  Table(this.minSize, [this.maxSize])
+  Table(this.minSize, this.maxSize)
       : refs = List.filled(minSize, null, growable: true);
 
   int get size => refs.length;
