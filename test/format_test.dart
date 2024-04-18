@@ -37,20 +37,21 @@ void main() {
     });
 
     test('SectionKind.export', () {
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
 
-      final export = module.exportedFunctions.first;
-      expect(export.name, 'fib');
+      final export = module.exports.functions.entries.first;
+      expect(export.key, 'fib');
 
-      final fn = export.func;
+      final fn = module.functions[export.value] as DefinedFunction;
       final type = fn.functionType;
       expect(type?.displayText, '(i32) => i32');
     });
 
     test('SectionKind.code', () {
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
 
-      final fn = module.exportedFunctions.first.func as DefinedFunction;
+      final index = module.exports.functions.entries.first.value;
+      final fn = module.functions[index] as DefinedFunction;
       expect(fn.instructions, isNotEmpty);
     });
   });
@@ -59,14 +60,14 @@ void main() {
     test('branch1.wasm', () {
       final module = ModuleDefinition.parse(File('samples/branch1.wasm'));
 
-      expect(module.exportedFunctions, isNotEmpty);
-      expect(module.globals.globals, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
+      expect(module.globals, isNotEmpty);
     });
 
     test('branch2.wasm', () {
       final module = ModuleDefinition.parse(File('samples/branch2.wasm'));
 
-      expect(module.globals.globals, isNotEmpty);
+      expect(module.globals, isNotEmpty);
 
       expect(module.importModules, isNotEmpty);
       final import = module.importModules.first;
@@ -79,33 +80,35 @@ void main() {
       final module = ModuleDefinition.parse(File('samples/eratosthenes.wasm'));
 
       expect(module.importModules, isNotEmpty);
-      expect(module.globals.globals, isNotEmpty);
+      expect(module.globals, isNotEmpty);
       expect(module.memoryInfo, isNotNull);
       expect(module.memoryInfo!.min, 1);
       expect(module.dataSegments.segments, isNotEmpty);
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
       expect(module.startFunctionIndex, isNotNull);
     });
 
     test('fac.wasm', () {
       final module = ModuleDefinition.parse(File('samples/fac.wasm'));
 
-      expect(module.exportedFunctions, isNotEmpty);
-      final export = module.exportedFunctions.first;
-      expect(export.name, 'fac');
+      expect(module.exports.functions, isNotEmpty);
+      final export = module.exports.functions.entries.first;
+      expect(export.key, 'fac');
 
-      final type = export.func.functionType;
+      final func = module.functions[export.value];
+      final type = func.functionType;
       expect(type!.displayText, '(i32) => i32');
     });
 
     test('gcd.wasm', () {
       final module = ModuleDefinition.parse(File('samples/gcd.wasm'));
 
-      expect(module.exportedFunctions, isNotEmpty);
-      final export = module.exportedFunctions.first;
-      expect(export.name, 'gcd');
+      expect(module.exports.functions, isNotEmpty);
+      final export = module.exports.functions.entries.first;
+      expect(export.key, 'gcd');
 
-      final type = export.func.functionType;
+      final func = module.functions[export.value];
+      final type = func.functionType;
       expect(type!.displayText, '(i32, i32) => i32');
     });
 
@@ -115,24 +118,24 @@ void main() {
       expect(module.memoryInfo, isNotNull);
       expect(module.memoryInfo!.min, 10);
       expect(module.globals, isNotEmpty);
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
     });
 
     test('icu_capi.wasm', () {
       final module = ModuleDefinition.parse(File('samples/icu_capi.wasm'));
 
       expect(module.importModules, isNotEmpty);
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
     });
 
     test('mandelbrot.wasm', () {
       final module = ModuleDefinition.parse(File('samples/mandelbrot.wasm'));
 
       expect(module.importModules, isNotEmpty);
-      expect(module.globals.globals, isNotEmpty);
+      expect(module.globals, isNotEmpty);
       expect(module.tables, isNotEmpty);
       expect(module.elementSegments.segments, isNotEmpty);
-      expect(module.exportedFunctions, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
     });
 
     test('print.wasm', () {
@@ -163,16 +166,16 @@ void main() {
           unorderedEquals(['fill_buf', 'buf_done']));
 
       // export rot13
-      expect(module.exportedFunctions, isNotEmpty);
-      final export = module.exportedFunctions.first;
-      expect(export.name, 'rot13');
+      expect(module.exports.functions, isNotEmpty);
+      final export = module.exports.functions.entries.first;
+      expect(export.key, 'rot13');
     });
 
     test('sha3.wasm', () {
       final module = ModuleDefinition.parse(File('samples/sha3.wasm'));
 
-      expect(module.exportedFunctions, isNotEmpty);
-      expect(module.globals.globals, isNotEmpty);
+      expect(module.exports.functions, isNotEmpty);
+      expect(module.globals, isNotEmpty);
       // (memory (;0;) 10 65536)
       expect(module.memoryInfo, isNotNull);
       expect(module.memoryInfo!.min, 10);

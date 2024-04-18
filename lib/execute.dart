@@ -46,8 +46,8 @@ class Module {
     }
 
     // functions
-    for (var fn in definition.exportedFunctions) {
-      _exportedFunctions[fn.name] = definition.allFunctions.indexOf(fn.func);
+    for (var entry in definition.exports.functions.entries) {
+      _exportedFunctions[entry.key] = entry.value;
     }
     for (var fn in definition.definedFunctions) {
       functions.add(DefinedFunction(this, fn));
@@ -68,7 +68,7 @@ class Module {
 
   void _initImports() {
     // init imported functions
-    for (var fn in definition.allFunctions) {
+    for (var fn in definition.functions) {
       if (fn is def.ImportedFunctionDefinition) {
         final importName = fn.importModule.name;
         final importModule = imports[importName];
@@ -91,13 +91,14 @@ class Module {
       }
     }
 
-    // globals are inited in _initGlobals()
-
     // todo: tables
   }
 
   void _initGlobals() {
-    for (final g in definition.globals.globals) {
+    final globalExports = definition.exports.globals.reversed;
+
+    for (int i = 0; i < definition.globals.length; i++) {
+      final g = definition.globals[i];
       late final Global global;
 
       if (g is def.ImportedGlobalDefinition) {
@@ -116,9 +117,7 @@ class Module {
       }
 
       // Update the exports.
-      final exportName = definition.globals.globalExports
-          .firstWhereOrNull((export) => export.global == g)
-          ?.name;
+      final exportName = globalExports[i];
       if (exportName != null) {
         exports.globals[exportName] = global;
       }
@@ -161,7 +160,9 @@ class Module {
   }
 
   void _initTables() {
-    for (var tableDef in definition.tables) {
+    final tableExports = definition.exports.tables.reversed;
+    for (var i = 0; i < definition.tables.length; i++) {
+      final tableDef = definition.tables[i];
       late final Table table;
 
       if (tableDef is def.DefinedTable) {
@@ -182,8 +183,9 @@ class Module {
         throw 'unhandled table type: $tableDef';
       }
 
-      if (tableDef.exportName != null) {
-        exports.tables[tableDef.exportName!] = table;
+      final exportName = tableExports[i];
+      if (exportName != null) {
+        exports.tables[exportName] = table;
       }
 
       tables.add(table);
@@ -226,6 +228,12 @@ class Module {
     // todo: figure out why we're not seeing test exports here
     var index = _exportedFunctions[methodName]!;
 
+    if (!_hasStarted) start();
+
+    return functions[index].invoke(args);
+  }
+
+  Object? invokeByIndex(int index, [List<Object?> args = const []]) {
     if (!_hasStarted) start();
 
     return functions[index].invoke(args);

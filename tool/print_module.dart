@@ -32,7 +32,7 @@ void main(List<String> args) {
   print('');
 
   // memory
-  if (module.memoryExported) {
+  if (module.exports.memory.isNotEmpty) {
     print('### Memory');
     print('');
 
@@ -43,28 +43,31 @@ void main(List<String> args) {
   }
 
   // globals
-  if (module.globals.globalExports.isNotEmpty) {
+  if (module.exports.globals.isNotEmpty) {
     print('### Globals');
     print('');
 
-    for (var global in module.globals.globalExports) {
-      final readOnly = global.global.mutable ? '' : ' [read-only]';
-      print('- ${global.global.type.dartType} ${global.name}$readOnly;');
+    for (var entry in module.exports.globals.entries) {
+      final name = entry.key;
+      final global = module.globals[entry.value];
+      final readOnly = global.mutable ? '' : ' [read-only]';
+      print('- ${global.type.dartType} $name$readOnly;');
     }
 
     print('');
   }
 
   // functions
-  if (module.exportedFunctions.isNotEmpty) {
+  if (module.exports.functions.isNotEmpty) {
     print('### Functions');
     print('');
 
-    for (var function in module.exportedFunctions) {
-      final func = function.func;
+    for (var entry in module.exports.functions.entries) {
+      final name = entry.key;
+      final func = module.functions[entry.value];
 
       final args = func.functionType!.parameterTypes;
-      print('- ${returnType(func.functionType!)} ${function.name}'
+      print('- ${returnType(func.functionType!)} $name'
           '(${args.map((r) => r.dartType).join(', ')});');
     }
 
@@ -189,8 +192,10 @@ Class createClassFor(String className, ModuleDefinition module) {
   getter.returns = Reference('Memory', 'package:wasmi/execute.dart');
   builder.methods.add(getter.build());
 
-  for (final function in module.exportedFunctions) {
-    final functionType = function.func.functionType!;
+  for (final entry in module.exports.functions.entries) {
+    final name = entry.key;
+    final func = module.functions[entry.value];
+    final functionType = func.functionType!;
     var sig =
         '(${functionType.parameterTypes.map((type) => type.name).join(', ')})';
     if (functionType.resultTypes.isNotEmpty) {
@@ -199,9 +204,9 @@ Class createClassFor(String className, ModuleDefinition module) {
     }
 
     final method = MethodBuilder();
-    method.name = function.name.replaceAll('-', '_');
+    method.name = name.replaceAll('-', '_');
     method.docs.addAll([
-      '\n  // ${function.name}$sig',
+      '\n  // $name$sig',
     ]);
     method.returns = Reference(functionType.resultTypes.dartReturn);
     for (int i = 0; i < functionType.parameterTypes.length; i++) {
@@ -215,7 +220,7 @@ Class createClassFor(String className, ModuleDefinition module) {
     if (functionType.resultTypes.isNotEmpty) {
       buf.write('return ');
     }
-    buf.write("module.invoke('${function.name}'");
+    buf.write("module.invoke('$name'");
     if (functionType.parameterTypes.isNotEmpty) {
       buf.write(', [');
       for (int i = 0; i < functionType.parameterTypes.length; i++) {

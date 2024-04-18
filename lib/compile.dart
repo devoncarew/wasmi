@@ -43,7 +43,7 @@ CompiledFn compile(
     }
 
     if (opcode == Opcode.call) {
-      final fn = module.definition.allFunctions[instruction.immediate_0 as int];
+      final fn = module.definition.functions[instruction.immediate_0 as int];
       final typeIndex = fn.typeIndex;
       final type = module.definition.functionTypes[typeIndex];
       stackHeight += type.resultTypes.length - type.parameterTypes.length;

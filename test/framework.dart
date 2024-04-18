@@ -92,14 +92,18 @@ ImportModule importModuleFrom(Module module) {
   final importModule = ImportModule();
 
   // functions
-  for (var export in module.definition.exportedFunctions) {
+  for (var export in module.definition.exports.functions.entries) {
+    final name = export.key;
+    final index = export.value;
+    final func = module.definition.functions[index];
+
     importModule.functions.add(ImportFunction(
-      export.name,
+      name,
       (List<Object?> args) {
-        return module.invoke(export.name, args);
+        return module.invokeByIndex(index, args);
       },
-      export.func.functionType!.parameterTypes,
-      export.func.functionType!.resultTypes,
+      func.functionType!.parameterTypes,
+      func.functionType!.resultTypes,
     ));
   }
 
