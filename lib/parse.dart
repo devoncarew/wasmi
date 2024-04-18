@@ -444,6 +444,9 @@ class ModuleDefinition {
       var name = r.readName();
 
       var type = r.readUint8();
+
+      // todo: change how we represent this - string names and indexes
+
       switch (type) {
         case 0x00:
           // funcidx

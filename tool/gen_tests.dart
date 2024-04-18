@@ -22,7 +22,7 @@ const Set<String> allowList = {
   'conversions.wast',
   // 'custom.wast',
   'data.wast',
-  // 'elem.wast',
+  'elem.wast',
   'endianness.wast',
   // 'exports.wast',
   'f32.wast',
@@ -31,7 +31,7 @@ const Set<String> allowList = {
   'f64.wast',
   'f64_bitwise.wast',
   'f64_cmp.wast',
-  // 'fac.wast',
+  'fac.wast',
   // 'float_exprs.wast',
   'float_literals.wast',
   'float_memory.wast',
@@ -248,9 +248,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
               .join(', ');
           expectedValue = '[$value]';
         } else if (expected.isNotEmpty) {
-          expectedValue = expected.map((arg) {
-            return encodeType(arg['type'], arg['value']);
-          }).join(', ');
+          final single = expected.first;
+          expectedValue =
+              encodeType(single['type'], single['value'], useClosure: true);
         } else {
           expectedValue = 'null /*void*/';
         }
@@ -364,10 +364,18 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   return builder.build();
 }
 
-String encodeType(String type, String value) {
-  if (value == 'null') {
-    return value;
-  } else if ((type == 'i32' || type == 'i64') && value.length <= 6) {
+String encodeType(String type, String value, {bool useClosure = false}) {
+  if (value == 'null') return value;
+
+  if (type == 'externref') {
+    if (useClosure) {
+      return '() => m.\$externref($value)';
+    } else {
+      return 'm.\$externref($value)';
+    }
+  }
+
+  if ((type == 'i32' || type == 'i64') && value.length <= 6) {
     if (value == '0') {
       return value;
     } else {

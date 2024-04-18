@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 import 'package:wasmi/execute.dart';
-import 'package:wasmi/parse.dart';
+import 'package:wasmi/parse.dart' as def;
 import 'package:wasmi/types.dart';
 
 @isTest
@@ -27,7 +27,10 @@ void returns(
     () {
       final actual = testClosure();
       if (expected != null) {
-        if (expected is double && expected.isNaN) {
+        if (expected is Function) {
+          // ignore: avoid_dynamic_calls
+          expect(actual, expected());
+        } else if (expected is double && expected.isNaN) {
           expect(actual, isNaN);
         } else if (expected is int && expected.isNaN) {
           expect(actual, isNaN);
@@ -73,7 +76,8 @@ void traps(
 void assertInvalid(String testName, String filePath, String text) {
   test(testName, () {
     try {
-      final definition = ModuleDefinition.parse(File('test/spec/$filePath'));
+      final definition =
+          def.ModuleDefinition.parse(File('test/spec/$filePath'));
       // ignore: unused_local_variable
       final module = Module(definition);
 
@@ -99,17 +103,43 @@ ImportModule importModuleFrom(Module module) {
     ));
   }
 
-  // todo: tables
+  // tables
+  for (var entry in module.exports.tables.entries) {
+    final table = entry.value;
+
+    importModule.tables.add(ImportTable(
+      entry.key,
+      table.minSize,
+      table.maxSize,
+      table.refs,
+    ));
+  }
 
   // todo: memory
 
-  // todo: globals
+  // globals
+  for (var entry in module.exports.globals.entries) {
+    final global = entry.value;
+    importModule.globals.add(ImportGlobal(
+      entry.key,
+      global.type,
+      global.mutable,
+      () => global.value,
+      (val) => global.value = val,
+    ));
+  }
 
   return importModule;
 }
 
-extension ModuleDefinitionExtension on Module {
+extension ModuleExtension on Module {
   Object? $(String fnName, List args) => invoke(fnName, args);
+
+  Object? $externref(int index) {
+    // todo: indexed from what?
+
+    return _testExterns[index];
+  }
 }
 
 int $i32(String value) {
@@ -134,11 +164,6 @@ double $f64(String value) {
   var val = $i64(value);
   _reinterpretData.setInt64(0, val, Endian.little);
   return _reinterpretData.getFloat64(0, Endian.little);
-}
-
-Function $externref(String value) {
-  int val = $i32(value);
-  return _testExterns[val];
 }
 
 final List<Function> _testExterns = [
@@ -190,7 +215,8 @@ ImportModule specTestModule() {
   module.functions.add(ImportFunction('print_i64', voidHandler));
 
   // tables
-  final table = ImportTable<WasmFunction>('table', 10, 20);
+  final table = ImportTable<WasmFunction>(
+      'table', 10, 20, List.filled(10, null, growable: true));
   // todo: fill in values?
   module.tables.add(table);
 
