@@ -39,7 +39,7 @@ const Set<String> allowList = {
   // 'forward.wast',
   // 'func.wast',
   // 'func_ptrs.wast',
-  // 'global.wast',
+  'global.wast',
   'i32.wast',
   'i64.wast',
   // 'if.wast',

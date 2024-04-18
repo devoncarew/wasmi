@@ -132,13 +132,13 @@ ImportModule importModuleFrom(Module module) {
   return importModule;
 }
 
+final Map<int, Object> _testExterns = {};
+
 extension ModuleExtension on Module {
   Object? $(String fnName, List args) => invoke(fnName, args);
 
   Object? $externref(int index) {
-    // todo: indexed from what?
-
-    return _testExterns[index];
+    return _testExterns.putIfAbsent(index, () => '$index');
   }
 }
 
@@ -166,23 +166,29 @@ double $f64(String value) {
   return _reinterpretData.getFloat64(0, Endian.little);
 }
 
-final List<Function> _testExterns = [
-  extern0,
-  extern1,
-  extern2,
-  extern3,
-  extern4,
-  extern5,
-  extern6,
-];
-
-int extern0() => 0;
-int extern1(int p) => p * p;
-int extern2(int p0, int p1) => p0 + p1;
-int extern3(int p0, int p1, int p2) => p0 + p1;
-int extern4(int p0, int p1, int p2, int p3) => p0 + p1;
-int extern5(int p0, int p1, int p2, int p3, int p4) => p0 + p1;
-int extern6(int p0, int p1, int p2, int p3, int p4, int p5) => p0 + p1;
+// When running scripts, the interpreter predefines a simple host module named
+// `"spectest"` that has the following module type:
+//
+// ```
+// (module
+//   (global (export "global_i32") i32)
+//   (global (export "global_i64") i64)
+//   (global (export "global_f32") f32)
+//   (global (export "global_f64") f64)
+//
+//   (table (export "table") 10 20 funcref)
+//
+//   (memory (export "memory") 1 2)
+//
+//   (func (export "print"))
+//   (func (export "print_i32") (param i32))
+//   (func (export "print_i64") (param i64))
+//   (func (export "print_f32") (param f32))
+//   (func (export "print_f64") (param f64))
+//   (func (export "print_i32_f32") (param i32 f32))
+//   (func (export "print_f64_f64") (param f64 f64))
+// )
+// ```
 
 ImportModule specTestModule() {
   // 'spectest'
@@ -190,34 +196,38 @@ ImportModule specTestModule() {
 
   module.memory = Memory(1, 2);
 
-  module.globals.add(_GlobalValue('global_i32', ValueType.i32, 0));
-  module.globals.add(_GlobalValue('global_i64', ValueType.i64, 0));
-  module.globals.add(_GlobalValue('global_f32', ValueType.f32, 0.0));
-  module.globals.add(_GlobalValue('global_f64', ValueType.f64, 0.0));
+  module.globals.add(_GlobalValue('global_i32', ValueType.i32, 666));
+  module.globals.add(_GlobalValue('global_i64', ValueType.i64, 666));
+  module.globals.add(_GlobalValue('global_f32', ValueType.f32, 666.6));
+  module.globals.add(_GlobalValue('global_f64', ValueType.f64, 666.6));
 
-  Object? voidHandler(List<Object?> args) {
-    return null;
+  void voidPrintHandler(List<Object?> args) {
+    printOnFailure('spectest.print');
+  }
+
+  void printHandler(List<Object?> args) {
+    final arg = args[0];
+    printOnFailure('spectest.print: $arg');
   }
 
   // void print() {}
-  module.functions.add(ImportFunction('print', voidHandler));
+  module.functions.add(ImportFunction('print', voidPrintHandler));
   // void print_f32(f32 arg0) {}
-  module.functions.add(ImportFunction('print_f32', voidHandler));
+  module.functions.add(ImportFunction('print_f32', printHandler));
   // void print_f64(f64 arg0) {}
-  module.functions.add(ImportFunction('print_f64', voidHandler));
+  module.functions.add(ImportFunction('print_f64', printHandler));
   // void print_f64_f64(f64 arg0, f64 arg1) {}
-  module.functions.add(ImportFunction('print_f64_f64', voidHandler));
+  module.functions.add(ImportFunction('print_f64_f64', printHandler));
   // void print_i32(i32 arg0) {}
-  module.functions.add(ImportFunction('print_i32', voidHandler));
+  module.functions.add(ImportFunction('print_i32', printHandler));
   // void print_i32_f32(i32 arg0, f32 arg1) {}
-  module.functions.add(ImportFunction('print_i32_f32', voidHandler));
+  module.functions.add(ImportFunction('print_i32_f32', printHandler));
   // void print_i64(i64 arg0) {}
-  module.functions.add(ImportFunction('print_i64', voidHandler));
+  module.functions.add(ImportFunction('print_i64', printHandler));
 
   // tables
   final table = ImportTable<WasmFunction>(
       'table', 10, 20, List.filled(10, null, growable: true));
-  // todo: fill in values?
   module.tables.add(table);
 
   return module;
