@@ -13,8 +13,6 @@ import 'types.dart';
 
 const _verbose = false;
 
-// TODO: a module definition should be able to print its import requirements
-
 class ModuleDefinition {
   static ModuleDefinition parse(File file) {
     Uint8List fileData = file.readAsBytesSync();
@@ -76,14 +74,13 @@ class ModuleDefinition {
 
   final List<FunctionType> functionTypes = [];
 
-  final List<ModuleFunction> allFunctions = [];
+  final List<ModuleFunction> functions = [];
   final List<DefinedFunction> definedFunctions = [];
 
-  final List<ExportedFunction> exportedFunctions = [];
-
-  final Globals globals = Globals();
+  final List<Global> globals = [];
 
   final List<ImportModuleDefinition> importModules = [];
+  final Exports exports = Exports();
 
   final DataSegments dataSegments = DataSegments();
   final ElementSegments elementSegments = ElementSegments();
@@ -92,21 +89,12 @@ class ModuleDefinition {
 
   DebugInfo? debugInfo;
   MemoryInfo? memoryInfo;
-  bool memoryExported = false;
   int? startFunctionIndex;
 
   ModuleDefinition({
     this.magic = 0x0061736D,
     this.version = 1,
   });
-
-  ModuleFunction? functionByIndex(int functionIndex) {
-    return allFunctions[functionIndex];
-  }
-
-  ExportedFunction? exportedFunction(String name) {
-    return exportedFunctions.firstWhereOrNull((fn) => fn.name == name);
-  }
 
   void _parseCustomSection(Reader r, int length) {
     var data = r.readUint8List(length).toList();
@@ -138,12 +126,12 @@ class ModuleDefinition {
           break;
         case 1:
           // function names
-          var functions = r.leb128_u();
-          for (int i = 0; i < functions; i++) {
+          var functionCount = r.leb128_u();
+          for (int i = 0; i < functionCount; i++) {
             var functionIndex = r.leb128_u();
             var name = r.readUtf8();
             _log('  [$name]');
-            var func = functionByIndex(functionIndex);
+            var func = functions[functionIndex];
             if (func is DefinedFunction) {
               (func.debugInfo ??= DebugInfo()).name = name;
             }
@@ -151,10 +139,10 @@ class ModuleDefinition {
           break;
         case 2:
           // local names
-          var functions = r.leb128_u();
-          for (int i = 0; i < functions; i++) {
+          var functionCount = r.leb128_u();
+          for (int i = 0; i < functionCount; i++) {
             var functionIndex = r.leb128_u();
-            var func = functionByIndex(functionIndex);
+            var func = functions[functionIndex];
             var locals = r.leb128_u();
             for (int j = 0; j < locals; j++) {
               var localIndex = r.leb128_u();
@@ -174,7 +162,7 @@ class ModuleDefinition {
             // TODO: We could also run this name through patchUpName()
             var name = r.readUtf8();
             _log('  [$name]');
-            var localMap = (globals.debugInfo ??= DebugInfo()).indexedNames;
+            var localMap = (debugInfo ??= DebugInfo()).indexedNames;
             localMap[index] = name;
           }
           break;
@@ -429,7 +417,7 @@ class ModuleDefinition {
         mutable: mutability == 0x01,
         initExpression: instructions,
       );
-      globals.addDefinedGlobal(global);
+      globals.add(global);
 
       _log('  global: ${global.type} (mutable: ${global.mutable})');
     }
@@ -445,32 +433,30 @@ class ModuleDefinition {
 
       var type = r.readUint8();
 
-      // todo: change how we represent this - string names and indexes
-
       switch (type) {
         case 0x00:
           // funcidx
           var functionIndex = r.leb128();
-          _exportFunction(name, functionIndex);
           _log("  export func '$name' (#$functionIndex)");
+          exports.functions[name] = functionIndex;
           break;
         case 0x01:
           // tableidx
           var tableIndex = r.leb128();
           _log("  export table '$name' (#$tableIndex)");
-          _exportTable(name, tableIndex);
+          exports.tables[name] = tableIndex;
           break;
         case 0x02:
           // memidx
           var memoryIndex = r.leb128();
-          _exportMemory(name, memoryIndex);
           _log('  export memory (#$memoryIndex)');
+          exports.memory[name] = memoryIndex;
           break;
         case 0x03:
           // globalidx
           var globalIndex = r.leb128();
           _log('  export global (#$globalIndex)');
-          globals.exportGlobal(name, globalIndex);
+          exports.globals[name] = globalIndex;
           break;
         default:
           throw 'export type not supported: ${type.toRadixString(16)}';
@@ -679,22 +665,8 @@ class ModuleDefinition {
   }
 
   void _addDefinedFunction(DefinedFunction function) {
-    allFunctions.add(function);
+    functions.add(function);
     definedFunctions.add(function);
-  }
-
-  void _exportFunction(String name, int functionIndex) {
-    exportedFunctions
-        .add(ExportedFunction(name, functionByIndex(functionIndex)!));
-  }
-
-  void _exportTable(String name, int tableIndex) {
-    tables[tableIndex].exportName = name;
-  }
-
-  void _exportMemory(String name, int memoryIndex) {
-    // we make the memory field visible by default
-    memoryExported = true;
   }
 
   void _addDefinedTable(TableType type, int minSize, [int? maxSize]) {
@@ -953,13 +925,6 @@ class DefinedFunction extends ModuleFunction {
   }
 }
 
-class ExportedFunction {
-  final String name;
-  final ModuleFunction func;
-
-  ExportedFunction(this.name, this.func);
-}
-
 class MemoryInfo {
   /// min pages
   final int min;
@@ -984,7 +949,7 @@ class ImportModuleDefinition {
   void addImportedFunction(ImportedFunctionDefinition function) {
     functions.add(function);
 
-    wasmModule.allFunctions.add(function);
+    wasmModule.functions.add(function);
   }
 
   void addImportedTable(String name, TableType tableType, int min, [int? max]) {
@@ -1000,7 +965,7 @@ class ImportModuleDefinition {
     required bool mutable,
   }) {
     var global = ImportedGlobalDefinition(type, mutable, this, name);
-    wasmModule.globals.addImportedGlobal(global);
+    wasmModule.globals.add(global);
     globals.add(global);
   }
 }
@@ -1021,6 +986,13 @@ class ImportedFunctionDefinition extends ModuleFunction {
 
   ImportedFunctionDefinition(
       super.module, super.functionTypeIndex, this.importModule, this.name);
+}
+
+class Exports {
+  final Map<String, int> functions = {};
+  final Map<String, int> tables = {};
+  final Map<String, int> memory = {};
+  final Map<String, int> globals = {};
 }
 
 abstract class Global {
@@ -1044,13 +1016,6 @@ class DefinedGlobal implements Global {
     required this.mutable,
     required this.initExpression,
   });
-}
-
-class GlobalExport {
-  final String name;
-  final Global global;
-
-  GlobalExport(this.name, this.global);
 }
 
 class ImportedGlobalDefinition extends Global {
@@ -1083,8 +1048,6 @@ abstract class Table {
   final int minSize;
   final int? maxSize;
 
-  String? exportName;
-
   Table(this.type, this.minSize, [this.maxSize]);
 }
 
@@ -1103,29 +1066,6 @@ class ImportedTableDefinition extends Table {
     super.minSize, [
     super.maxSize,
   ]);
-}
-
-class Globals {
-  final List<Global> globals = [];
-  List<GlobalExport> globalExports = [];
-
-  DebugInfo? debugInfo;
-
-  Globals();
-
-  bool get isNotEmpty => globals.isNotEmpty;
-
-  void addImportedGlobal(ImportedGlobalDefinition global) {
-    globals.add(global);
-  }
-
-  void addDefinedGlobal(DefinedGlobal global) {
-    globals.add(global);
-  }
-
-  void exportGlobal(String name, int globalIndex) {
-    globalExports.add(GlobalExport(name, globals[globalIndex]));
-  }
 }
 
 class DataSegments {
@@ -1197,4 +1137,14 @@ class ElementSegment {
   });
 
   bool get passive => segmentKind == SegmentKind.passive;
+}
+
+extension MapExtension on Map<String, int> {
+  Map<int, String> get reversed {
+    final result = <int, String>{};
+    for (var entry in entries) {
+      result[entry.value] = entry.key;
+    }
+    return result;
+  }
 }
