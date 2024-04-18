@@ -384,30 +384,10 @@ void main() {
         () => registered['exporter'] = importModuleFrom(m));
     returns('get_0', () => m.$('get', [0]), null);
     returns('get_1', () => m.$('get', [1]), null);
-    returns(
-      'set_0',
-      () => m.$('set', [0, m.$externref(42)]),
-      null /*void*/,
-      skip: 'failed',
-    );
-    returns(
-      'set_1',
-      () => m.$('set', [1, m.$externref(137)]),
-      null /*void*/,
-      skip: 'failed',
-    );
-    returns(
-      'get_2',
-      () => m.$('get', [0]),
-      () => m.$externref(42),
-      skip: 'failed',
-    );
-    returns(
-      'get_3',
-      () => m.$('get', [1]),
-      () => m.$externref(137),
-      skip: 'failed',
-    );
+    returns('set_0', () => m.$('set', [0, m.$externref(42)]), null /*void*/);
+    returns('set_1', () => m.$('set', [1, m.$externref(137)]), null /*void*/);
+    returns('get_2', () => m.$('get', [0]), () => m.$externref(42));
+    returns('get_3', () => m.$('get', [1]), () => m.$externref(137));
   });
 
   group('elem.66.wasm', () {
