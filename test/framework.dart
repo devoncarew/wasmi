@@ -85,6 +85,30 @@ void assertInvalid(String testName, String filePath, String text) {
   });
 }
 
+@isTest
+void assertUnlinkable(
+  String testName,
+  String filePath,
+  String text,
+  Map<String, ImportModule> registered,
+) {
+  test(testName, () {
+    try {
+      final definition =
+          def.ModuleDefinition.parse(File('test/spec/$filePath'));
+      // ignore: unused_local_variable
+      final module = Module(
+        definition,
+        imports: {'spectest': specTestModule(), ...registered},
+      );
+
+      fail('Expected: $text');
+    } on LinkException catch (e) {
+      expect(e.message, text);
+    }
+  });
+}
+
 ImportModule importModuleFrom(Module module) {
   final importModule = ImportModule();
 
@@ -110,13 +134,18 @@ ImportModule importModuleFrom(Module module) {
 
     importModule.tables.add(ImportTable(
       entry.key,
+      table.type,
       table.minSize,
       table.maxSize,
       table.refs,
     ));
   }
 
-  // todo: memory
+  // memory
+  if (module.exports.memory.isNotEmpty) {
+    final memories = module.exports.memory.values;
+    importModule.memory = memories.first;
+  }
 
   // globals
   for (var entry in module.exports.globals.entries) {
@@ -230,8 +259,8 @@ ImportModule specTestModule() {
       .add(ImportFunction('print_i64', printHandler, [ValueType.i64]));
 
   // tables
-  final table = ImportTable<WasmFunction>(
-      'table', 10, 20, List.filled(10, null, growable: true));
+  final table = ImportTable<WasmFunction>('table', TableType.functype, 10, 20,
+      List.filled(10, null, growable: true));
   module.tables.add(table);
 
   return module;

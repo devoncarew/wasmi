@@ -77,13 +77,22 @@ class Module {
       if (fn is def.ImportedFunctionDefinition) {
         final importName = fn.importModule.name;
         final importModule = imports[importName];
-        if (importModule == null) throw 'import not found: $importName';
+        if (importModule == null) {
+          throw LinkException('unknown import');
+        }
+
         final importFunction =
             importModule.functions.firstWhereOrNull((f) => f.name == fn.name);
         if (importFunction == null) {
-          throw 'import function not found: ${fn.name}';
+          throw LinkException('unknown import');
         }
-        // todo: validate params and return type
+
+        // validate params and return type
+        if (!fn.functionType!
+            .compatibleWith(importFunction.args, importFunction.returns)) {
+          throw LinkException('incompatible import type');
+        }
+
         functions.add(importFunction);
       }
     }
@@ -91,12 +100,16 @@ class Module {
     // init imported memory
     for (var moduleDef in definition.importModules) {
       if (moduleDef.memory != null) {
-        final importModule = imports[moduleDef.name]!;
+        final importModule = imports[moduleDef.name];
+        if (importModule == null) {
+          throw LinkException('unknown import');
+        }
+        if (importModule.memory == null) {
+          throw LinkException('unknown import');
+        }
         memory = importModule.memory!;
       }
     }
-
-    // todo: tables
   }
 
   void _initGlobals() {
@@ -109,10 +122,22 @@ class Module {
       if (g is def.ImportedGlobalDefinition) {
         final importName = g.importModule.name;
         final importModule = imports[importName];
-        if (importModule == null) throw 'import not found: $importName';
+        if (importModule == null) {
+          throw LinkException('unknown import');
+        }
+
         final import =
             importModule.globals.firstWhereOrNull((f) => f.name == g.name);
-        if (import == null) throw 'import global not found: ${g.name}';
+        if (import == null) {
+          throw LinkException('unknown import');
+        }
+
+        // validate import type
+        // if (g.type != import.type || g.mutable != import.mutable) {
+        if (g.type != import.type || (g.mutable && !import.mutable)) {
+          throw LinkException('incompatible import type');
+        }
+
         global = import;
       } else if (g is def.DefinedGlobal) {
         final startingValue = _evaluateExpression(g.initExpression, g.type);
@@ -166,23 +191,33 @@ class Module {
 
   void _initTables() {
     final tableExports = definition.exports.tables.reversed;
+
     for (var i = 0; i < definition.tables.length; i++) {
       final tableDef = definition.tables[i];
       late final Table table;
 
       if (tableDef is def.DefinedTable) {
-        if (tableDef.type == def.TableType.functype) {
-          table = Table<WasmFunction?>(tableDef.minSize, tableDef.maxSize);
+        if (tableDef.type == TableType.functype) {
+          table = Table<WasmFunction?>(
+              tableDef.type, tableDef.minSize, tableDef.maxSize);
         } else {
-          table = Table<reftype>(tableDef.minSize, tableDef.maxSize);
+          table =
+              Table<reftype>(tableDef.type, tableDef.minSize, tableDef.maxSize);
         }
       } else if (tableDef is def.ImportedTableDefinition) {
         final importName = tableDef.parent.name;
         final importModule = imports[importName];
-        if (importModule == null) throw 'import not found: $importName';
+        if (importModule == null) {
+          throw LinkException('unknown import');
+        }
         final import = importModule.tables
             .firstWhereOrNull((f) => f.name == tableDef.name);
-        if (import == null) throw 'import table not found: ${tableDef.name}';
+        if (import == null) {
+          throw LinkException('unknown import');
+        }
+        if (tableDef.type != import.type) {
+          throw LinkException('incompatible import type');
+        }
         table = import;
       } else {
         throw 'unhandled table type: $tableDef';
@@ -310,7 +345,8 @@ class ImportTable<T> extends Table<T> {
 
   final List<T?> _refs;
 
-  ImportTable(this.name, super.minSize, super.maxSize, List<T?> refs)
+  ImportTable(
+      this.name, super.type, super.minSize, super.maxSize, List<T?> refs)
       : _refs = refs;
 
   @override
@@ -2266,6 +2302,15 @@ class Trap implements Exception {
   String toString() => message;
 }
 
+class LinkException implements Exception {
+  final String message;
+
+  LinkException(this.message);
+
+  @override
+  String toString() => message;
+}
+
 class Memory {
   static const defaultMaxSize = 64 * 1024;
   static const pageSize = 64 * 1024;
@@ -2398,12 +2443,13 @@ class DefinedGlobal extends Global {
 // refs (Table<Object?> / Table<reftype>)?
 
 class Table<T> {
+  final TableType type;
   final int minSize;
   final int? maxSize;
 
   final List<T?> refs;
 
-  Table(this.minSize, this.maxSize)
+  Table(this.type, this.minSize, this.maxSize)
       : refs = List.filled(minSize, null, growable: true);
 
   int get size => refs.length;

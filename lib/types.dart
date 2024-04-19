@@ -126,3 +126,20 @@ class FunctionType {
     return true;
   }
 }
+
+enum TableType {
+  externref(0x6F),
+  functype(0x70);
+
+  const TableType(this.code);
+
+  final int code;
+
+  static Map<int, TableType>? _codeMap;
+
+  static TableType? from(int id) {
+    _codeMap ??= Map.fromIterable(TableType.values,
+        key: (kind) => (kind as TableType).code);
+    return _codeMap![id];
+  }
+}
