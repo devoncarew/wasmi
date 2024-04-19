@@ -14,16 +14,18 @@ void main() {
   final Map<String, ImportModule> registered = {};
   final Map<String, Module> named = {};
 
-  group('type.0.wasm', () {
-    late ModuleDefinition def;
-    late Module m;
+  group('type', () {
+    group('type.0.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
 
-    setUpAll(() {
-      def = ModuleDefinition.parse(File('test/spec/type/type.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/type/type.0.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
     });
-  });
 
-  // assertMalformed('malformed type.1.wat');
-  // assertMalformed('malformed type.2.wat');
+    // assertMalformed('malformed type.1.wat');
+    // assertMalformed('malformed type.2.wat');
+  });
 }

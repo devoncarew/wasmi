@@ -14,14 +14,16 @@ void main() {
   final Map<String, ImportModule> registered = {};
   final Map<String, Module> named = {};
 
-  group('inline-module.0.wasm', () {
-    late ModuleDefinition def;
-    late Module m;
+  group('inline-module', () {
+    group('inline-module.0.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
 
-    setUpAll(() {
-      def = ModuleDefinition.parse(
-          File('test/spec/inline-module/inline-module.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/inline-module/inline-module.0.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
     });
   });
 }

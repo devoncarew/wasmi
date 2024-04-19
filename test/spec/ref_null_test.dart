@@ -14,16 +14,19 @@ void main() {
   final Map<String, ImportModule> registered = {};
   final Map<String, Module> named = {};
 
-  group('ref_null.0.wasm', () {
-    late ModuleDefinition def;
-    late Module m;
+  group('ref_null', () {
+    group('ref_null.0.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
 
-    setUpAll(() {
-      def = ModuleDefinition.parse(File('test/spec/ref_null/ref_null.0.wasm'));
-      m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      setUpAll(() {
+        def =
+            ModuleDefinition.parse(File('test/spec/ref_null/ref_null.0.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('externref_0', () => m.$('externref', []), null);
+      returns('funcref_0', () => m.$('funcref', []), null);
     });
-
-    returns('externref_0', () => m.$('externref', []), null);
-    returns('funcref_0', () => m.$('funcref', []), null);
   });
 }

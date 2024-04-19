@@ -85,7 +85,7 @@ const Set<String> allowList = {
   'table_init.wast',
   'table_set.wast',
   'table_size.wast',
-  // 'token.wast',
+  'token.wast',
   // 'traps.wast',
   'type.wast',
   'unreachable.wast',
@@ -165,8 +165,12 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
   final code = StringBuffer();
 
+  final baseName = p.basenameWithoutExtension(wastFile.path);
+
   code.writeln('final Map<String, ImportModule> registered = {};');
   code.writeln('final Map<String, Module> named = {};');
+  code.writeln();
+  code.writeln("group('$baseName', () {");
   code.writeln();
 
   final json = jsonDecode(jsonFile.readAsStringSync()) as Map;
@@ -181,7 +185,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
     if (inGroup) {
       code.writeln('});\n');
       inGroup = false;
-      groupName = null;
+      groupName = baseName;
     }
   }
 
@@ -190,7 +194,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
     code.writeln("\ngroup('$name', () {");
     inGroup = true;
-    groupName = name;
+    groupName = '$baseName $name';
   }
 
   for (final command in commands) {
@@ -305,7 +309,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         if (actionType != 'invoke') {
           throw 'unhandled action type: $actionType';
         }
-
+        final moduleName = action['module'] as String?;
         var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
         final text = command['text'] as String?;
 
@@ -324,8 +328,10 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           return encodeType(arg['type'], arg['value']);
         }).join(', ');
 
-        code.writeln(
-            "traps('$testName', () => m.\$('$field', [$argList]), '$text'$failText);");
+        final moduleRef = moduleName == null ? 'm' : "named[r'$moduleName']!";
+
+        code.writeln("traps('$testName', "
+            "() => $moduleRef.\$('$field', [$argList]), '$text'$failText);");
 
         break;
 
@@ -349,7 +355,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           throw 'unhandled moduel type: $moduleType';
         }
 
-        // todo:
+        // TODO:
         final testName = 'invalid ${filename!}';
         code.writeln(
             "  // assertInvalid('$testName', '$moduleFilePath', '$text');");
@@ -380,12 +386,30 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         // TODO: implement
         break;
 
+      case 'assert_unlinkable':
+        final text = command['text'] as String;
+        final moduleType = command['module_type'] as String;
+        final moduleFilePath = '$spec/$filename';
+
+        closeGroup();
+
+        if (moduleType != 'binary') {
+          throw 'unhandled moduel type: $moduleType';
+        }
+
+        final testName = 'unlinkable ${filename!}';
+        code.writeln(
+            "  assertUnlinkable('$testName', '$moduleFilePath', '$text', registered);");
+        break;
+
       default:
         throw 'unhandled type: $type';
     }
   }
 
   closeGroup();
+
+  code.writeln('});');
 
   mainMethod.body = Code(code.toString());
   builder.body.add(mainMethod.build());
