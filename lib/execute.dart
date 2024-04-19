@@ -464,29 +464,26 @@ class CompiledFn {
 
       i32 arg0 = stack[--sp] as int;
 
-      // TODO: update stack heights and such
-      // TODO: use any calculated stackEdits
-
-      if (arg0 < code.pcTargets.length) {
-        pc = code.pcTargets[arg0];
+      if (arg0 >= 0 && arg0 < code.targetPcs.length) {
+        pc = code.targetPcs[arg0];
+        final stackEdit = code.targetPcStackEdits[arg0];
+        if (stackEdit != null) {
+          sp = stackEdit.apply(stack, sp);
+        }
       } else {
-        pc = code.defaultPcTarget;
+        pc = code.defaultTargetPc!;
+        if (code.defaultStackEdit != null) {
+          sp = code.defaultStackEdit!.apply(stack, sp);
+        }
       }
     }
 
     void $return(Bytecode code) {
-      // // todo: use the fn return type
-      // if (fn.functionType!.returnsVoid) {
-      //   return null;
-      // } else {
-      //   return stack[--sp];
-      // }
-
       pc = bytecodes.length;
     }
 
     void call(Bytecode code) {
-      // todo: switch to invoking using the same stack
+      // TODO: switch to invoking using the same stack
 
       i32 index = code.i0;
       final function = functions[index];
@@ -594,7 +591,7 @@ class CompiledFn {
 
     void tableSet(Bytecode code) {
       int tableNum = code.i0;
-      // This could be a WasmFunction? for function tables or an Object?
+      // This could be a `WasmFunction?` for function tables or an `Object?`
       // ref for externref tables.
       final ref = stack[--sp];
       i32 index = stack[--sp] as int;
