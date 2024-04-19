@@ -46,12 +46,12 @@ void main() {
     returns('set_7_1', () => m.$('set-7', [$f32('41000000')]), null /*void*/);
     returns('set_8_1', () => m.$('set-8', [$f64('4022000000000000')]),
         null /*void*/);
-    returns('set_mr_0', () => m.$('set-mr', [m.$externref(10)]), null /*void*/);
+    returns('set_mr_0', () => m.$('set-mr', [$externref(10)]), null /*void*/);
     returns('get_x_2', () => m.$('get-x', []), 6);
     returns('get_y_2', () => m.$('get-y', []), 7);
     returns('get_7_2', () => m.$('get-7', []), $f32('41000000'));
     returns('get_8_2', () => m.$('get-8', []), $f64('4022000000000000'));
-    returns('get_mr_1', () => m.$('get-mr', []), () => m.$externref(10));
+    returns('get_mr_1', () => m.$('get-mr', []), $externref(10));
     returns('as_select_first_0', () => m.$('as-select-first', []), 6);
     returns('as_select_mid_0', () => m.$('as-select-mid', []), 2);
     returns('as_select_last_0', () => m.$('as-select-last', []), 2);

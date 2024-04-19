@@ -25,8 +25,8 @@ void main() {
 
     returns('funcref_0', () => m.$('funcref', [null]), 1);
     returns('externref_0', () => m.$('externref', [null]), 1);
-    returns('externref_1', () => m.$('externref', [m.$externref(1)]), 0);
-    action('init_0', () => m.$('init', [m.$externref(0)]));
+    returns('externref_1', () => m.$('externref', [$externref(1)]), 0);
+    action('init_0', () => m.$('init', [$externref(0)]));
     returns('funcref_elem_0', () => m.$('funcref-elem', [0]), 1);
     returns('externref_elem_0', () => m.$('externref-elem', [0]), 1);
     returns('funcref_elem_1', () => m.$('funcref-elem', [1]), 0);

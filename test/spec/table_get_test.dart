@@ -23,10 +23,9 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    action('init_0', () => m.$('init', [m.$externref(1)]));
+    action('init_0', () => m.$('init', [$externref(1)]));
     returns('get_externref_0', () => m.$('get-externref', [0]), null);
-    returns('get_externref_1', () => m.$('get-externref', [1]),
-        () => m.$externref(1));
+    returns('get_externref_1', () => m.$('get-externref', [1]), $externref(1));
     returns('get_funcref_0', () => m.$('get-funcref', [0]), null);
     returns('is_null_funcref_0', () => m.$('is_null-funcref', [1]), 0);
     returns('is_null_funcref_1', () => m.$('is_null-funcref', [2]), 0);

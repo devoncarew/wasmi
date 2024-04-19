@@ -213,18 +213,12 @@ void main() {
         () => m.$('nested-br_table-value-index', [$i32('8FCC67')]), 9);
     returns('nested_br_table_loop_block_0',
         () => m.$('nested-br_table-loop-block', [1]), 3);
-    returns(
-        'meet_externref_0',
-        () => m.$('meet-externref', [0, m.$externref(1)]),
-        () => m.$externref(1));
-    returns(
-        'meet_externref_1',
-        () => m.$('meet-externref', [1, m.$externref(1)]),
-        () => m.$externref(1));
-    returns(
-        'meet_externref_2',
-        () => m.$('meet-externref', [2, m.$externref(1)]),
-        () => m.$externref(1));
+    returns('meet_externref_0', () => m.$('meet-externref', [0, $externref(1)]),
+        $externref(1));
+    returns('meet_externref_1', () => m.$('meet-externref', [1, $externref(1)]),
+        $externref(1));
+    returns('meet_externref_2', () => m.$('meet-externref', [2, $externref(1)]),
+        $externref(1));
   });
 
   // assertInvalid('invalid br_table.1.wasm', 'br_table/br_table.1.wasm', 'type mismatch');

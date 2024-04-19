@@ -24,10 +24,9 @@ void main() {
     });
 
     returns('get_externref_0', () => m.$('get-externref', [0]), null);
-    returns('set_externref_0', () => m.$('set-externref', [0, m.$externref(1)]),
+    returns('set_externref_0', () => m.$('set-externref', [0, $externref(1)]),
         null /*void*/);
-    returns('get_externref_1', () => m.$('get-externref', [0]),
-        () => m.$externref(1));
+    returns('get_externref_1', () => m.$('get-externref', [0]), $externref(1));
     returns('set_externref_1', () => m.$('set-externref', [0, null]),
         null /*void*/);
     returns('get_externref_2', () => m.$('get-externref', [0]), null);
@@ -48,13 +47,13 @@ void main() {
         'out of bounds table access');
     traps('set_funcref_2', () => m.$('set-funcref', [$i32('FFFFFFFF'), null]),
         'out of bounds table access');
-    traps('set_externref_4', () => m.$('set-externref', [2, m.$externref(0)]),
+    traps('set_externref_4', () => m.$('set-externref', [2, $externref(0)]),
         'out of bounds table access');
     traps('set_funcref_from_1', () => m.$('set-funcref-from', [3, 1]),
         'out of bounds table access');
     traps(
         'set_externref_5',
-        () => m.$('set-externref', [$i32('FFFFFFFF'), m.$externref(0)]),
+        () => m.$('set-externref', [$i32('FFFFFFFF'), $externref(0)]),
         'out of bounds table access');
     traps(
         'set_funcref_from_2',
