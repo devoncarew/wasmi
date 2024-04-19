@@ -266,6 +266,20 @@ void main() {
     });
   });
 
+  // assertUninstantiable('uninstantiable data.27.wasm');
+  // assertUninstantiable('uninstantiable data.28.wasm');
+  // assertUninstantiable('uninstantiable data.29.wasm');
+  // assertUninstantiable('uninstantiable data.30.wasm');
+  // assertUninstantiable('uninstantiable data.31.wasm');
+  // assertUninstantiable('uninstantiable data.32.wasm');
+  // assertUninstantiable('uninstantiable data.33.wasm');
+  // assertUninstantiable('uninstantiable data.34.wasm');
+  // assertUninstantiable('uninstantiable data.35.wasm');
+  // assertUninstantiable('uninstantiable data.36.wasm');
+  // assertUninstantiable('uninstantiable data.37.wasm');
+  // assertUninstantiable('uninstantiable data.38.wasm');
+  // assertUninstantiable('uninstantiable data.39.wasm');
+  // assertUninstantiable('uninstantiable data.40.wasm');
   // assertInvalid('invalid data.41.wasm', 'data/data.41.wasm', 'unknown memory');
   // assertInvalid('invalid data.42.wasm', 'data/data.42.wasm', 'unknown memory 1');
   // assertInvalid('invalid data.43.wasm', 'data/data.43.wasm', 'unknown memory 0');

@@ -78,4 +78,7 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertUninstantiable('uninstantiable start.8.wasm');
+  // assertMalformed('malformed start.9.wat');
 }

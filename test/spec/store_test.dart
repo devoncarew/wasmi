@@ -36,6 +36,13 @@ void main() {
     returns('as_if_else_0', () => m.$('as-if-else', []), null /*void*/);
   });
 
+  // assertMalformed('malformed store.1.wat');
+  // assertMalformed('malformed store.2.wat');
+  // assertMalformed('malformed store.3.wat');
+  // assertMalformed('malformed store.4.wat');
+  // assertMalformed('malformed store.5.wat');
+  // assertMalformed('malformed store.6.wat');
+  // assertMalformed('malformed store.7.wat');
   // assertInvalid('invalid store.8.wasm', 'store/store.8.wasm', 'type mismatch');
   // assertInvalid('invalid store.9.wasm', 'store/store.9.wasm', 'type mismatch');
   // assertInvalid('invalid store.10.wasm', 'store/store.10.wasm', 'type mismatch');

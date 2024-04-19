@@ -73,6 +73,19 @@ void main() {
     returns('as_memory_grow_size_0', () => m.$('as-memory.grow-size', []), 1);
   });
 
+  // assertMalformed('malformed load.1.wat');
+  // assertMalformed('malformed load.2.wat');
+  // assertMalformed('malformed load.3.wat');
+  // assertMalformed('malformed load.4.wat');
+  // assertMalformed('malformed load.5.wat');
+  // assertMalformed('malformed load.6.wat');
+  // assertMalformed('malformed load.7.wat');
+  // assertMalformed('malformed load.8.wat');
+  // assertMalformed('malformed load.9.wat');
+  // assertMalformed('malformed load.10.wat');
+  // assertMalformed('malformed load.11.wat');
+  // assertMalformed('malformed load.12.wat');
+  // assertMalformed('malformed load.13.wat');
   // assertInvalid('invalid load.14.wasm', 'load/load.14.wasm', 'type mismatch');
   // assertInvalid('invalid load.15.wasm', 'load/load.15.wasm', 'type mismatch');
   // assertInvalid('invalid load.16.wasm', 'load/load.16.wasm', 'type mismatch');

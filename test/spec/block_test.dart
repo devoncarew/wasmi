@@ -81,6 +81,17 @@ void main() {
     returns('type_use_0', () => m.$('type-use', []), null /*void*/);
   });
 
+  // assertMalformed('malformed block.1.wat');
+  // assertMalformed('malformed block.2.wat');
+  // assertMalformed('malformed block.3.wat');
+  // assertMalformed('malformed block.4.wat');
+  // assertMalformed('malformed block.5.wat');
+  // assertMalformed('malformed block.6.wat');
+  // assertMalformed('malformed block.7.wat');
+  // assertMalformed('malformed block.8.wat');
+  // assertMalformed('malformed block.9.wat');
+  // assertMalformed('malformed block.10.wat');
+  // assertMalformed('malformed block.11.wat');
   // assertInvalid('invalid block.12.wasm', 'block/block.12.wasm', 'type mismatch');
   // assertInvalid('invalid block.13.wasm', 'block/block.13.wasm', 'type mismatch');
   // assertInvalid('invalid block.14.wasm', 'block/block.14.wasm', 'type mismatch');
@@ -236,4 +247,8 @@ void main() {
   // assertInvalid('invalid block.164.wasm', 'block/block.164.wasm', 'type mismatch');
   // assertInvalid('invalid block.165.wasm', 'block/block.165.wasm', 'type mismatch');
   // assertInvalid('invalid block.166.wasm', 'block/block.166.wasm', 'type mismatch');
+  // assertMalformed('malformed block.167.wat');
+  // assertMalformed('malformed block.168.wat');
+  // assertMalformed('malformed block.169.wat');
+  // assertMalformed('malformed block.170.wat');
 }

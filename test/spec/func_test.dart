@@ -225,6 +225,7 @@ void main() {
   });
 
   // assertInvalid('invalid func.2.wasm', 'func/func.2.wasm', 'unknown type');
+  // assertMalformed('malformed func.3.wat');
 
   group('func.4.wasm', () {
     late ModuleDefinition def;
@@ -259,6 +260,16 @@ void main() {
         () => m.$('signature-implicit-duplicate', []), null /*void*/);
   });
 
+  // assertMalformed('malformed func.6.wat');
+  // assertMalformed('malformed func.7.wat');
+  // assertMalformed('malformed func.8.wat');
+  // assertMalformed('malformed func.9.wat');
+  // assertMalformed('malformed func.10.wat');
+  // assertMalformed('malformed func.11.wat');
+  // assertMalformed('malformed func.12.wat');
+  // assertMalformed('malformed func.13.wat');
+  // assertMalformed('malformed func.14.wat');
+  // assertMalformed('malformed func.15.wat');
   // assertInvalid('invalid func.16.wasm', 'func/func.16.wasm', 'type mismatch');
   // assertInvalid('invalid func.17.wasm', 'func/func.17.wasm', 'type mismatch');
   // assertInvalid('invalid func.18.wasm', 'func/func.18.wasm', 'type mismatch');
@@ -307,4 +318,16 @@ void main() {
   // assertInvalid('invalid func.61.wasm', 'func/func.61.wasm', 'type mismatch');
   // assertInvalid('invalid func.62.wasm', 'func/func.62.wasm', 'type mismatch');
   // assertInvalid('invalid func.63.wasm', 'func/func.63.wasm', 'type mismatch');
+  // assertMalformed('malformed func.64.wat');
+  // assertMalformed('malformed func.65.wat');
+  // assertMalformed('malformed func.66.wat');
+  // assertMalformed('malformed func.67.wat');
+  // assertMalformed('malformed func.68.wat');
+  // assertMalformed('malformed func.69.wat');
+  // assertMalformed('malformed func.70.wat');
+  // assertMalformed('malformed func.71.wat');
+  // assertMalformed('malformed func.72.wat');
+  // assertMalformed('malformed func.73.wat');
+  // assertMalformed('malformed func.74.wat');
+  // assertMalformed('malformed func.75.wat');
 }

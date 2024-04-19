@@ -128,6 +128,9 @@ void main() {
   // assertInvalid('invalid memory.24.wasm', 'memory/memory.24.wasm', 'memory size must be at most 65536 pages (4GiB)');
   // assertInvalid('invalid memory.25.wasm', 'memory/memory.25.wasm', 'memory size must be at most 65536 pages (4GiB)');
   // assertInvalid('invalid memory.26.wasm', 'memory/memory.26.wasm', 'memory size must be at most 65536 pages (4GiB)');
+  // assertMalformed('malformed memory.27.wat');
+  // assertMalformed('malformed memory.28.wat');
+  // assertMalformed('malformed memory.29.wat');
 
   group('memory.30.wasm', () {
     late ModuleDefinition def;
@@ -231,4 +234,8 @@ void main() {
         () => m.$('i64_load32_u', [$i64('3456436598BACDEF')]),
         $i64('98BACDEF'));
   });
+
+  // assertMalformed('malformed memory.31.wat');
+  // assertMalformed('malformed memory.32.wat');
+  // assertMalformed('malformed memory.33.wat');
 }

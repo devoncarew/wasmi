@@ -47,7 +47,7 @@ const Set<String> allowList = {
   // 'inline-module.wast',
   'int_exprs.wast',
   'int_literals.wast',
-  // 'labels.wast',
+  'labels.wast',
   // 'left-to-right.wast',
   // 'linking.wast',
   'load.wast',
@@ -88,14 +88,14 @@ const Set<String> allowList = {
   // 'token.wast',
   // 'traps.wast',
   // 'type.wast',
-  // 'unreachable.wast',
-  // 'unreached-invalid.wast',
-  // 'unreached-valid.wast',
-  // 'unwind.wast',
-  // 'utf8-custom-section-id.wast',
-  // 'utf8-import-field.wast',
-  // 'utf8-import-module.wast',
-  // 'utf8-invalid-encoding.wast',
+  'unreachable.wast',
+  'unreached-invalid.wast',
+  'unreached-valid.wast',
+  'unwind.wast',
+  'utf8-custom-section-id.wast',
+  'utf8-import-field.wast',
+  'utf8-import-module.wast',
+  'utf8-invalid-encoding.wast',
 };
 
 void main(List<String> args) {
@@ -312,7 +312,6 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         break;
 
       case 'register':
-
         // {"type": "register", "line": 4, "as": "M"},
 
         final asName = command['as'] as String;
@@ -332,18 +331,31 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           throw 'unhandled moduel type: $moduleType';
         }
 
-        final testName = 'invalid ${filename!}';
         // todo:
+        final testName = 'invalid ${filename!}';
         code.writeln(
             "  // assertInvalid('$testName', '$moduleFilePath', '$text');");
         break;
 
       case 'assert_malformed':
+        closeGroup();
+
         // skip processing malformed wat files
+        final testName = 'malformed ${filename!}';
+        code.writeln("  // assertMalformed('$testName');");
         break;
 
       case 'assert_uninstantiable':
-        // todo: ?
+        //   {"type": "assert_uninstantiable", "line": 180, "filename": "data.27.wasm", "text": "out of bounds memory access", "module_type": "binary"},
+
+        // ignore: unused_local_variable
+        final text = command['text'] as String;
+
+        closeGroup();
+
+        // todo:
+        final testName = 'uninstantiable ${filename!}';
+        code.writeln("  // assertUninstantiable('$testName');");
         break;
 
       case 'assert_exhaustion':

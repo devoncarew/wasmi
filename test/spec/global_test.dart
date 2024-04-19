@@ -143,6 +143,9 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed global.24.wasm');
+  // assertMalformed('malformed global.25.wasm');
+
   group('global.26.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -153,6 +156,8 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed global.27.wasm');
+  // assertMalformed('malformed global.28.wasm');
   // assertInvalid('invalid global.29.wasm', 'global/global.29.wasm', 'unknown global');
   // assertInvalid('invalid global.30.wasm', 'global/global.30.wasm', 'unknown global');
   // assertInvalid('invalid global.31.wasm', 'global/global.31.wasm', 'unknown global');
@@ -173,4 +178,7 @@ void main() {
   // assertInvalid('invalid global.46.wasm', 'global/global.46.wasm', 'type mismatch');
   // assertInvalid('invalid global.47.wasm', 'global/global.47.wasm', 'type mismatch');
   // assertInvalid('invalid global.48.wasm', 'global/global.48.wasm', 'type mismatch');
+  // assertMalformed('malformed global.49.wat');
+  // assertMalformed('malformed global.50.wat');
+  // assertMalformed('malformed global.51.wat');
 }

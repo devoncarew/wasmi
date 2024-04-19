@@ -126,6 +126,8 @@ void main() {
     traps('32_bad_1', () => m.$('32_bad', [1]), 'out of bounds memory access');
   });
 
+  // assertMalformed('malformed address.1.wat');
+
   group('address.2.wasm', () {
     late ModuleDefinition def;
     late Module m;

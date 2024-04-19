@@ -996,4 +996,6 @@ void main() {
   // assertInvalid('invalid i64.27.wasm', 'i64/i64.27.wasm', 'type mismatch');
   // assertInvalid('invalid i64.28.wasm', 'i64/i64.28.wasm', 'type mismatch');
   // assertInvalid('invalid i64.29.wasm', 'i64/i64.29.wasm', 'type mismatch');
+  // assertMalformed('malformed i64.30.wat');
+  // assertMalformed('malformed i64.31.wat');
 }

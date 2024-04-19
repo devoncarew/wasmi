@@ -5158,4 +5158,6 @@ void main() {
   // assertInvalid('invalid f32.9.wasm', 'f32/f32.9.wasm', 'type mismatch');
   // assertInvalid('invalid f32.10.wasm', 'f32/f32.10.wasm', 'type mismatch');
   // assertInvalid('invalid f32.11.wasm', 'f32/f32.11.wasm', 'type mismatch');
+  // assertMalformed('malformed f32.12.wat');
+  // assertMalformed('malformed f32.13.wat');
 }

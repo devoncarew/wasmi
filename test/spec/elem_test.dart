@@ -222,6 +222,19 @@ void main() {
     });
   });
 
+  // assertUninstantiable('uninstantiable elem.22.wasm');
+  // assertUninstantiable('uninstantiable elem.23.wasm');
+  // assertUninstantiable('uninstantiable elem.24.wasm');
+  // assertUninstantiable('uninstantiable elem.25.wasm');
+  // assertUninstantiable('uninstantiable elem.26.wasm');
+  // assertUninstantiable('uninstantiable elem.27.wasm');
+  // assertUninstantiable('uninstantiable elem.28.wasm');
+  // assertUninstantiable('uninstantiable elem.29.wasm');
+  // assertUninstantiable('uninstantiable elem.30.wasm');
+  // assertUninstantiable('uninstantiable elem.31.wasm');
+  // assertUninstantiable('uninstantiable elem.32.wasm');
+  // assertUninstantiable('uninstantiable elem.33.wasm');
+
   group('elem.34.wasm', () {
     late ModuleDefinition def;
     late Module m;

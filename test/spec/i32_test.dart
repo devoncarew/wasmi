@@ -639,4 +639,6 @@ void main() {
   // assertInvalid('invalid i32.81.wasm', 'i32/i32.81.wasm', 'type mismatch');
   // assertInvalid('invalid i32.82.wasm', 'i32/i32.82.wasm', 'type mismatch');
   // assertInvalid('invalid i32.83.wasm', 'i32/i32.83.wasm', 'type mismatch');
+  // assertMalformed('malformed i32.84.wat');
+  // assertMalformed('malformed i32.85.wat');
 }
