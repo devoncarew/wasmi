@@ -8898,4 +8898,6 @@ void main() {
   // assertInvalid('invalid f64.9.wasm', 'f64/f64.9.wasm', 'type mismatch');
   // assertInvalid('invalid f64.10.wasm', 'f64/f64.10.wasm', 'type mismatch');
   // assertInvalid('invalid f64.11.wasm', 'f64/f64.11.wasm', 'type mismatch');
+  // assertMalformed('malformed f64.12.wat');
+  // assertMalformed('malformed f64.13.wat');
 }

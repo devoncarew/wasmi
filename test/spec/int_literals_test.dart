@@ -60,4 +60,25 @@ void main() {
         'i64_hex_sep1_0', () => m.$('i64-hex-sep1', []), $i64('AF00F00009999'));
     returns('i64_hex_sep2_0', () => m.$('i64-hex-sep2', []), 0x1AA0F);
   });
+
+  // assertMalformed('malformed int_literals.1.wat');
+  // assertMalformed('malformed int_literals.2.wat');
+  // assertMalformed('malformed int_literals.3.wat');
+  // assertMalformed('malformed int_literals.4.wat');
+  // assertMalformed('malformed int_literals.5.wat');
+  // assertMalformed('malformed int_literals.6.wat');
+  // assertMalformed('malformed int_literals.7.wat');
+  // assertMalformed('malformed int_literals.8.wat');
+  // assertMalformed('malformed int_literals.9.wat');
+  // assertMalformed('malformed int_literals.10.wat');
+  // assertMalformed('malformed int_literals.11.wat');
+  // assertMalformed('malformed int_literals.12.wat');
+  // assertMalformed('malformed int_literals.13.wat');
+  // assertMalformed('malformed int_literals.14.wat');
+  // assertMalformed('malformed int_literals.15.wat');
+  // assertMalformed('malformed int_literals.16.wat');
+  // assertMalformed('malformed int_literals.17.wat');
+  // assertMalformed('malformed int_literals.18.wat');
+  // assertMalformed('malformed int_literals.19.wat');
+  // assertMalformed('malformed int_literals.20.wat');
 }

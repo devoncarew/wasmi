@@ -107,4 +107,10 @@ void main() {
   // assertInvalid('invalid table.10.wasm', 'table/table.10.wasm', 'unknown table');
   // assertInvalid('invalid table.11.wasm', 'table/table.11.wasm', 'size minimum must not be greater than maximum');
   // assertInvalid('invalid table.12.wasm', 'table/table.12.wasm', 'size minimum must not be greater than maximum');
+  // assertMalformed('malformed table.13.wat');
+  // assertMalformed('malformed table.14.wat');
+  // assertMalformed('malformed table.15.wat');
+  // assertMalformed('malformed table.16.wat');
+  // assertMalformed('malformed table.17.wat');
+  // assertMalformed('malformed table.18.wat');
 }

@@ -150,6 +150,17 @@ void main() {
     returns('type_use_0', () => m.$('type-use', []), null /*void*/);
   });
 
+  // assertMalformed('malformed loop.1.wat');
+  // assertMalformed('malformed loop.2.wat');
+  // assertMalformed('malformed loop.3.wat');
+  // assertMalformed('malformed loop.4.wat');
+  // assertMalformed('malformed loop.5.wat');
+  // assertMalformed('malformed loop.6.wat');
+  // assertMalformed('malformed loop.7.wat');
+  // assertMalformed('malformed loop.8.wat');
+  // assertMalformed('malformed loop.9.wat');
+  // assertMalformed('malformed loop.10.wat');
+  // assertMalformed('malformed loop.11.wat');
   // assertInvalid('invalid loop.12.wasm', 'loop/loop.12.wasm', 'type mismatch');
   // assertInvalid('invalid loop.13.wasm', 'loop/loop.13.wasm', 'type mismatch');
   // assertInvalid('invalid loop.14.wasm', 'loop/loop.14.wasm', 'type mismatch');
@@ -177,4 +188,8 @@ void main() {
   // assertInvalid('invalid loop.36.wasm', 'loop/loop.36.wasm', 'type mismatch');
   // assertInvalid('invalid loop.37.wasm', 'loop/loop.37.wasm', 'type mismatch');
   // assertInvalid('invalid loop.38.wasm', 'loop/loop.38.wasm', 'type mismatch');
+  // assertMalformed('malformed loop.39.wat');
+  // assertMalformed('malformed loop.40.wat');
+  // assertMalformed('malformed loop.41.wat');
+  // assertMalformed('malformed loop.42.wat');
 }

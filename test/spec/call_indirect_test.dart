@@ -271,6 +271,17 @@ void main() {
     );
   });
 
+  // assertMalformed('malformed call_indirect.2.wat');
+  // assertMalformed('malformed call_indirect.3.wat');
+  // assertMalformed('malformed call_indirect.4.wat');
+  // assertMalformed('malformed call_indirect.5.wat');
+  // assertMalformed('malformed call_indirect.6.wat');
+  // assertMalformed('malformed call_indirect.7.wat');
+  // assertMalformed('malformed call_indirect.8.wat');
+  // assertMalformed('malformed call_indirect.9.wat');
+  // assertMalformed('malformed call_indirect.10.wat');
+  // assertMalformed('malformed call_indirect.11.wat');
+  // assertMalformed('malformed call_indirect.12.wat');
   // assertInvalid('invalid call_indirect.13.wasm', 'call_indirect/call_indirect.13.wasm', 'unknown table');
   // assertInvalid('invalid call_indirect.14.wasm', 'call_indirect/call_indirect.14.wasm', 'type mismatch');
   // assertInvalid('invalid call_indirect.15.wasm', 'call_indirect/call_indirect.15.wasm', 'type mismatch');

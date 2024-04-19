@@ -404,7 +404,7 @@ class CompiledFn {
     /* bytecode implementations */
 
     void unreachable(Bytecode code) {
-      throw Trap('encountered unreachable');
+      throw Trap('unreachable');
     }
 
     void nop(Bytecode code) {

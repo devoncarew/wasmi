@@ -33,6 +33,11 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.2.wat');
+  // assertMalformed('malformed const.3.wat');
+  // assertMalformed('malformed const.4.wat');
+  // assertMalformed('malformed const.5.wat');
+
   group('const.6.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -52,6 +57,11 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.8.wat');
+  // assertMalformed('malformed const.9.wat');
+  // assertMalformed('malformed const.10.wat');
+  // assertMalformed('malformed const.11.wat');
 
   group('const.12.wasm', () {
     late ModuleDefinition def;
@@ -292,6 +302,26 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.36.wat');
+  // assertMalformed('malformed const.37.wat');
+  // assertMalformed('malformed const.38.wat');
+  // assertMalformed('malformed const.39.wat');
+  // assertMalformed('malformed const.40.wat');
+  // assertMalformed('malformed const.41.wat');
+  // assertMalformed('malformed const.42.wat');
+  // assertMalformed('malformed const.43.wat');
+  // assertMalformed('malformed const.44.wat');
+  // assertMalformed('malformed const.45.wat');
+  // assertMalformed('malformed const.46.wat');
+  // assertMalformed('malformed const.47.wat');
+  // assertMalformed('malformed const.48.wat');
+  // assertMalformed('malformed const.49.wat');
+  // assertMalformed('malformed const.50.wat');
+  // assertMalformed('malformed const.51.wat');
+  // assertMalformed('malformed const.52.wat');
+  // assertMalformed('malformed const.53.wat');
+  // assertMalformed('malformed const.54.wat');
 
   group('const.55.wasm', () {
     late ModuleDefinition def;
@@ -653,6 +683,26 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.91.wat');
+  // assertMalformed('malformed const.92.wat');
+  // assertMalformed('malformed const.93.wat');
+  // assertMalformed('malformed const.94.wat');
+  // assertMalformed('malformed const.95.wat');
+  // assertMalformed('malformed const.96.wat');
+  // assertMalformed('malformed const.97.wat');
+  // assertMalformed('malformed const.98.wat');
+  // assertMalformed('malformed const.99.wat');
+  // assertMalformed('malformed const.100.wat');
+  // assertMalformed('malformed const.101.wat');
+  // assertMalformed('malformed const.102.wat');
+  // assertMalformed('malformed const.103.wat');
+  // assertMalformed('malformed const.104.wat');
+  // assertMalformed('malformed const.105.wat');
+  // assertMalformed('malformed const.106.wat');
+  // assertMalformed('malformed const.107.wat');
+  // assertMalformed('malformed const.108.wat');
+  // assertMalformed('malformed const.109.wat');
+
   group('const.110.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -672,6 +722,9 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.112.wat');
+  // assertMalformed('malformed const.113.wat');
 
   group('const.114.wasm', () {
     late ModuleDefinition def;
@@ -693,6 +746,9 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.116.wat');
+  // assertMalformed('malformed const.117.wat');
+
   group('const.118.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -713,6 +769,9 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.120.wat');
+  // assertMalformed('malformed const.121.wat');
+
   group('const.122.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -732,6 +791,9 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.124.wat');
+  // assertMalformed('malformed const.125.wat');
 
   group('const.126.wasm', () {
     late ModuleDefinition def;
@@ -833,6 +895,11 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.136.wat');
+  // assertMalformed('malformed const.137.wat');
+  // assertMalformed('malformed const.138.wat');
+  // assertMalformed('malformed const.139.wat');
+
   group('const.140.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -853,6 +920,9 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.142.wat');
+  // assertMalformed('malformed const.143.wat');
+
   group('const.144.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -872,6 +942,9 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.146.wat');
+  // assertMalformed('malformed const.147.wat');
 
   group('const.148.wasm', () {
     late ModuleDefinition def;
@@ -953,6 +1026,11 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.156.wat');
+  // assertMalformed('malformed const.157.wat');
+  // assertMalformed('malformed const.158.wat');
+  // assertMalformed('malformed const.159.wat');
+
   group('const.160.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -973,6 +1051,9 @@ void main() {
     });
   });
 
+  // assertMalformed('malformed const.162.wat');
+  // assertMalformed('malformed const.163.wat');
+
   group('const.164.wasm', () {
     late ModuleDefinition def;
     late Module m;
@@ -992,6 +1073,9 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.166.wat');
+  // assertMalformed('malformed const.167.wat');
 
   group('const.168.wasm', () {
     late ModuleDefinition def;
@@ -1032,6 +1116,13 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
   });
+
+  // assertMalformed('malformed const.172.wat');
+  // assertMalformed('malformed const.173.wat');
+  // assertMalformed('malformed const.174.wat');
+  // assertMalformed('malformed const.175.wat');
+  // assertMalformed('malformed const.176.wat');
+  // assertMalformed('malformed const.177.wat');
 
   group('const.178.wasm', () {
     late ModuleDefinition def;
