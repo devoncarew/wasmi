@@ -12,6 +12,7 @@ import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
+  final Map<String, Module> named = {};
 
   group('forward.0.wasm', () {
     late ModuleDefinition def;

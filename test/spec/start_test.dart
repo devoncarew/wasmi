@@ -12,6 +12,7 @@ import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
+  final Map<String, Module> named = {};
 
   // assertInvalid('invalid start.0.wasm', 'start/start.0.wasm', 'unknown function');
   // assertInvalid('invalid start.1.wasm', 'start/start.1.wasm', 'start function');

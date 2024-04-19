@@ -17,21 +17,19 @@ import 'types.dart';
 typedef ImplFn = void Function(Bytecode code);
 typedef reftype = Object?;
 
-// TODO: improve branching / stack handling
-
 class Module {
   final def.ModuleDefinition definition;
+
   final Map<String, ImportModule> imports;
   final Exports exports = Exports();
 
-  final Map<String, int> _exportedFunctions = {};
   final List<WasmFunction> functions = [];
+  final List<Table> tables = [];
   Memory? memory;
   final List<Global> globals = [];
-  final List<Table> tables = [];
-  final List<PassiveSegment?> segments = [];
-  final Set<int> droppedDataSegments = {};
 
+  final List<PassiveSegment?> _segments = [];
+  final Set<int> _droppedDataSegments = {};
   bool _hasStarted = false;
 
   Module(this.definition, {this.imports = const {}}) {
@@ -39,18 +37,25 @@ class Module {
     _initImports();
 
     // memory
-    // todo: throw if memory != null
+    // TODO: throw if memory != null
     if (definition.memoryInfo != null) {
       final info = definition.memoryInfo!;
       memory = Memory(info.min, info.max);
     }
 
-    // functions
-    for (var entry in definition.exports.functions.entries) {
-      _exportedFunctions[entry.key] = entry.value;
+    if (definition.exports.memory.isNotEmpty) {
+      final entry = definition.exports.memory.entries.first;
+      exports.memory[entry.key] = memory!;
     }
+
+    // functions
     for (var fn in definition.definedFunctions) {
       functions.add(DefinedFunction(this, fn));
+    }
+    for (var entry in definition.exports.functions.entries) {
+      final name = entry.key;
+      final index = entry.value;
+      exports.functions[name] = functions[index];
     }
 
     // Init globals first - they can be referenced from other initializers (like
@@ -143,7 +148,7 @@ class Module {
         if (segmentDef.functionIndexs != null) {
           final fnIndexes = segmentDef.functionIndexs!;
           final fns = fnIndexes.map((index) => functions[index]).toList();
-          segments.add(PassiveSegment(segmentDef.elementKind, fns));
+          _segments.add(PassiveSegment(segmentDef.elementKind, fns));
         } else {
           final fns = <WasmFunction?>[];
           for (var expr in segmentDef.functionIndexExpressions!) {
@@ -151,10 +156,10 @@ class Module {
                 _evaluateExpression(expr, ValueType.funcref) as WasmFunction?;
             fns.add(fn);
           }
-          segments.add(PassiveSegment(segmentDef.elementKind, fns));
+          _segments.add(PassiveSegment(segmentDef.elementKind, fns));
         }
       } else {
-        segments.add(null);
+        _segments.add(null);
       }
     }
   }
@@ -223,14 +228,16 @@ class Module {
     }
   }
 
+  Global? global(String name) => exports.globals[name];
+
   Object? invoke(String methodName, [List<Object?> args = const []]) {
-    // todo: throw an exception if there is no such method
-    // todo: figure out why we're not seeing test exports here
-    var index = _exportedFunctions[methodName]!;
+    // TODO: throw an exception if there is no such method
+    // TODO: figure out why we're not seeing test exports here
+    var func = exports.functions[methodName]!;
 
     if (!_hasStarted) start();
 
-    return functions[index].invoke(args);
+    return func.invoke(args);
   }
 
   Object? invokeByIndex(int index, [List<Object?> args = const []]) {
@@ -249,9 +256,10 @@ class Module {
 }
 
 class Exports {
-  // todo: memory, tables, functions
-  final Map<String, Global> globals = {};
+  final Map<String, WasmFunction> functions = {};
   final Map<String, Table> tables = {};
+  final Map<String, Memory> memory = {};
+  final Map<String, Global> globals = {};
 }
 
 class PassiveSegment {
@@ -376,7 +384,7 @@ class CompiledFn {
   List<def.DataSegment> get dataSegments =>
       module.definition.dataSegments.segments;
 
-  Set<int> get droppedDataSegments => module.droppedDataSegments;
+  Set<int> get droppedDataSegments => module._droppedDataSegments;
 
   Object? invoke([List<Object?> args = const []]) {
     final paramTypes = functionType.parameterTypes;
@@ -1963,7 +1971,7 @@ class CompiledFn {
       i32 srcOffset = stack[--sp] as int;
       i32 dstOffset = stack[--sp] as int;
 
-      final segment = module.segments[segmentIndex];
+      final segment = module._segments[segmentIndex];
       if (segment == null) {
         if (count == 0) return;
 
@@ -1977,7 +1985,7 @@ class CompiledFn {
     void elem_drop(Bytecode code) {
       // optionally, drop the given element segment
       u32 index = code.i0;
-      module.segments[index] = null;
+      module._segments[index] = null;
     }
 
     void table_copy(Bytecode code) {

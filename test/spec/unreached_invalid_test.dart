@@ -12,6 +12,7 @@ import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
+  final Map<String, Module> named = {};
 
   // assertInvalid('invalid unreached-invalid.0.wasm', 'unreached-invalid/unreached-invalid.0.wasm', 'unknown local');
   // assertInvalid('invalid unreached-invalid.1.wasm', 'unreached-invalid/unreached-invalid.1.wasm', 'unknown global');

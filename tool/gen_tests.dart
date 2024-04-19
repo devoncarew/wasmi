@@ -8,8 +8,8 @@ import 'package:path/path.dart' as p;
 const Set<String> allowList = {
   'address.wast',
   'align.wast',
-  // 'binary-leb128.wast',
-  // 'binary.wast',
+  'binary-leb128.wast',
+  'binary.wast',
   'block.wast',
   'br.wast',
   'br_if.wast',
@@ -17,14 +17,14 @@ const Set<String> allowList = {
   'bulk.wast',
   'call.wast',
   'call_indirect.wast',
-  // 'comments.wast',
+  // 'comments.wast', // wast2json parse error
   'const.wast',
   'conversions.wast',
-  // 'custom.wast',
+  'custom.wast',
   'data.wast',
   'elem.wast',
   'endianness.wast',
-  // 'exports.wast',
+  'exports.wast',
   'f32.wast',
   'f32_bitwise.wast',
   'f32_cmp.wast',
@@ -166,6 +166,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   final code = StringBuffer();
 
   code.writeln('final Map<String, ImportModule> registered = {};');
+  code.writeln('final Map<String, Module> named = {};');
   code.writeln();
 
   final json = jsonDecode(jsonFile.readAsStringSync()) as Map;
@@ -198,6 +199,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
 
     switch (type) {
       case 'module':
+        // {"type": "module", "line": 25, "name": "$Other1", "filename": "exports.13.wasm"},
+        final name = command['name'] as String?;
+
         startGroup(filename!);
 
         final moduleFilePath = 'test/spec/$spec/$filename';
@@ -209,6 +213,9 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         code.writeln("def = ModuleDefinition.parse(File('$moduleFilePath'));");
         code.writeln(
             "m = Module(def, imports: {'spectest': specTestModule(), ...registered});");
+        if (name != null) {
+          code.writeln("named[r'$name'] = m;");
+        }
         code.writeln('});');
         code.writeln();
 
@@ -219,15 +226,11 @@ Library createLibraryFor(File wastFile, File jsonFile) {
       case 'assert_return':
         final action = command['action'] as Map;
         final actionType = action['type'];
-        if (actionType != 'invoke') {
+        if (actionType != 'invoke' && actionType != 'get') {
           throw 'unhandled action type: $actionType';
         }
-
-        var args = (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
-        final argList = args.map((arg) {
-          return encodeType(arg['type'], arg['value']);
-        }).join(', ');
-
+        final getter = actionType == 'get';
+        final moduleName = action['module'] as String?;
         final field = action['field'];
 
         nameCount.putIfAbsent(field, () => 0);
@@ -254,8 +257,23 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           expectedValue = 'null /*void*/';
         }
 
-        code.writeln("returns('$testName', () => m.\$('$field', [$argList]), "
-            '$expectedValue$failText);');
+        final moduleRef = moduleName == null ? 'm' : "named[r'$moduleName']!";
+
+        if (getter) {
+          code.writeln(
+              "returns('$testName', () => $moduleRef.global('$field')!.value, "
+              '$expectedValue$failText);');
+        } else {
+          var args =
+              (action['args'] as List? ?? []).cast<Map<String, dynamic>>();
+          final argList = args.map((arg) {
+            return encodeType(arg['type'], arg['value']);
+          }).join(', ');
+          code.writeln(
+              "returns('$testName', () => $moduleRef.\$('$field', [$argList]), "
+              '$expectedValue$failText);');
+        }
+
         break;
 
       case 'action':
