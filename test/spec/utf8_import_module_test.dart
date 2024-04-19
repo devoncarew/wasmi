@@ -12,6 +12,7 @@ import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
+  final Map<String, Module> named = {};
 
   // assertMalformed('malformed utf8-import-module.0.wasm');
   // assertMalformed('malformed utf8-import-module.1.wasm');

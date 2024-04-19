@@ -12,6 +12,7 @@ import '../framework.dart';
 
 void main() {
   final Map<String, ImportModule> registered = {};
+  final Map<String, Module> named = {};
 
   group('elem.0.wasm', () {
     late ModuleDefinition def;
@@ -312,13 +313,14 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/elem/elem.58.wasm'));
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      named[r'$module1'] = m;
     });
 
     action(
         'register-module1', () => registered['module1'] = importModuleFrom(m));
     traps('call_7_0', () => m.$('call-7', []), 'uninitialized element');
-    returns('call_8_0', () => m.$('call-8', []), 0x41);
-    returns('call_9_0', () => m.$('call-9', []), 0x42);
+    returns('call_8_0', () => named[r'$module1']!.$('call-8', []), 0x41);
+    returns('call_9_0', () => named[r'$module1']!.$('call-9', []), 0x42);
   });
 
   group('elem.59.wasm', () {
@@ -328,26 +330,12 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/elem/elem.59.wasm'));
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      named[r'$module2'] = m;
     });
 
-    returns(
-      'call_7_0',
-      () => m.$('call-7', []),
-      0x43,
-      skip: 'failed',
-    );
-    returns(
-      'call_8_0',
-      () => m.$('call-8', []),
-      0x44,
-      skip: 'failed',
-    );
-    returns(
-      'call_9_0',
-      () => m.$('call-9', []),
-      0x42,
-      skip: 'failed',
-    );
+    returns('call_7_0', () => named[r'$module1']!.$('call-7', []), 0x43);
+    returns('call_8_0', () => named[r'$module1']!.$('call-8', []), 0x44);
+    returns('call_9_0', () => named[r'$module1']!.$('call-9', []), 0x42);
   });
 
   group('elem.60.wasm', () {
@@ -357,26 +345,12 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/elem/elem.60.wasm'));
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      named[r'$module3'] = m;
     });
 
-    returns(
-      'call_7_0',
-      () => m.$('call-7', []),
-      0x43,
-      skip: 'failed',
-    );
-    returns(
-      'call_8_0',
-      () => m.$('call-8', []),
-      0x45,
-      skip: 'failed',
-    );
-    returns(
-      'call_9_0',
-      () => m.$('call-9', []),
-      0x46,
-      skip: 'failed',
-    );
+    returns('call_7_0', () => named[r'$module1']!.$('call-7', []), 0x43);
+    returns('call_8_0', () => named[r'$module1']!.$('call-8', []), 0x45);
+    returns('call_9_0', () => named[r'$module1']!.$('call-9', []), 0x46);
   });
 
   // assertInvalid('invalid elem.61.wasm', 'elem/elem.61.wasm', 'type mismatch');
@@ -391,16 +365,19 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/elem/elem.65.wasm'));
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      named[r'$m'] = m;
     });
 
     action('register-exporter',
         () => registered['exporter'] = importModuleFrom(m));
-    returns('get_0', () => m.$('get', [0]), null);
-    returns('get_1', () => m.$('get', [1]), null);
-    returns('set_0', () => m.$('set', [0, $externref(42)]), null /*void*/);
-    returns('set_1', () => m.$('set', [1, $externref(137)]), null /*void*/);
-    returns('get_2', () => m.$('get', [0]), $externref(42));
-    returns('get_3', () => m.$('get', [1]), $externref(137));
+    returns('get_0', () => named[r'$m']!.$('get', [0]), null);
+    returns('get_1', () => named[r'$m']!.$('get', [1]), null);
+    returns('set_0', () => named[r'$m']!.$('set', [0, $externref(42)]),
+        null /*void*/);
+    returns('set_1', () => named[r'$m']!.$('set', [1, $externref(137)]),
+        null /*void*/);
+    returns('get_2', () => named[r'$m']!.$('get', [0]), $externref(42));
+    returns('get_3', () => named[r'$m']!.$('get', [1]), $externref(137));
   });
 
   group('elem.66.wasm', () {
@@ -412,18 +389,8 @@ void main() {
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
     });
 
-    returns(
-      'get_0',
-      () => m.$('get', [0]),
-      null,
-      skip: 'failed',
-    );
-    returns(
-      'get_1',
-      () => m.$('get', [1]),
-      $externref(137),
-      skip: 'failed',
-    );
+    returns('get_0', () => named[r'$m']!.$('get', [0]), null);
+    returns('get_1', () => named[r'$m']!.$('get', [1]), $externref(137));
   });
 
   group('elem.67.wasm', () {
@@ -433,6 +400,7 @@ void main() {
     setUpAll(() {
       def = ModuleDefinition.parse(File('test/spec/elem/elem.67.wasm'));
       m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      named[r'$module4'] = m;
     });
 
     action(
