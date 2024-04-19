@@ -237,19 +237,20 @@ class BranchBytecode extends Bytecode {
 
   BranchBytecode(
     super.code, {
-    super.i0 = 0,
-    super.i1 = 0,
+    required super.i0,
   });
 }
 
 class BrTableBytecode extends Bytecode {
-  final List<int> indexes;
+  int? defaultTargetPc;
+  StackEdit? defaultStackEdit;
 
-  List<int> pcTargets = [];
-  int defaultPcTarget = 0;
+  final List<int> targetPcs = [];
+  final List<StackEdit?> targetPcStackEdits = [];
 
-  BrTableBytecode(this.indexes, int defaultIndex)
-      : super(Bytecode.brTable, i1: defaultIndex);
+  BrTableBytecode({
+    required super.i1,
+  }) : super(Bytecode.brTable);
 }
 
 class StackEdit {

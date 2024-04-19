@@ -140,50 +140,25 @@ CompiledFn compile(
 
     // Branching instructions - `br`, `brIf`, and `brTable`.
     if (instruction.brInstr || instruction.brIfInstr) {
-      final targetInstr = labels.reverseIndex(instruction.labelTarget);
-      instruction.targetInstr = targetInstr;
-      final blockTypeCode = targetInstr.blockType;
-      final blockType = blockTypeCode < 0
-          ? FunctionType.fromBlockType(blockTypeCode)!
-          : function.module.functionTypes[blockTypeCode];
-      if (printDebug) {
-        print('     $instruction => $targetInstr');
-      }
+      instruction.targetInstr = labels.reverseIndex(instruction.labelTarget);
 
-      // Determine if we need to apply a stack edit for this branch.
-      if (targetInstr.blockInstr || targetInstr.ifInstr) {
-        // This is a forward jump.
-        final blockParams = blockType.resultTypes;
-        if (targetInstr.startingStackHeight! + blockParams.length !=
-            stackHeight) {
-          final bytecode = instruction.bytecode as BranchBytecode;
-          bytecode.stackEdit = StackEdit(
-            dest: targetInstr.startingStackHeight!,
-            count: blockParams.length,
-          );
-        }
-      } else {
-        if (!targetInstr.loopInstr) {
-          throw StateError('expected a loop instruction');
-        }
-
-        // This is a backwards jump.
-        final blockParams = blockType.parameterTypes;
-        if (targetInstr.startingStackHeight! != stackHeight) {
-          final bytecode = instruction.bytecode as BranchBytecode;
-          bytecode.stackEdit = StackEdit(
-            dest: targetInstr.startingStackHeight! - blockParams.length,
-            count: blockParams.length,
-          );
-        }
-      }
+      final bytecode = instruction.bytecode as BranchBytecode;
+      bytecode.stackEdit = calculateStackEdit(
+          function.module, labels, instruction.labelTarget, stackHeight);
     } else if (opcode == Opcode.brTable) {
       // Store the instructions that brTable branches to.
       final brTableInstr = instruction as InstructionBrTable;
-      brTableInstr.defaultInstr =
+
+      brTableInstr.defaultTargetInstr =
           labels.reverseIndex(brTableInstr.defaultLabel);
+      final bytecode = instruction.bytecode as BrTableBytecode;
+      bytecode.defaultStackEdit = calculateStackEdit(
+          function.module, labels, brTableInstr.defaultLabel, stackHeight);
+
       for (var label in brTableInstr.labels) {
-        brTableInstr.labelsInstr.add(labels.reverseIndex(label));
+        brTableInstr.targetInstrs.add(labels.reverseIndex(label));
+        bytecode.targetPcStackEdits.add(
+            calculateStackEdit(function.module, labels, label, stackHeight));
       }
     }
   }
@@ -227,10 +202,10 @@ CompiledFn compile(
       final brTableInstr = instruction as InstructionBrTable;
       final brTableBytecode = instruction.bytecode! as BrTableBytecode;
 
-      brTableBytecode.defaultPcTarget =
-          brTableInstr.defaultInstr!.calcJumpTargetPc(bytecodes);
-      for (var targetInstr in brTableInstr.labelsInstr) {
-        brTableBytecode.pcTargets.add(targetInstr.calcJumpTargetPc(bytecodes));
+      brTableBytecode.defaultTargetPc =
+          brTableInstr.defaultTargetInstr!.calcJumpTargetPc(bytecodes);
+      for (var targetInstr in brTableInstr.targetInstrs) {
+        brTableBytecode.targetPcs.add(targetInstr.calcJumpTargetPc(bytecodes));
       }
     }
   }
@@ -240,6 +215,46 @@ CompiledFn compile(
   }
 
   return CompiledFn(module, function, functionType, bytecodes, maxHeight);
+}
+
+StackEdit? calculateStackEdit(
+  def.ModuleDefinition module,
+  List<Instruction> labels,
+  int labelTarget,
+  int stackHeight,
+) {
+  final targetInstr = labels.reverseIndex(labelTarget);
+  final blockTypeCode = targetInstr.blockType;
+  final blockType = blockTypeCode < 0
+      ? FunctionType.fromBlockType(blockTypeCode)!
+      : module.functionTypes[blockTypeCode];
+
+  // Determine if we need to apply a stack edit for this branch.
+  if (targetInstr.blockInstr || targetInstr.ifInstr) {
+    // This is a forward jump.
+    final blockParams = blockType.resultTypes;
+    if (targetInstr.startingStackHeight! + blockParams.length != stackHeight) {
+      return StackEdit(
+        dest: targetInstr.startingStackHeight!,
+        count: blockParams.length,
+      );
+    } else {
+      return null;
+    }
+  } else if (targetInstr.loopInstr) {
+    // This is a backwards jump.
+    final blockParams = blockType.parameterTypes;
+    if (targetInstr.startingStackHeight! != stackHeight) {
+      return StackEdit(
+        dest: targetInstr.startingStackHeight! - blockParams.length,
+        count: blockParams.length,
+      );
+    } else {
+      return null;
+    }
+  } else {
+    throw StateError('expected a block, if, or loop instruction');
+  }
 }
 
 Bytecode _translate(Instruction instr) {
@@ -264,7 +279,7 @@ Bytecode _translate(Instruction instr) {
       return BranchBytecode(Bytecode.brIf, i0: instr.immediate_0 as int);
     case Opcode.brTable:
       return BrTableBytecode(
-          instr.immediate_0 as List<int>, instr.immediate_1 as int);
+          /*instr.immediate_0 as List<int>,*/ i1: instr.immediate_1 as int);
     case Opcode.$return:
       return Bytecode(Bytecode.$return);
     case Opcode.call:

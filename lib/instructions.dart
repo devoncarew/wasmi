@@ -446,8 +446,8 @@ class Instruction {
 }
 
 class InstructionBrTable extends Instruction {
-  final List<Instruction> labelsInstr = [];
-  Instruction? defaultInstr;
+  Instruction? defaultTargetInstr;
+  final List<Instruction> targetInstrs = [];
 
   InstructionBrTable(List<Object> args) : super(Opcode.brTable, args);
 
