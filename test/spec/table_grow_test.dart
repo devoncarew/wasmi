@@ -24,27 +24,27 @@ void main() {
     });
 
     returns('size_0', () => m.$('size', []), 0);
-    traps('set_0', () => m.$('set', [0, m.$externref(2)]),
+    traps('set_0', () => m.$('set', [0, $externref(2)]),
         'out of bounds table access');
     traps('get_0', () => m.$('get', [0]), 'out of bounds table access');
     returns('grow_0', () => m.$('grow', [1, null]), 0);
     returns('size_1', () => m.$('size', []), 1);
     returns('get_1', () => m.$('get', [0]), null);
-    returns('set_1', () => m.$('set', [0, m.$externref(2)]), null /*void*/);
-    returns('get_2', () => m.$('get', [0]), () => m.$externref(2));
-    traps('set_2', () => m.$('set', [1, m.$externref(2)]),
+    returns('set_1', () => m.$('set', [0, $externref(2)]), null /*void*/);
+    returns('get_2', () => m.$('get', [0]), $externref(2));
+    traps('set_2', () => m.$('set', [1, $externref(2)]),
         'out of bounds table access');
     traps('get_3', () => m.$('get', [1]), 'out of bounds table access');
-    returns('grow_abbrev_0', () => m.$('grow-abbrev', [4, m.$externref(3)]), 1);
+    returns('grow_abbrev_0', () => m.$('grow-abbrev', [4, $externref(3)]), 1);
     returns('size_2', () => m.$('size', []), 5);
-    returns('get_4', () => m.$('get', [0]), () => m.$externref(2));
-    returns('set_3', () => m.$('set', [0, m.$externref(2)]), null /*void*/);
-    returns('get_5', () => m.$('get', [0]), () => m.$externref(2));
-    returns('get_6', () => m.$('get', [1]), () => m.$externref(3));
-    returns('get_7', () => m.$('get', [4]), () => m.$externref(3));
-    returns('set_4', () => m.$('set', [4, m.$externref(4)]), null /*void*/);
-    returns('get_8', () => m.$('get', [4]), () => m.$externref(4));
-    traps('set_5', () => m.$('set', [5, m.$externref(2)]),
+    returns('get_4', () => m.$('get', [0]), $externref(2));
+    returns('set_3', () => m.$('set', [0, $externref(2)]), null /*void*/);
+    returns('get_5', () => m.$('get', [0]), $externref(2));
+    returns('get_6', () => m.$('get', [1]), $externref(3));
+    returns('get_7', () => m.$('get', [4]), $externref(3));
+    returns('set_4', () => m.$('set', [4, $externref(4)]), null /*void*/);
+    returns('get_8', () => m.$('get', [4]), $externref(4));
+    traps('set_5', () => m.$('set', [5, $externref(2)]),
         'out of bounds table access');
     traps('get_9', () => m.$('get', [5]), 'out of bounds table access');
   });

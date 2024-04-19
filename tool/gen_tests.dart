@@ -18,7 +18,7 @@ const Set<String> allowList = {
   'call.wast',
   'call_indirect.wast',
   // 'comments.wast',
-  // 'const.wast',
+  'const.wast',
   'conversions.wast',
   // 'custom.wast',
   'data.wast',
@@ -36,9 +36,9 @@ const Set<String> allowList = {
   'float_literals.wast',
   'float_memory.wast',
   'float_misc.wast',
-  // 'forward.wast',
-  // 'func.wast',
-  // 'func_ptrs.wast',
+  'forward.wast',
+  'func.wast',
+  'func_ptrs.wast',
   'global.wast',
   'i32.wast',
   'i64.wast',
@@ -249,8 +249,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
           expectedValue = '[$value]';
         } else if (expected.isNotEmpty) {
           final single = expected.first;
-          expectedValue =
-              encodeType(single['type'], single['value'], useClosure: true);
+          expectedValue = encodeType(single['type'], single['value']);
         } else {
           expectedValue = 'null /*void*/';
         }
@@ -364,18 +363,12 @@ Library createLibraryFor(File wastFile, File jsonFile) {
   return builder.build();
 }
 
-String encodeType(String type, String value, {bool useClosure = false}) {
+String encodeType(String type, String value) {
   if (value == 'null') return value;
 
   if (type == 'externref') {
-    if (useClosure) {
-      return '() => m.\$externref($value)';
-    } else {
-      return 'm.\$externref($value)';
-    }
-  }
-
-  if ((type == 'i32' || type == 'i64') && value.length <= 6) {
+    return '\$externref($value)';
+  } else if ((type == 'i32' || type == 'i64') && value.length <= 6) {
     if (value == '0') {
       return value;
     } else {
@@ -386,14 +379,12 @@ String encodeType(String type, String value, {bool useClosure = false}) {
         return '0x${val.toRadixString(16).toUpperCase()}';
       }
     }
+  } else if ((type == 'f32' || type == 'f64') &&
+      (value == 'nan:arithmetic' || value == 'nan:canonical')) {
+    return 'double.nan';
   } else {
-    if ((type == 'f32' || type == 'f64') &&
-        (value == 'nan:arithmetic' || value == 'nan:canonical')) {
-      return 'double.nan';
-    } else {
-      var val = BigInt.parse(value);
-      return "\$$type('${val.toRadixString(16).toUpperCase()}')";
-    }
+    var val = BigInt.parse(value);
+    return "\$$type('${val.toRadixString(16).toUpperCase()}')";
   }
 }
 

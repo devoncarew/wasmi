@@ -27,10 +27,7 @@ void returns(
     () {
       final actual = testClosure();
       if (expected != null) {
-        if (expected is Function) {
-          // ignore: avoid_dynamic_calls
-          expect(actual, expected());
-        } else if (expected is double && expected.isNaN) {
+        if (expected is double && expected.isNaN) {
           expect(actual, isNaN);
         } else if (expected is int && expected.isNaN) {
           expect(actual, isNaN);
@@ -136,14 +133,8 @@ ImportModule importModuleFrom(Module module) {
   return importModule;
 }
 
-final Map<int, Object> _testExterns = {};
-
 extension ModuleExtension on Module {
   Object? $(String fnName, List args) => invoke(fnName, args);
-
-  Object? $externref(int index) {
-    return _testExterns.putIfAbsent(index, () => '$index');
-  }
 }
 
 int $i32(String value) {
@@ -168,6 +159,12 @@ double $f64(String value) {
   var val = $i64(value);
   _reinterpretData.setInt64(0, val, Endian.little);
   return _reinterpretData.getFloat64(0, Endian.little);
+}
+
+final Map<int, Object> _testExternRefs = {};
+
+Object? $externref(int index) {
+  return _testExternRefs.putIfAbsent(index, () => '$index');
 }
 
 // When running scripts, the interpreter predefines a simple host module named
@@ -205,29 +202,32 @@ ImportModule specTestModule() {
   module.globals.add(_GlobalValue('global_f32', ValueType.f32, 666.6));
   module.globals.add(_GlobalValue('global_f64', ValueType.f64, 666.6));
 
-  void voidPrintHandler(List<Object?> args) {
-    printOnFailure('spectest.print');
-  }
-
   void printHandler(List<Object?> args) {
     final arg = args[0];
-    printOnFailure('spectest.print: $arg');
+    printOnFailure(
+        'spectest.print(${args.map((arg) => '$arg').join(', ')}): $arg');
   }
 
   // void print() {}
-  module.functions.add(ImportFunction('print', voidPrintHandler));
+  module.functions.add(ImportFunction('print', printHandler));
   // void print_f32(f32 arg0) {}
-  module.functions.add(ImportFunction('print_f32', printHandler));
+  module.functions
+      .add(ImportFunction('print_f32', printHandler, [ValueType.f32]));
   // void print_f64(f64 arg0) {}
-  module.functions.add(ImportFunction('print_f64', printHandler));
+  module.functions
+      .add(ImportFunction('print_f64', printHandler, [ValueType.f64]));
   // void print_f64_f64(f64 arg0, f64 arg1) {}
-  module.functions.add(ImportFunction('print_f64_f64', printHandler));
+  module.functions.add(ImportFunction(
+      'print_f64_f64', printHandler, [ValueType.f64, ValueType.f64]));
   // void print_i32(i32 arg0) {}
-  module.functions.add(ImportFunction('print_i32', printHandler));
+  module.functions
+      .add(ImportFunction('print_i32', printHandler, [ValueType.i32]));
   // void print_i32_f32(i32 arg0, f32 arg1) {}
-  module.functions.add(ImportFunction('print_i32_f32', printHandler));
+  module.functions.add(ImportFunction(
+      'print_i32_f32', printHandler, [ValueType.i32, ValueType.f32]));
   // void print_i64(i64 arg0) {}
-  module.functions.add(ImportFunction('print_i64', printHandler));
+  module.functions
+      .add(ImportFunction('print_i64', printHandler, [ValueType.i64]));
 
   // tables
   final table = ImportTable<WasmFunction>(
