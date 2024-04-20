@@ -9,7 +9,7 @@ void main(List<String> args) {
   importModule.functions.add(ImportFunction(
     'abort',
     (List<Object?> args) {
-      throw 'abort';
+      throw Trap('abort');
     },
     [ValueType.i32, ValueType.i32, ValueType.i32, ValueType.i32, ValueType.i32],
   ));
@@ -33,7 +33,7 @@ class Eratosthenes {
 
   final Module module;
 
-  Memory get memory => module.memory!;
+  Memory get memory => module.memory;
 
   // prime(i32) => i32
   int prime(int arg0) {

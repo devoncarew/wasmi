@@ -62,7 +62,7 @@ const Set<String> allowList = {
   'memory_init.wast',
   // 'memory_redundancy.wast',
   'memory_size.wast',
-  // 'memory_trap.wast',
+  'memory_trap.wast',
   // 'names.wast',
   'nop.wast',
   // 'obsolete-keywords.wast',
@@ -274,8 +274,10 @@ Library createLibraryFor(File wastFile, File jsonFile) {
             return encodeType(arg['type'], arg['value']);
           }).join(', ');
           code.writeln(
-              "returns('$testName', () => $moduleRef.\$('$field', [$argList]), "
-              '$expectedValue$failText);');
+            'returns(${safeStrRef(testName)}, () => '
+            '$moduleRef.\$(${safeStrRef(field)}, [$argList]), '
+            '$expectedValue$failText);',
+          );
         }
 
         break;
@@ -459,4 +461,26 @@ Map<String, String> readExpectedFails() {
   }
 
   return results;
+}
+
+final RegExp identifierChars = RegExp(r'[a-zA-Z0-9_]+');
+
+String safeStrRef(String str) {
+  return "'$str'";
+
+  // // If str contains other than [a-zA-Z0-9_], then render using unicode.
+
+  // final match = identifierChars.stringMatch(str) ?? '';
+  // if (match.length != str.length) {
+  //   final chars = str.runes.map((r) {
+  //     if (r < (256 * 256)) {
+  //       return '\\x${r.toRadixString(16).padLeft(4, '0')}';
+  //     } else {
+  //       return '\\u${r.toRadixString(16).padLeft(8, '0')}';
+  //     }
+  //   }).join();
+  //   return "'$chars'";
+  // } else {
+  //   return "'$str'";
+  // }
 }

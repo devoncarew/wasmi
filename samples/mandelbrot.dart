@@ -18,7 +18,7 @@ void main(List<String> args) {
   print('');
 
   final envModule = ImportModule();
-  envModule.memory = Memory(1);
+  envModule.memories.add(ImportMemory('memory', Memory(1)));
   envModule.functions.add(ImportFunction(
     'Math.log',
     (List<Object?> args) => math.log(args[0] as double),
@@ -39,7 +39,7 @@ void main(List<String> args) {
     imports: {'env': envModule},
   );
 
-  final memory = envModule.memory!;
+  final memory = envModule.memories.first.memory;
 
   var stopwatch = Stopwatch()..start();
   module.invoke('update', [width, height, numColors]);

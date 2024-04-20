@@ -55,7 +55,7 @@ void main(List<String> args) {
   final module = Module(moduleDefinition, imports: {'env': envModule});
   final icu = Icu_capi(module);
 
-  memory = module.memory!;
+  memory = module.memory;
 
   var timer = Stopwatch()..start();
 
@@ -135,7 +135,7 @@ class Icu_capi {
 
   final Module module;
 
-  Memory get memory => module.memory!;
+  Memory get memory => module.memory;
 
   // icu4x_init()
   void icu4x_init() {
