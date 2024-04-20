@@ -31,9 +31,9 @@ void main() {
     });
 
     test('SectionKind.memory', () {
-      expect(module.memoryInfo, isNotNull);
-      expect(module.memoryInfo!.min, 0);
-      expect(module.memoryInfo!.max, null);
+      expect(module.memories, isNotEmpty);
+      expect(module.memory!.min, 0);
+      expect(module.memory!.max, null);
     });
 
     test('SectionKind.export', () {
@@ -81,8 +81,8 @@ void main() {
 
       expect(module.importModules, isNotEmpty);
       expect(module.globals, isNotEmpty);
-      expect(module.memoryInfo, isNotNull);
-      expect(module.memoryInfo!.min, 1);
+      expect(module.memories, isNotEmpty);
+      expect(module.memory!.min, 1);
       expect(module.dataSegments.segments, isNotEmpty);
       expect(module.exports.functions, isNotEmpty);
       expect(module.startFunctionIndex, isNotNull);
@@ -115,8 +115,8 @@ void main() {
     test('hello.wasm', () {
       final module = ModuleDefinition.parse(File('samples/hello.wasm'));
 
-      expect(module.memoryInfo, isNotNull);
-      expect(module.memoryInfo!.min, 10);
+      expect(module.memories, isNotEmpty);
+      expect(module.memory!.min, 10);
       expect(module.globals, isNotEmpty);
       expect(module.exports.functions, isNotEmpty);
     });
@@ -153,7 +153,7 @@ void main() {
       // memory is imported
       expect(module.importModules.isNotEmpty, isTrue);
       final importModule = module.importModules.first;
-      expect(importModule.memory, isNotNull);
+      expect(importModule.memories, isNotEmpty);
 
       // defines imports
       expect(module.importModules, isNotEmpty);
@@ -177,9 +177,13 @@ void main() {
       expect(module.exports.functions, isNotEmpty);
       expect(module.globals, isNotEmpty);
       // (memory (;0;) 10 65536)
-      expect(module.memoryInfo, isNotNull);
-      expect(module.memoryInfo!.min, 10);
-      expect(module.memoryInfo!.max, 65536);
+      expect(module.memories, isNotEmpty);
+      expect(module.memory!.min, 10);
+      expect(module.memory!.max, 65536);
     });
   });
+}
+
+extension on ModuleDefinition {
+  MemoryInfo? get memory => memories.firstOrNull;
 }

@@ -48,11 +48,8 @@ void main(List<String> args) async {
   final code = await process.exitCode;
   io.exitCode = code;
 
-  print('');
   int skipped = results.where((r) => r.skipped != null).length;
   int failed = results.where((r) => r.failed).length;
-  print('$skipped tests skipped.');
-  print('$failed tests failed.');
 
   if (updateStatus) {
     print('');
@@ -84,6 +81,12 @@ void main(List<String> args) async {
       }
     }
   }
+
+  print('');
+
+  print('$skipped tests skipped.');
+  print('$failed tests failed.');
+  print('${tests.length} total tests.');
 }
 
 final Map<int, Test> tests = {};

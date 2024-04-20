@@ -32,13 +32,17 @@ void main(List<String> args) {
   print('');
 
   // memory
-  if (module.exports.memory.isNotEmpty) {
+  if (module.exports.memories.isNotEmpty) {
     print('### Memory');
     print('');
 
-    final memory = module.memoryInfo!;
-    final max = memory.max != null ? ' max: ${memory.max}' : '';
-    print('- memory(min: ${memory.min}$max)');
+    for (var entry in module.exports.memories.entries) {
+      final name = entry.key;
+      final memory = module.memories[entry.value];
+      final max = memory.max != null ? ' max: ${memory.max}' : '';
+      print('- $name: memory(min: ${memory.min}$max)');
+    }
+
     print('');
   }
 
@@ -100,11 +104,12 @@ void printImportModule(ImportModuleDefinition def) {
   }
 
   // memory
-  if (def.memory != null) {
-    final memory = def.memory!;
-
-    final max = memory.max != null ? ' max: ${memory.max}' : '';
-    print('- memory(min: ${memory.min}$max)');
+  if (def.memories.isNotEmpty) {
+    for (final memory in def.memories) {
+      final name = memory.name;
+      final max = memory.max != null ? ' max: ${memory.max}' : '';
+      print('- $name: memory(min: ${memory.min}$max)');
+    }
     print('');
   }
 

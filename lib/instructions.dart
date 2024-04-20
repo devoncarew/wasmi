@@ -56,7 +56,7 @@ class Instruction {
       case Opcode.reserved_08:
       case Opcode.reserved_09:
       case Opcode.reserved_0A:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
       case Opcode.end:
         return Instruction(opcode);
       case Opcode.br:
@@ -87,7 +87,7 @@ class Instruction {
       case Opcode.reserved_17:
       case Opcode.reserved_18:
       case Opcode.reserved_19:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
       case Opcode.drop:
         return Instruction(opcode);
       case Opcode.select:
@@ -95,13 +95,14 @@ class Instruction {
       case Opcode.selectT:
         var count = r.leb128_u();
         if (count != 1) {
-          throw 'select_t currently only supports result types == 1 (count=$count)';
+          throw FormatException(
+              'select_t currently only supports result types == 1 (count=$count)');
         }
         return Instruction(opcode, [r.readUint8()]);
       case Opcode.reserved_1D:
       case Opcode.reserved_1E:
       case Opcode.reserved_1F:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
 
       // 0x20
       case Opcode.localGet:
@@ -113,7 +114,7 @@ class Instruction {
       case Opcode.tableSet:
         return Instruction(opcode, [r.u32()]);
       case Opcode.reserved_27:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
       case Opcode.i32_load:
       case Opcode.i64_load:
       case Opcode.f32_load:
@@ -319,7 +320,7 @@ class Instruction {
       case Opcode.reserved_CD:
       case Opcode.reserved_CE:
       case Opcode.reserved_CF:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
 
       // 0xD0
       case Opcode.refNull:
@@ -341,7 +342,7 @@ class Instruction {
       case Opcode.reserved_DD:
       case Opcode.reserved_DE:
       case Opcode.reserved_DF:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
 
       // 0xE0
       case Opcode.reserved_E0:
@@ -360,7 +361,7 @@ class Instruction {
       case Opcode.reserved_ED:
       case Opcode.reserved_EE:
       case Opcode.reserved_EF:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
 
       // 0xF0
       case Opcode.reserved_F0:
@@ -375,13 +376,13 @@ class Instruction {
       case Opcode.reserved_F9:
       case Opcode.reserved_FA:
       case Opcode.reserved_FB:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
       case Opcode.overflow:
         if (code2 == null) return null;
 
         return _parseOverflow(r, code2);
       case Opcode.vector:
-        throw 'unhandled $opcode';
+        throw FormatException('unhandled $opcode');
     }
   }
 

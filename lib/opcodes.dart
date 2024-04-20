@@ -457,7 +457,9 @@ enum ImmediateType {
 
   static ImmediateType fromString(String str) {
     var ret = values.firstWhereOrNull((e) => e.name == str);
-    if (ret == null) throw 'no ImmediateType found for \'$str\'';
+    if (ret == null) {
+      throw FormatException('no ImmediateType found for \'$str\'');
+    }
 
     return ret;
   }

@@ -62,7 +62,7 @@ class ModuleDefinition {
       } else if (sectionKind == SectionKind.data_count) {
         module._parseDataCountSection(r, length);
       } else {
-        throw 'unhandled section ${sectionKind?.name}';
+        throw FormatException('unhandled section ${sectionKind?.name}');
       }
     }
 
@@ -77,6 +77,10 @@ class ModuleDefinition {
   final List<ModuleFunction> functions = [];
   final List<DefinedFunction> definedFunctions = [];
 
+  final List<Table> tables = [];
+
+  final List<MemoryInfo> memories = [];
+
   final List<Global> globals = [];
 
   final List<ImportModuleDefinition> importModules = [];
@@ -85,10 +89,7 @@ class ModuleDefinition {
   final DataSegments dataSegments = DataSegments();
   final ElementSegments elementSegments = ElementSegments();
 
-  final List<Table> tables = [];
-
   DebugInfo? debugInfo;
-  MemoryInfo? memoryInfo;
   int? startFunctionIndex;
 
   ModuleDefinition({
@@ -233,7 +234,7 @@ class ModuleDefinition {
           var refType = r.readUint8();
           var tableType = TableType.from(refType);
           if (tableType == null) {
-            throw 'unknown table type: ${hex(refType)}';
+            throw FormatException('unknown table type: ${hex(refType)}');
           }
 
           var limitKind = r.readUint8();
@@ -267,7 +268,8 @@ class ModuleDefinition {
               }
               _log('  min: $min pages');
 
-              importModule.memory = ImportedMemoryDefinition(min: min);
+              importModule.addImportedMemory(
+                  ImportedMemoryDefinition(importModule, itemName, min: min));
               break;
             case 0x01:
               var min = r.leb128();
@@ -288,8 +290,9 @@ class ModuleDefinition {
 
               _log('  min: $min pages');
               _log('  max: $max pages');
-              importModule.memory =
-                  ImportedMemoryDefinition(min: min, max: max);
+              importModule.addImportedMemory(ImportedMemoryDefinition(
+                  importModule, itemName,
+                  min: min, max: max));
               break;
             default:
               throw StateError('unsupported memory kind: ${hex(limitKind)}');
@@ -305,7 +308,7 @@ class ModuleDefinition {
               type: ValueType.fromCode(type), mutable: mutability == 0x01);
           break;
         default:
-          throw 'unknown import type: ${hex(importType)}';
+          throw FormatException('unknown import type: ${hex(importType)}');
       }
     }
   }
@@ -331,7 +334,7 @@ class ModuleDefinition {
       var refType = r.readUint8();
       var tableType = TableType.from(refType);
       if (tableType == null) {
-        throw 'unknown table type: ${hex(refType)}';
+        throw FormatException('unknown table type: ${hex(refType)}');
       }
       var limitKind = r.readUint8();
       switch (limitKind) {
@@ -354,30 +357,33 @@ class ModuleDefinition {
 
   void _parseMemorySection(Reader r) {
     int count = r.leb128();
-    if (count > 1) {
-      throw FormatException('multiple memories');
-    }
+    // // TODO: do we need to check this?
+    // if (count > 1) {
+    //   throw FormatException('multiple memories');
+    // }
 
     for (int i = 0; i < count; i++) {
       var limitKind = r.readUint8();
       switch (limitKind) {
         case 0x00:
-          if (memoryInfo != null) {
-            throw FormatException('multiple memories');
-          }
+          // // TODO: do we need to check this?
+          // if (memoryInfo != null) {
+          //   throw FormatException('multiple memories');
+          // }
 
           var min = r.leb128();
           if (min > 65536) {
             throw FormatException(
                 'memory size must be at most 65536 pages (4GiB)');
           }
-          memoryInfo = MemoryInfo(min: min);
+          memories.add(DefinedMemoryInfo(min: min));
           _log('  min: $min pages');
           break;
         case 0x01:
-          if (memoryInfo != null) {
-            throw FormatException('multiple memories');
-          }
+          // // TODO: do we need to check this?
+          // if (memoryInfo != null) {
+          //   throw FormatException('multiple memories');
+          // }
 
           var min = r.leb128();
           if (min > 65536) {
@@ -393,7 +399,7 @@ class ModuleDefinition {
             throw FormatException(
                 'size minimum must not be greater than maximum');
           }
-          memoryInfo = MemoryInfo(min: min, max: max);
+          memories.add(DefinedMemoryInfo(min: min, max: max));
           _log('  min: $min pages');
           _log('  max: $max pages');
           break;
@@ -450,7 +456,7 @@ class ModuleDefinition {
           // memidx
           var memoryIndex = r.leb128();
           _log('  export memory (#$memoryIndex)');
-          exports.memory[name] = memoryIndex;
+          exports.memories[name] = memoryIndex;
           break;
         case 0x03:
           // globalidx
@@ -459,7 +465,8 @@ class ModuleDefinition {
           exports.globals[name] = globalIndex;
           break;
         default:
-          throw 'export type not supported: ${type.toRadixString(16)}';
+          throw FormatException(
+              'export type not supported: ${type.toRadixString(16)}');
       }
     }
   }
@@ -487,7 +494,8 @@ class ModuleDefinition {
 
         var valueType = ValueType.fromCode(elementKind);
         if (!valueType.refType) {
-          throw 'elementKind type not yet supported (${hex(elementKind)})';
+          throw FormatException(
+              'elementKind type not yet supported (${hex(elementKind)})');
         }
 
         return valueType;
@@ -548,7 +556,8 @@ class ModuleDefinition {
           functionInstrs = r.readVectorOfInstructions();
           break;
         default:
-          throw 'unhandled element section type: ${hex(sectionType)}';
+          throw FormatException(
+              'unhandled element section type: ${hex(sectionType)}');
       }
 
       elementSegments.addElementSegment(ElementSegment(
@@ -639,8 +648,9 @@ class ModuleDefinition {
         case 0x02:
           var memIndex = r.leb128();
           if (memIndex != 0) {
-            throw 'Only data segments with memory indexes of 0 are supported; '
-                'found $memIndex';
+            throw FormatException(
+                'Only data segments with memory indexes of 0 are supported; '
+                'found $memIndex');
           }
           var instructions = r.readInstructionsEndTerminated();
           var bytes = r.readByteVector();
@@ -652,7 +662,7 @@ class ModuleDefinition {
           ));
           break;
         default:
-          throw 'unsupported data type ${hex(type)}';
+          throw FormatException('unsupported data type ${hex(type)}');
       }
     }
   }
@@ -710,7 +720,8 @@ class Reader {
   /// Throws an exception if the expected marker is not what's found.
   void verifyMarker(int actual, int expected) {
     if (actual != expected) {
-      throw 'found ${hex(actual)} but expected ${hex(expected)}';
+      throw FormatException(
+          'found ${hex(actual)} but expected ${hex(expected)}');
     }
   }
 
@@ -854,7 +865,7 @@ class Reader {
       if (instruction != null) {
         instructions.add(instruction);
       } else {
-        throw 'unknown opcode: ${hex(opcode)}';
+        throw FormatException('unknown opcode: ${hex(opcode)}');
       }
     }
 
@@ -925,7 +936,7 @@ class DefinedFunction extends ModuleFunction {
   }
 }
 
-class MemoryInfo {
+abstract class MemoryInfo {
   /// min pages
   final int min;
 
@@ -935,14 +946,26 @@ class MemoryInfo {
   MemoryInfo({required this.min, this.max});
 }
 
+class DefinedMemoryInfo extends MemoryInfo {
+  DefinedMemoryInfo({required super.min, super.max});
+}
+
+class ImportedMemoryDefinition extends MemoryInfo {
+  final ImportModuleDefinition importModule;
+  final String name;
+
+  ImportedMemoryDefinition(this.importModule, this.name,
+      {required super.min, super.max});
+}
+
 class ImportModuleDefinition {
   final String name;
   final ModuleDefinition wasmModule;
 
   final List<ImportedFunctionDefinition> functions = [];
-  ImportedMemoryDefinition? memory;
-  final List<ImportedGlobalDefinition> globals = [];
   final List<ImportedTableDefinition> tables = [];
+  final List<ImportedMemoryDefinition> memories = [];
+  final List<ImportedGlobalDefinition> globals = [];
 
   ImportModuleDefinition(this.name, this.wasmModule);
 
@@ -959,6 +982,12 @@ class ImportModuleDefinition {
     wasmModule.tables.add(table);
   }
 
+  void addImportedMemory(ImportedMemoryDefinition memory) {
+    memories.add(memory);
+
+    wasmModule.memories.add(memory);
+  }
+
   void addImportedGlobal(
     String name, {
     required ValueType type,
@@ -968,16 +997,6 @@ class ImportModuleDefinition {
     wasmModule.globals.add(global);
     globals.add(global);
   }
-}
-
-class ImportedMemoryDefinition {
-  /// min pages
-  final int min;
-
-  /// max pages
-  final int? max;
-
-  ImportedMemoryDefinition({required this.min, this.max});
 }
 
 class ImportedFunctionDefinition extends ModuleFunction {
@@ -991,7 +1010,7 @@ class ImportedFunctionDefinition extends ModuleFunction {
 class Exports {
   final Map<String, int> functions = {};
   final Map<String, int> tables = {};
-  final Map<String, int> memory = {};
+  final Map<String, int> memories = {};
   final Map<String, int> globals = {};
 }
 

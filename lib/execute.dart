@@ -25,7 +25,7 @@ class Module {
 
   final List<WasmFunction> functions = [];
   final List<Table> tables = [];
-  Memory? memory;
+  final List<Memory> memories = [];
   final List<Global> globals = [];
 
   final List<PassiveSegment?> _segments = [];
@@ -37,18 +37,10 @@ class Module {
     _initImports();
 
     // memory
-    // TODO: throw if memory != null
-    if (definition.memoryInfo != null) {
-      final info = definition.memoryInfo!;
-      memory = Memory(info.min, info.max);
-    }
-
-    if (definition.exports.memory.isNotEmpty) {
-      final entry = definition.exports.memory.entries.first;
-      exports.memory[entry.key] = memory!;
-    }
+    _initMemories();
 
     // functions
+    // todo:
     for (var fn in definition.definedFunctions) {
       functions.add(DefinedFunction(this, fn));
     }
@@ -70,6 +62,8 @@ class Module {
     // init tables
     _initTables();
   }
+
+  Memory get memory => memories.first;
 
   void _initImports() {
     // init imported functions
@@ -96,19 +90,41 @@ class Module {
         functions.add(importFunction);
       }
     }
+  }
 
-    // init imported memory
-    for (var moduleDef in definition.importModules) {
-      if (moduleDef.memory != null) {
-        final importModule = imports[moduleDef.name];
+  void _initMemories() {
+    final memoryExports = definition.exports.memories.reversed;
+
+    for (int i = 0; i < definition.memories.length; i++) {
+      final memoryDef = definition.memories[i];
+      late final Memory memory;
+
+      if (memoryDef is def.ImportedMemoryDefinition) {
+        final importModule = imports[memoryDef.importModule.name];
         if (importModule == null) {
           throw LinkException('unknown import');
         }
-        if (importModule.memory == null) {
+
+        final import = importModule.memories
+            .firstWhereOrNull((f) => f.name == memoryDef.name);
+        if (import == null) {
           throw LinkException('unknown import');
         }
-        memory = importModule.memory!;
+
+        memory = import.memory;
+      } else if (memoryDef is def.DefinedMemoryInfo) {
+        memory = Memory(memoryDef.min, memoryDef.max);
+      } else {
+        throw StateError('unknown memory type: $memoryDef');
       }
+
+      // Update the exports.
+      final exportName = memoryExports[i];
+      if (exportName != null) {
+        exports.memories[exportName] = memory;
+      }
+
+      memories.add(memory);
     }
   }
 
@@ -163,7 +179,8 @@ class Module {
       // Copy active segments into memory on module init.
       var offset =
           _evaluateExpression(segment.offsetExpression!, ValueType.i64) as int;
-      memory!.copyFrom(segment.bytes, 0, offset, segment.bytes.length);
+      final memory = memories.first;
+      memory.copyFrom(segment.bytes, 0, offset, segment.bytes.length);
     }
   }
 
@@ -220,7 +237,7 @@ class Module {
         }
         table = import;
       } else {
-        throw 'unhandled table type: $tableDef';
+        throw LinkException('unhandled table type: $tableDef');
       }
 
       final exportName = tableExports[i];
@@ -293,7 +310,7 @@ class Module {
 class Exports {
   final Map<String, WasmFunction> functions = {};
   final Map<String, Table> tables = {};
-  final Map<String, Memory> memory = {};
+  final Map<String, Memory> memories = {};
   final Map<String, Global> globals = {};
 }
 
@@ -307,7 +324,7 @@ class PassiveSegment {
 class ImportModule {
   final List<ImportFunction> functions = [];
   final List<ImportTable> tables = [];
-  Memory? memory;
+  final List<ImportMemory> memories = [];
   final List<ImportGlobal> globals = [];
 }
 
@@ -334,10 +351,17 @@ class ImportGlobal extends Global {
 
   @override
   set value(Object? v) {
-    if (!mutable) throw 'value not mutable';
+    if (!mutable) throw Trap('value not mutable');
 
     setter!(v);
   }
+}
+
+class ImportMemory {
+  final String name;
+  final Memory memory;
+
+  ImportMemory(this.name, this.memory);
 }
 
 class ImportTable<T> extends Table<T> {
@@ -412,7 +436,7 @@ class CompiledFn {
     this.functionType,
     this.bytecodes,
     this.stackHeight,
-  )   : memory = module.memory,
+  )   : memory = module.memories.firstOrNull,
         globals = module.globals,
         tables = module.tables,
         functions = module.functions;
@@ -2433,7 +2457,7 @@ class DefinedGlobal extends Global {
 
   @override
   set value(Object? v) {
-    if (!mutable) throw 'value not mutable';
+    if (!mutable) throw Trap('value not mutable');
 
     _value = v;
   }

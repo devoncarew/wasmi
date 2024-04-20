@@ -20,7 +20,7 @@ class Br {
 
   final Module module;
 
-  Memory get memory => module.memory!;
+  Memory get memory => module.memory;
 
   // nested-block-value(i32) => i32
   int nested_block_value(int arg0) {

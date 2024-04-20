@@ -5,16 +5,18 @@ import 'package:wasmi/parse.dart';
 import 'package:wasmi/types.dart';
 
 void main(List<String> args) {
+  final memory = Memory(1);
+
   // (import "js" "mem" (memory 1))
   final jsModule = ImportModule();
-  jsModule.memory = Memory(1);
+  jsModule.memories.add(ImportMemory('mem', memory));
 
   // (import "console" "log" (func $log (param i32 i32)))
   final consoleModule = ImportModule();
   consoleModule.functions.add(ImportFunction(
     'log',
     (List<Object?> args) {
-      _printMemory(jsModule.memory!, args[0] as int, args[1] as int);
+      _printMemory(memory, args[0] as int, args[1] as int);
       return null;
     },
     [ValueType.i32, ValueType.i32],

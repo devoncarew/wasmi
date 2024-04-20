@@ -142,9 +142,10 @@ ImportModule importModuleFrom(Module module) {
   }
 
   // memory
-  if (module.exports.memory.isNotEmpty) {
-    final memories = module.exports.memory.values;
-    importModule.memory = memories.first;
+  for (var entry in module.exports.memories.entries) {
+    final memory = entry.value;
+
+    importModule.memories.add(ImportMemory(entry.key, memory));
   }
 
   // globals
@@ -224,7 +225,7 @@ ImportModule specTestModule() {
   // 'spectest'
   final module = ImportModule();
 
-  module.memory = Memory(1, 2);
+  module.memories.add(ImportMemory('memory', Memory(1, 2)));
 
   module.globals.add(_GlobalValue('global_i32', ValueType.i32, 666));
   module.globals.add(_GlobalValue('global_i64', ValueType.i64, 666));

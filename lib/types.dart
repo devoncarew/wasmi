@@ -42,7 +42,7 @@ enum ValueType {
       case f64:
         return 0.0;
       case v128:
-        throw 'unsupported: $v128';
+        throw FormatException('unsupported: $v128');
       case funcref:
         return null;
       case externref:
@@ -54,14 +54,14 @@ enum ValueType {
 
   static ValueType fromString(String str) {
     var ret = values.firstWhereOrNull((e) => e.name == str);
-    if (ret == null) throw 'no ValueType found for \'$str\'';
+    if (ret == null) throw FormatException('no ValueType found for \'$str\'');
 
     return ret;
   }
 
   static ValueType fromCode(int code) {
     return ValueType.values.firstWhere((e) => e.code == code, orElse: () {
-      throw 'unhandled type kind: ${hex(code)}';
+      throw FormatException('unhandled type kind: ${hex(code)}');
     });
   }
 }
