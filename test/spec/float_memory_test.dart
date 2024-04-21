@@ -65,17 +65,9 @@ void main() {
       returns('f64_load_1', () => m.$('f64.load', []), $f64('0'));
       action('f64_store_0', () => m.$('f64.store', []));
       returns(
-        'i64_load_2',
-        () => m.$('i64.load', []),
-        $i64('7FF4000000000000'),
-        skip: 'failed',
-      );
+          'i64_load_2', () => m.$('i64.load', []), $i64('7FF4000000000000'));
       returns(
-        'f64_load_2',
-        () => m.$('f64.load', []),
-        $f64('7FF4000000000000'),
-        skip: 'failed',
-      );
+          'f64_load_2', () => m.$('f64.load', []), $f64('7FF4000000000000'));
       action('reset_1', () => m.$('reset', []));
       returns('i64_load_3', () => m.$('i64.load', []), 0);
       returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));
@@ -136,17 +128,9 @@ void main() {
       returns('f64_load_1', () => m.$('f64.load', []), $f64('0'));
       action('f64_store_0', () => m.$('f64.store', []));
       returns(
-        'i64_load_2',
-        () => m.$('i64.load', []),
-        $i64('7FF4000000000000'),
-        skip: 'failed',
-      );
+          'i64_load_2', () => m.$('i64.load', []), $i64('7FF4000000000000'));
       returns(
-        'f64_load_2',
-        () => m.$('f64.load', []),
-        $f64('7FF4000000000000'),
-        skip: 'failed',
-      );
+          'f64_load_2', () => m.$('f64.load', []), $f64('7FF4000000000000'));
       action('reset_1', () => m.$('reset', []));
       returns('i64_load_3', () => m.$('i64.load', []), 0);
       returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));
@@ -202,17 +186,9 @@ void main() {
       returns('f64_load_1', () => m.$('f64.load', []), $f64('0'));
       action('f64_store_0', () => m.$('f64.store', []));
       returns(
-        'i64_load_2',
-        () => m.$('i64.load', []),
-        $i64('7FFC000000000001'),
-        skip: 'failed',
-      );
+          'i64_load_2', () => m.$('i64.load', []), $i64('7FFC000000000001'));
       returns(
-        'f64_load_2',
-        () => m.$('f64.load', []),
-        $f64('7FFC000000000001'),
-        skip: 'failed',
-      );
+          'f64_load_2', () => m.$('f64.load', []), $f64('7FFC000000000001'));
       action('reset_1', () => m.$('reset', []));
       returns('i64_load_3', () => m.$('i64.load', []), 0);
       returns('f64_load_3', () => m.$('f64.load', []), $f64('0'));

@@ -113,12 +113,7 @@ void main() {
       returns('f32_max_0', () => m.$('f32_max', []), 0x102);
       returns('f64_max_0', () => m.$('f64_max', []), 0x102);
       returns('f32_store_0', () => m.$('f32_store', []), 0x102);
-      returns(
-        'f64_store_0',
-        () => m.$('f64_store', []),
-        0x102,
-        skip: 'failed',
-      );
+      returns('f64_store_0', () => m.$('f64_store', []), 0x102);
       returns('f32_call_0', () => m.$('f32_call', []), 0x102);
       returns('f64_call_0', () => m.$('f64_call', []), 0x102);
       returns(

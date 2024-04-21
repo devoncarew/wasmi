@@ -63,7 +63,7 @@ void main() {
       returns('size_t3_5', () => m.$('size-t3', []), 8);
     });
 
-    // assertInvalid('invalid table_size.1.wasm', 'table_size/table_size.1.wasm', 'type mismatch');
-    // assertInvalid('invalid table_size.2.wasm', 'table_size/table_size.2.wasm', 'type mismatch');
+    // assertInvalid('invalid table_size.1.wasm', 'table_size/table_size.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_size.2.wasm', 'table_size/table_size.2.wasm', 'type mismatch', registered);
   });
 }

@@ -50,7 +50,7 @@ void main() {
       returns('call_v_2', () => m.$('call-v', [4]), 4);
     });
 
-    // assertInvalid('invalid ref_func.2.wasm', 'ref_func/ref_func.2.wasm', 'unknown function 7');
+    // assertInvalid('invalid ref_func.2.wasm', 'ref_func/ref_func.2.wasm', 'unknown function 7', registered);
 
     group('ref_func.3.wasm', () {
       late ModuleDefinition def;
@@ -63,7 +63,7 @@ void main() {
       });
     });
 
-    // assertInvalid('invalid ref_func.4.wasm', 'ref_func/ref_func.4.wasm', 'undeclared function reference');
-    // assertInvalid('invalid ref_func.5.wasm', 'ref_func/ref_func.5.wasm', 'undeclared function reference');
+    // assertInvalid('invalid ref_func.4.wasm', 'ref_func/ref_func.4.wasm', 'undeclared function reference', registered);
+    // assertInvalid('invalid ref_func.5.wasm', 'ref_func/ref_func.5.wasm', 'undeclared function reference', registered);
   });
 }

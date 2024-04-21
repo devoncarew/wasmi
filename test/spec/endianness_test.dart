@@ -157,30 +157,14 @@ void main() {
           $f32('45849365'));
       returns('f32_store_3', () => m.$('f32_store', [$f32('7F7FFFFF')]),
           $f32('7F7FFFFF'));
-      returns(
-        'f64_store_0',
-        () => m.$('f64_store', [$f64('BFF0000000000000')]),
-        $f64('BFF0000000000000'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_store_1',
-        () => m.$('f64_store', [$f64('40934A4584F4C6E7')]),
-        $f64('40934A4584F4C6E7'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_store_2',
-        () => m.$('f64_store', [$f64('4119E4C9B26C7EAE')]),
-        $f64('4119E4C9B26C7EAE'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_store_3',
-        () => m.$('f64_store', [$f64('7FEFFFFFFFFFFFFF')]),
-        $f64('7FEFFFFFFFFFFFFF'),
-        skip: 'failed',
-      );
+      returns('f64_store_0', () => m.$('f64_store', [$f64('BFF0000000000000')]),
+          $f64('BFF0000000000000'));
+      returns('f64_store_1', () => m.$('f64_store', [$f64('40934A4584F4C6E7')]),
+          $f64('40934A4584F4C6E7'));
+      returns('f64_store_2', () => m.$('f64_store', [$f64('4119E4C9B26C7EAE')]),
+          $f64('4119E4C9B26C7EAE'));
+      returns('f64_store_3', () => m.$('f64_store', [$f64('7FEFFFFFFFFFFFFF')]),
+          $f64('7FEFFFFFFFFFFFFF'));
     });
   });
 }

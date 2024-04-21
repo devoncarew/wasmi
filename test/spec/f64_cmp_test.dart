@@ -8654,11 +8654,11 @@ void main() {
           0);
     });
 
-    // assertInvalid('invalid f64_cmp.1.wasm', 'f64_cmp/f64_cmp.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_cmp.2.wasm', 'f64_cmp/f64_cmp.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_cmp.3.wasm', 'f64_cmp/f64_cmp.3.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_cmp.4.wasm', 'f64_cmp/f64_cmp.4.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_cmp.5.wasm', 'f64_cmp/f64_cmp.5.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_cmp.6.wasm', 'f64_cmp/f64_cmp.6.wasm', 'type mismatch');
+    // assertInvalid('invalid f64_cmp.1.wasm', 'f64_cmp/f64_cmp.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_cmp.2.wasm', 'f64_cmp/f64_cmp.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_cmp.3.wasm', 'f64_cmp/f64_cmp.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_cmp.4.wasm', 'f64_cmp/f64_cmp.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_cmp.5.wasm', 'f64_cmp/f64_cmp.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_cmp.6.wasm', 'f64_cmp/f64_cmp.6.wasm', 'type mismatch', registered);
   });
 }

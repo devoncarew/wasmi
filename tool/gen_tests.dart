@@ -65,7 +65,7 @@ const Set<String> allowList = {
   'memory_trap.wast',
   // 'names.wast',
   'nop.wast',
-  // 'obsolete-keywords.wast',
+  'obsolete-keywords.wast',
   'ref_func.wast',
   'ref_is_null.wast',
   'ref_null.wast',
@@ -360,7 +360,7 @@ Library createLibraryFor(File wastFile, File jsonFile) {
         // TODO:
         final testName = 'invalid ${filename!}';
         code.writeln(
-            "  // assertInvalid('$testName', '$moduleFilePath', '$text');");
+            "  // assertInvalid('$testName', '$moduleFilePath', '$text', registered);");
         break;
 
       case 'assert_malformed':
@@ -374,14 +374,20 @@ Library createLibraryFor(File wastFile, File jsonFile) {
       case 'assert_uninstantiable':
         //   {"type": "assert_uninstantiable", "line": 180, "filename": "data.27.wasm", "text": "out of bounds memory access", "module_type": "binary"},
 
-        // ignore: unused_local_variable
         final text = command['text'] as String;
+        final moduleType = command['module_type'] as String;
+        final moduleFilePath = '$spec/$filename';
 
         closeGroup();
 
-        // todo:
+        if (moduleType != 'binary') {
+          throw 'unhandled moduel type: $moduleType';
+        }
+
+        // TODO:
         final testName = 'uninstantiable ${filename!}';
-        code.writeln("  // assertUninstantiable('$testName');");
+        code.writeln(
+            "  // assertUninstantiable('$testName', '$moduleFilePath', '$text', registered);");
         break;
 
       case 'assert_exhaustion':

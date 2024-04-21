@@ -1331,8 +1331,8 @@ void main() {
       returns('neg_17', () => m.$('neg', [$f32('7FC00000')]), $f32('FFC00000'));
     });
 
-    // assertInvalid('invalid f32_bitwise.1.wasm', 'f32_bitwise/f32_bitwise.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_bitwise.2.wasm', 'f32_bitwise/f32_bitwise.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_bitwise.3.wasm', 'f32_bitwise/f32_bitwise.3.wasm', 'type mismatch');
+    // assertInvalid('invalid f32_bitwise.1.wasm', 'f32_bitwise/f32_bitwise.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_bitwise.2.wasm', 'f32_bitwise/f32_bitwise.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_bitwise.3.wasm', 'f32_bitwise/f32_bitwise.3.wasm', 'type mismatch', registered);
   });
 }

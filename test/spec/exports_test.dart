@@ -176,14 +176,14 @@ void main() {
       returns('c_0', () => m.$('c', []), 0x2A);
     });
 
-    // assertInvalid('invalid exports.15.wasm', 'exports/exports.15.wasm', 'unknown function');
-    // assertInvalid('invalid exports.16.wasm', 'exports/exports.16.wasm', 'unknown function');
-    // assertInvalid('invalid exports.17.wasm', 'exports/exports.17.wasm', 'unknown function');
-    // assertInvalid('invalid exports.18.wasm', 'exports/exports.18.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.19.wasm', 'exports/exports.19.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.20.wasm', 'exports/exports.20.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.21.wasm', 'exports/exports.21.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.22.wasm', 'exports/exports.22.wasm', 'duplicate export name');
+    // assertInvalid('invalid exports.15.wasm', 'exports/exports.15.wasm', 'unknown function', registered);
+    // assertInvalid('invalid exports.16.wasm', 'exports/exports.16.wasm', 'unknown function', registered);
+    // assertInvalid('invalid exports.17.wasm', 'exports/exports.17.wasm', 'unknown function', registered);
+    // assertInvalid('invalid exports.18.wasm', 'exports/exports.18.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.19.wasm', 'exports/exports.19.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.20.wasm', 'exports/exports.20.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.21.wasm', 'exports/exports.21.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.22.wasm', 'exports/exports.22.wasm', 'duplicate export name', registered);
 
     group('exports.23.wasm', () {
       late ModuleDefinition def;
@@ -312,14 +312,14 @@ void main() {
       returns('e_0', () => named[r'$Global']!.global('e')!.value, 0x2A);
     });
 
-    // assertInvalid('invalid exports.35.wasm', 'exports/exports.35.wasm', 'unknown global');
-    // assertInvalid('invalid exports.36.wasm', 'exports/exports.36.wasm', 'unknown global');
-    // assertInvalid('invalid exports.37.wasm', 'exports/exports.37.wasm', 'unknown global');
-    // assertInvalid('invalid exports.38.wasm', 'exports/exports.38.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.39.wasm', 'exports/exports.39.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.40.wasm', 'exports/exports.40.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.41.wasm', 'exports/exports.41.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.42.wasm', 'exports/exports.42.wasm', 'duplicate export name');
+    // assertInvalid('invalid exports.35.wasm', 'exports/exports.35.wasm', 'unknown global', registered);
+    // assertInvalid('invalid exports.36.wasm', 'exports/exports.36.wasm', 'unknown global', registered);
+    // assertInvalid('invalid exports.37.wasm', 'exports/exports.37.wasm', 'unknown global', registered);
+    // assertInvalid('invalid exports.38.wasm', 'exports/exports.38.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.39.wasm', 'exports/exports.39.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.40.wasm', 'exports/exports.40.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.41.wasm', 'exports/exports.41.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.42.wasm', 'exports/exports.42.wasm', 'duplicate export name', registered);
 
     group('exports.43.wasm', () {
       late ModuleDefinition def;
@@ -471,14 +471,14 @@ void main() {
       });
     });
 
-    // assertInvalid('invalid exports.58.wasm', 'exports/exports.58.wasm', 'unknown table');
-    // assertInvalid('invalid exports.59.wasm', 'exports/exports.59.wasm', 'unknown table');
-    // assertInvalid('invalid exports.60.wasm', 'exports/exports.60.wasm', 'unknown table');
-    // assertInvalid('invalid exports.61.wasm', 'exports/exports.61.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.62.wasm', 'exports/exports.62.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.63.wasm', 'exports/exports.63.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.64.wasm', 'exports/exports.64.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.65.wasm', 'exports/exports.65.wasm', 'duplicate export name');
+    // assertInvalid('invalid exports.58.wasm', 'exports/exports.58.wasm', 'unknown table', registered);
+    // assertInvalid('invalid exports.59.wasm', 'exports/exports.59.wasm', 'unknown table', registered);
+    // assertInvalid('invalid exports.60.wasm', 'exports/exports.60.wasm', 'unknown table', registered);
+    // assertInvalid('invalid exports.61.wasm', 'exports/exports.61.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.62.wasm', 'exports/exports.62.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.63.wasm', 'exports/exports.63.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.64.wasm', 'exports/exports.64.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.65.wasm', 'exports/exports.65.wasm', 'duplicate export name', registered);
 
     group('exports.66.wasm', () {
       late ModuleDefinition def;
@@ -620,12 +620,12 @@ void main() {
       });
     });
 
-    // assertInvalid('invalid exports.80.wasm', 'exports/exports.80.wasm', 'unknown memory');
-    // assertInvalid('invalid exports.81.wasm', 'exports/exports.81.wasm', 'unknown memory');
-    // assertInvalid('invalid exports.82.wasm', 'exports/exports.82.wasm', 'unknown memory');
-    // assertInvalid('invalid exports.83.wasm', 'exports/exports.83.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.84.wasm', 'exports/exports.84.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.85.wasm', 'exports/exports.85.wasm', 'duplicate export name');
-    // assertInvalid('invalid exports.86.wasm', 'exports/exports.86.wasm', 'duplicate export name');
+    // assertInvalid('invalid exports.80.wasm', 'exports/exports.80.wasm', 'unknown memory', registered);
+    // assertInvalid('invalid exports.81.wasm', 'exports/exports.81.wasm', 'unknown memory', registered);
+    // assertInvalid('invalid exports.82.wasm', 'exports/exports.82.wasm', 'unknown memory', registered);
+    // assertInvalid('invalid exports.83.wasm', 'exports/exports.83.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.84.wasm', 'exports/exports.84.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.85.wasm', 'exports/exports.85.wasm', 'duplicate export name', registered);
+    // assertInvalid('invalid exports.86.wasm', 'exports/exports.86.wasm', 'duplicate export name', registered);
   });
 }

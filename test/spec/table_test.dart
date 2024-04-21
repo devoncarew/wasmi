@@ -105,10 +105,10 @@ void main() {
       });
     });
 
-    // assertInvalid('invalid table.9.wasm', 'table/table.9.wasm', 'unknown table');
-    // assertInvalid('invalid table.10.wasm', 'table/table.10.wasm', 'unknown table');
-    // assertInvalid('invalid table.11.wasm', 'table/table.11.wasm', 'size minimum must not be greater than maximum');
-    // assertInvalid('invalid table.12.wasm', 'table/table.12.wasm', 'size minimum must not be greater than maximum');
+    // assertInvalid('invalid table.9.wasm', 'table/table.9.wasm', 'unknown table', registered);
+    // assertInvalid('invalid table.10.wasm', 'table/table.10.wasm', 'unknown table', registered);
+    // assertInvalid('invalid table.11.wasm', 'table/table.11.wasm', 'size minimum must not be greater than maximum', registered);
+    // assertInvalid('invalid table.12.wasm', 'table/table.12.wasm', 'size minimum must not be greater than maximum', registered);
     // assertMalformed('malformed table.13.wat');
     // assertMalformed('malformed table.14.wat');
     // assertMalformed('malformed table.15.wat');

@@ -64,12 +64,12 @@ void main() {
           'out of bounds table access');
     });
 
-    // assertInvalid('invalid table_set.1.wasm', 'table_set/table_set.1.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.2.wasm', 'table_set/table_set.2.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.3.wasm', 'table_set/table_set.3.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.4.wasm', 'table_set/table_set.4.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.5.wasm', 'table_set/table_set.5.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.6.wasm', 'table_set/table_set.6.wasm', 'type mismatch');
-    // assertInvalid('invalid table_set.7.wasm', 'table_set/table_set.7.wasm', 'type mismatch');
+    // assertInvalid('invalid table_set.1.wasm', 'table_set/table_set.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.2.wasm', 'table_set/table_set.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.3.wasm', 'table_set/table_set.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.4.wasm', 'table_set/table_set.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.5.wasm', 'table_set/table_set.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.6.wasm', 'table_set/table_set.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_set.7.wasm', 'table_set/table_set.7.wasm', 'type mismatch', registered);
   });
 }

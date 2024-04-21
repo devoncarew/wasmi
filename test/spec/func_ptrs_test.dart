@@ -31,13 +31,13 @@ void main() {
       action('four_0', () => m.$('four', [0x53]));
     });
 
-    // assertInvalid('invalid func_ptrs.1.wasm', 'func_ptrs/func_ptrs.1.wasm', 'unknown table');
-    // assertInvalid('invalid func_ptrs.2.wasm', 'func_ptrs/func_ptrs.2.wasm', 'unknown table');
-    // assertInvalid('invalid func_ptrs.3.wasm', 'func_ptrs/func_ptrs.3.wasm', 'type mismatch');
-    // assertInvalid('invalid func_ptrs.4.wasm', 'func_ptrs/func_ptrs.4.wasm', 'constant expression required');
-    // assertInvalid('invalid func_ptrs.5.wasm', 'func_ptrs/func_ptrs.5.wasm', 'constant expression required');
-    // assertInvalid('invalid func_ptrs.6.wasm', 'func_ptrs/func_ptrs.6.wasm', 'unknown type');
-    // assertInvalid('invalid func_ptrs.7.wasm', 'func_ptrs/func_ptrs.7.wasm', 'unknown type');
+    // assertInvalid('invalid func_ptrs.1.wasm', 'func_ptrs/func_ptrs.1.wasm', 'unknown table', registered);
+    // assertInvalid('invalid func_ptrs.2.wasm', 'func_ptrs/func_ptrs.2.wasm', 'unknown table', registered);
+    // assertInvalid('invalid func_ptrs.3.wasm', 'func_ptrs/func_ptrs.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid func_ptrs.4.wasm', 'func_ptrs/func_ptrs.4.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid func_ptrs.5.wasm', 'func_ptrs/func_ptrs.5.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid func_ptrs.6.wasm', 'func_ptrs/func_ptrs.6.wasm', 'unknown type', registered);
+    // assertInvalid('invalid func_ptrs.7.wasm', 'func_ptrs/func_ptrs.7.wasm', 'unknown type', registered);
 
     group('func_ptrs.8.wasm', () {
       late ModuleDefinition def;

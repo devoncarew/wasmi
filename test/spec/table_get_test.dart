@@ -42,10 +42,10 @@ void main() {
           'out of bounds table access');
     });
 
-    // assertInvalid('invalid table_get.1.wasm', 'table_get/table_get.1.wasm', 'type mismatch');
-    // assertInvalid('invalid table_get.2.wasm', 'table_get/table_get.2.wasm', 'type mismatch');
-    // assertInvalid('invalid table_get.3.wasm', 'table_get/table_get.3.wasm', 'type mismatch');
-    // assertInvalid('invalid table_get.4.wasm', 'table_get/table_get.4.wasm', 'type mismatch');
-    // assertInvalid('invalid table_get.5.wasm', 'table_get/table_get.5.wasm', 'type mismatch');
+    // assertInvalid('invalid table_get.1.wasm', 'table_get/table_get.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_get.2.wasm', 'table_get/table_get.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_get.3.wasm', 'table_get/table_get.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_get.4.wasm', 'table_get/table_get.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_get.5.wasm', 'table_get/table_get.5.wasm', 'type mismatch', registered);
   });
 }

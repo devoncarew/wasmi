@@ -121,8 +121,8 @@ void main() {
       returns('call_9_0', () => m.$('call-9', []), 0x42);
     });
 
-    // assertInvalid('invalid elem.10.wasm', 'elem/elem.10.wasm', 'unknown global');
-    // assertInvalid('invalid elem.11.wasm', 'elem/elem.11.wasm', 'unknown global');
+    // assertInvalid('invalid elem.10.wasm', 'elem/elem.10.wasm', 'unknown global', registered);
+    // assertInvalid('invalid elem.11.wasm', 'elem/elem.11.wasm', 'unknown global', registered);
 
     group('elem.12.wasm', () {
       late ModuleDefinition def;
@@ -224,18 +224,18 @@ void main() {
       });
     });
 
-    // assertUninstantiable('uninstantiable elem.22.wasm');
-    // assertUninstantiable('uninstantiable elem.23.wasm');
-    // assertUninstantiable('uninstantiable elem.24.wasm');
-    // assertUninstantiable('uninstantiable elem.25.wasm');
-    // assertUninstantiable('uninstantiable elem.26.wasm');
-    // assertUninstantiable('uninstantiable elem.27.wasm');
-    // assertUninstantiable('uninstantiable elem.28.wasm');
-    // assertUninstantiable('uninstantiable elem.29.wasm');
-    // assertUninstantiable('uninstantiable elem.30.wasm');
-    // assertUninstantiable('uninstantiable elem.31.wasm');
-    // assertUninstantiable('uninstantiable elem.32.wasm');
-    // assertUninstantiable('uninstantiable elem.33.wasm');
+    // assertUninstantiable('uninstantiable elem.22.wasm', 'elem/elem.22.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.23.wasm', 'elem/elem.23.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.24.wasm', 'elem/elem.24.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.25.wasm', 'elem/elem.25.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.26.wasm', 'elem/elem.26.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.27.wasm', 'elem/elem.27.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.28.wasm', 'elem/elem.28.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.29.wasm', 'elem/elem.29.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.30.wasm', 'elem/elem.30.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.31.wasm', 'elem/elem.31.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.32.wasm', 'elem/elem.32.wasm', 'out of bounds table access', registered);
+    // assertUninstantiable('uninstantiable elem.33.wasm', 'elem/elem.33.wasm', 'out of bounds table access', registered);
 
     group('elem.34.wasm', () {
       late ModuleDefinition def;
@@ -261,26 +261,26 @@ void main() {
       traps('init_0', () => m.$('init', []), 'out of bounds table access');
     });
 
-    // assertInvalid('invalid elem.36.wasm', 'elem/elem.36.wasm', 'unknown table');
-    // assertInvalid('invalid elem.37.wasm', 'elem/elem.37.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.38.wasm', 'elem/elem.38.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.39.wasm', 'elem/elem.39.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.40.wasm', 'elem/elem.40.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.41.wasm', 'elem/elem.41.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.42.wasm', 'elem/elem.42.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.43.wasm', 'elem/elem.43.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.44.wasm', 'elem/elem.44.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.45.wasm', 'elem/elem.45.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.46.wasm', 'elem/elem.46.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.47.wasm', 'elem/elem.47.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.48.wasm', 'elem/elem.48.wasm', 'unknown global 0');
-    // assertInvalid('invalid elem.49.wasm', 'elem/elem.49.wasm', 'unknown global 1');
-    // assertInvalid('invalid elem.50.wasm', 'elem/elem.50.wasm', 'constant expression required');
-    // assertInvalid('invalid elem.51.wasm', 'elem/elem.51.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.52.wasm', 'elem/elem.52.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.53.wasm', 'elem/elem.53.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.54.wasm', 'elem/elem.54.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.55.wasm', 'elem/elem.55.wasm', 'constant expression required');
+    // assertInvalid('invalid elem.36.wasm', 'elem/elem.36.wasm', 'unknown table', registered);
+    // assertInvalid('invalid elem.37.wasm', 'elem/elem.37.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.38.wasm', 'elem/elem.38.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.39.wasm', 'elem/elem.39.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.40.wasm', 'elem/elem.40.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.41.wasm', 'elem/elem.41.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.42.wasm', 'elem/elem.42.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.43.wasm', 'elem/elem.43.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.44.wasm', 'elem/elem.44.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.45.wasm', 'elem/elem.45.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.46.wasm', 'elem/elem.46.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.47.wasm', 'elem/elem.47.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.48.wasm', 'elem/elem.48.wasm', 'unknown global 0', registered);
+    // assertInvalid('invalid elem.49.wasm', 'elem/elem.49.wasm', 'unknown global 1', registered);
+    // assertInvalid('invalid elem.50.wasm', 'elem/elem.50.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid elem.51.wasm', 'elem/elem.51.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.52.wasm', 'elem/elem.52.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.53.wasm', 'elem/elem.53.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.54.wasm', 'elem/elem.54.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.55.wasm', 'elem/elem.55.wasm', 'constant expression required', registered);
 
     group('elem.56.wasm', () {
       late ModuleDefinition def;
@@ -355,10 +355,10 @@ void main() {
       returns('call_9_0', () => named[r'$module1']!.$('call-9', []), 0x46);
     });
 
-    // assertInvalid('invalid elem.61.wasm', 'elem/elem.61.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.62.wasm', 'elem/elem.62.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.63.wasm', 'elem/elem.63.wasm', 'type mismatch');
-    // assertInvalid('invalid elem.64.wasm', 'elem/elem.64.wasm', 'type mismatch');
+    // assertInvalid('invalid elem.61.wasm', 'elem/elem.61.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.62.wasm', 'elem/elem.62.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.63.wasm', 'elem/elem.63.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid elem.64.wasm', 'elem/elem.64.wasm', 'type mismatch', registered);
 
     group('elem.65.wasm', () {
       late ModuleDefinition def;

@@ -138,9 +138,9 @@ void main() {
           null /*void*/);
     });
 
-    // assertInvalid('invalid nop.1.wasm', 'nop/nop.1.wasm', 'type mismatch');
-    // assertInvalid('invalid nop.2.wasm', 'nop/nop.2.wasm', 'type mismatch');
-    // assertInvalid('invalid nop.3.wasm', 'nop/nop.3.wasm', 'type mismatch');
-    // assertInvalid('invalid nop.4.wasm', 'nop/nop.4.wasm', 'type mismatch');
+    // assertInvalid('invalid nop.1.wasm', 'nop/nop.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid nop.2.wasm', 'nop/nop.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid nop.3.wasm', 'nop/nop.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid nop.4.wasm', 'nop/nop.4.wasm', 'type mismatch', registered);
   });
 }

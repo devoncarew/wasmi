@@ -59,21 +59,21 @@ void main() {
           $f64('4041666666666666'));
     });
 
-    // assertInvalid('invalid local_get.1.wasm', 'local_get/local_get.1.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.2.wasm', 'local_get/local_get.2.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.3.wasm', 'local_get/local_get.3.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.4.wasm', 'local_get/local_get.4.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.5.wasm', 'local_get/local_get.5.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.6.wasm', 'local_get/local_get.6.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.7.wasm', 'local_get/local_get.7.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.8.wasm', 'local_get/local_get.8.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.9.wasm', 'local_get/local_get.9.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.10.wasm', 'local_get/local_get.10.wasm', 'type mismatch');
-    // assertInvalid('invalid local_get.11.wasm', 'local_get/local_get.11.wasm', 'unknown local');
-    // assertInvalid('invalid local_get.12.wasm', 'local_get/local_get.12.wasm', 'unknown local');
-    // assertInvalid('invalid local_get.13.wasm', 'local_get/local_get.13.wasm', 'unknown local');
-    // assertInvalid('invalid local_get.14.wasm', 'local_get/local_get.14.wasm', 'unknown local');
-    // assertInvalid('invalid local_get.15.wasm', 'local_get/local_get.15.wasm', 'unknown local');
-    // assertInvalid('invalid local_get.16.wasm', 'local_get/local_get.16.wasm', 'unknown local');
+    // assertInvalid('invalid local_get.1.wasm', 'local_get/local_get.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.2.wasm', 'local_get/local_get.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.3.wasm', 'local_get/local_get.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.4.wasm', 'local_get/local_get.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.5.wasm', 'local_get/local_get.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.6.wasm', 'local_get/local_get.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.7.wasm', 'local_get/local_get.7.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.8.wasm', 'local_get/local_get.8.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.9.wasm', 'local_get/local_get.9.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.10.wasm', 'local_get/local_get.10.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid local_get.11.wasm', 'local_get/local_get.11.wasm', 'unknown local', registered);
+    // assertInvalid('invalid local_get.12.wasm', 'local_get/local_get.12.wasm', 'unknown local', registered);
+    // assertInvalid('invalid local_get.13.wasm', 'local_get/local_get.13.wasm', 'unknown local', registered);
+    // assertInvalid('invalid local_get.14.wasm', 'local_get/local_get.14.wasm', 'unknown local', registered);
+    // assertInvalid('invalid local_get.15.wasm', 'local_get/local_get.15.wasm', 'unknown local', registered);
+    // assertInvalid('invalid local_get.16.wasm', 'local_get/local_get.16.wasm', 'unknown local', registered);
   });
 }
