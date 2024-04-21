@@ -2072,55 +2072,15 @@ void main() {
       action('init_1', () => m.$('init', [8, $f64('402E666666666666')]));
       action('init_2', () => m.$('init', [0x10, $f64('402E99999999999A')]));
       action('init_3', () => m.$('init', [0x18, $f64('402ECCCCCCCCCCCD')]));
-      returns(
-        'check_0',
-        () => m.$('check', [0]),
-        $f64('402E333333333333'),
-        skip: 'failed',
-      );
-      returns(
-        'check_1',
-        () => m.$('check', [8]),
-        $f64('402E666666666666'),
-        skip: 'failed',
-      );
-      returns(
-        'check_2',
-        () => m.$('check', [0x10]),
-        $f64('402E99999999999A'),
-        skip: 'failed',
-      );
-      returns(
-        'check_3',
-        () => m.$('check', [0x18]),
-        $f64('402ECCCCCCCCCCCD'),
-        skip: 'failed',
-      );
+      returns('check_0', () => m.$('check', [0]), $f64('402E333333333333'));
+      returns('check_1', () => m.$('check', [8]), $f64('402E666666666666'));
+      returns('check_2', () => m.$('check', [0x10]), $f64('402E99999999999A'));
+      returns('check_3', () => m.$('check', [0x18]), $f64('402ECCCCCCCCCCCD'));
       action('run_0', () => m.$('run', [0x20, $f64('4008000000000000')]));
-      returns(
-        'check_4',
-        () => m.$('check', [0]),
-        $f64('4014222222222222'),
-        skip: 'failed',
-      );
-      returns(
-        'check_5',
-        () => m.$('check', [8]),
-        $f64('4014444444444444'),
-        skip: 'failed',
-      );
-      returns(
-        'check_6',
-        () => m.$('check', [0x10]),
-        $f64('4014666666666667'),
-        skip: 'failed',
-      );
-      returns(
-        'check_7',
-        () => m.$('check', [0x18]),
-        $f64('4014888888888889'),
-        skip: 'failed',
-      );
+      returns('check_4', () => m.$('check', [0]), $f64('4014222222222222'));
+      returns('check_5', () => m.$('check', [8]), $f64('4014444444444444'));
+      returns('check_6', () => m.$('check', [0x10]), $f64('4014666666666667'));
+      returns('check_7', () => m.$('check', [0x18]), $f64('4014888888888889'));
     });
 
     group('float_exprs.42.wasm', () {
@@ -3188,25 +3148,11 @@ void main() {
 
       returns('f64_simple_x4_sum_0',
           () => m.$('f64.simple_x4_sum', [0, 0x20, 0x40]), null /*void*/);
-      returns(
-        'f64_load_0',
-        () => m.$('f64.load', [0x40]),
-        $f64('2'),
-        skip: 'failed',
-      );
+      returns('f64_load_0', () => m.$('f64.load', [0x40]), $f64('2'));
       returns('f64_load_1', () => m.$('f64.load', [0x48]), $f64('0'));
-      returns(
-        'f64_load_2',
-        () => m.$('f64.load', [0x50]),
-        $f64('1'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_load_3',
-        () => m.$('f64.load', [0x58]),
-        $f64('8000000000000001'),
-        skip: 'failed',
-      );
+      returns('f64_load_2', () => m.$('f64.load', [0x50]), $f64('1'));
+      returns('f64_load_3', () => m.$('f64.load', [0x58]),
+          $f64('8000000000000001'));
     });
 
     group('float_exprs.61.wasm', () {

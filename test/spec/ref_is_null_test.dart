@@ -40,7 +40,7 @@ void main() {
       returns('externref_elem_3', () => m.$('externref-elem', [1]), 1);
     });
 
-    // assertInvalid('invalid ref_is_null.1.wasm', 'ref_is_null/ref_is_null.1.wasm', 'type mismatch');
-    // assertInvalid('invalid ref_is_null.2.wasm', 'ref_is_null/ref_is_null.2.wasm', 'type mismatch');
+    // assertInvalid('invalid ref_is_null.1.wasm', 'ref_is_null/ref_is_null.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid ref_is_null.2.wasm', 'ref_is_null/ref_is_null.2.wasm', 'type mismatch', registered);
   });
 }

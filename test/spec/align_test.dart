@@ -291,43 +291,43 @@ void main() {
     // assertMalformed('malformed align.66.wat');
     // assertMalformed('malformed align.67.wat');
     // assertMalformed('malformed align.68.wat');
-    // assertInvalid('invalid align.69.wasm', 'align/align.69.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.70.wasm', 'align/align.70.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.71.wasm', 'align/align.71.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.72.wasm', 'align/align.72.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.73.wasm', 'align/align.73.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.74.wasm', 'align/align.74.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.75.wasm', 'align/align.75.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.76.wasm', 'align/align.76.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.77.wasm', 'align/align.77.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.78.wasm', 'align/align.78.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.79.wasm', 'align/align.79.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.80.wasm', 'align/align.80.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.81.wasm', 'align/align.81.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.82.wasm', 'align/align.82.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.83.wasm', 'align/align.83.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.84.wasm', 'align/align.84.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.85.wasm', 'align/align.85.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.86.wasm', 'align/align.86.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.87.wasm', 'align/align.87.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.88.wasm', 'align/align.88.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.89.wasm', 'align/align.89.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.90.wasm', 'align/align.90.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.91.wasm', 'align/align.91.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.92.wasm', 'align/align.92.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.93.wasm', 'align/align.93.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.94.wasm', 'align/align.94.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.95.wasm', 'align/align.95.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.96.wasm', 'align/align.96.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.97.wasm', 'align/align.97.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.98.wasm', 'align/align.98.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.99.wasm', 'align/align.99.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.100.wasm', 'align/align.100.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.101.wasm', 'align/align.101.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.102.wasm', 'align/align.102.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.103.wasm', 'align/align.103.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.104.wasm', 'align/align.104.wasm', 'alignment must not be larger than natural');
-    // assertInvalid('invalid align.105.wasm', 'align/align.105.wasm', 'alignment must not be larger than natural');
+    // assertInvalid('invalid align.69.wasm', 'align/align.69.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.70.wasm', 'align/align.70.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.71.wasm', 'align/align.71.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.72.wasm', 'align/align.72.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.73.wasm', 'align/align.73.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.74.wasm', 'align/align.74.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.75.wasm', 'align/align.75.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.76.wasm', 'align/align.76.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.77.wasm', 'align/align.77.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.78.wasm', 'align/align.78.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.79.wasm', 'align/align.79.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.80.wasm', 'align/align.80.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.81.wasm', 'align/align.81.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.82.wasm', 'align/align.82.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.83.wasm', 'align/align.83.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.84.wasm', 'align/align.84.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.85.wasm', 'align/align.85.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.86.wasm', 'align/align.86.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.87.wasm', 'align/align.87.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.88.wasm', 'align/align.88.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.89.wasm', 'align/align.89.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.90.wasm', 'align/align.90.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.91.wasm', 'align/align.91.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.92.wasm', 'align/align.92.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.93.wasm', 'align/align.93.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.94.wasm', 'align/align.94.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.95.wasm', 'align/align.95.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.96.wasm', 'align/align.96.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.97.wasm', 'align/align.97.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.98.wasm', 'align/align.98.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.99.wasm', 'align/align.99.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.100.wasm', 'align/align.100.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.101.wasm', 'align/align.101.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.102.wasm', 'align/align.102.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.103.wasm', 'align/align.103.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.104.wasm', 'align/align.104.wasm', 'alignment must not be larger than natural', registered);
+    // assertInvalid('invalid align.105.wasm', 'align/align.105.wasm', 'alignment must not be larger than natural', registered);
 
     group('align.106.wasm', () {
       late ModuleDefinition def;
@@ -346,32 +346,16 @@ void main() {
           $f32('41200000'));
       returns('f32_align_switch_3', () => m.$('f32_align_switch', [3]),
           $f32('41200000'));
-      returns(
-        'f64_align_switch_0',
-        () => m.$('f64_align_switch', [0]),
-        $f64('4024000000000000'),
-        skip: 'failed',
-      );
+      returns('f64_align_switch_0', () => m.$('f64_align_switch', [0]),
+          $f64('4024000000000000'));
       returns('f64_align_switch_1', () => m.$('f64_align_switch', [1]),
           $f64('4024000000000000'));
-      returns(
-        'f64_align_switch_2',
-        () => m.$('f64_align_switch', [2]),
-        $f64('4024000000000000'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_align_switch_3',
-        () => m.$('f64_align_switch', [3]),
-        $f64('4024000000000000'),
-        skip: 'failed',
-      );
-      returns(
-        'f64_align_switch_4',
-        () => m.$('f64_align_switch', [4]),
-        $f64('4024000000000000'),
-        skip: 'failed',
-      );
+      returns('f64_align_switch_2', () => m.$('f64_align_switch', [2]),
+          $f64('4024000000000000'));
+      returns('f64_align_switch_3', () => m.$('f64_align_switch', [3]),
+          $f64('4024000000000000'));
+      returns('f64_align_switch_4', () => m.$('f64_align_switch', [4]),
+          $f64('4024000000000000'));
       returns('i32_align_switch_0', () => m.$('i32_align_switch', [0, 0]), 0xA);
       returns('i32_align_switch_1', () => m.$('i32_align_switch', [0, 1]), 0xA);
       returns('i32_align_switch_2', () => m.$('i32_align_switch', [1, 0]), 0xA);

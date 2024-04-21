@@ -4142,11 +4142,11 @@ void main() {
           'ge_399', () => m.$('ge', [$f32('7FA00000'), $f32('7FA00000')]), 0);
     });
 
-    // assertInvalid('invalid f32_cmp.1.wasm', 'f32_cmp/f32_cmp.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_cmp.2.wasm', 'f32_cmp/f32_cmp.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_cmp.3.wasm', 'f32_cmp/f32_cmp.3.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_cmp.4.wasm', 'f32_cmp/f32_cmp.4.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_cmp.5.wasm', 'f32_cmp/f32_cmp.5.wasm', 'type mismatch');
-    // assertInvalid('invalid f32_cmp.6.wasm', 'f32_cmp/f32_cmp.6.wasm', 'type mismatch');
+    // assertInvalid('invalid f32_cmp.1.wasm', 'f32_cmp/f32_cmp.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_cmp.2.wasm', 'f32_cmp/f32_cmp.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_cmp.3.wasm', 'f32_cmp/f32_cmp.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_cmp.4.wasm', 'f32_cmp/f32_cmp.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_cmp.5.wasm', 'f32_cmp/f32_cmp.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32_cmp.6.wasm', 'f32_cmp/f32_cmp.6.wasm', 'type mismatch', registered);
   });
 }

@@ -15,9 +15,9 @@ void main() {
   final Map<String, Module> named = {};
 
   group('start', () {
-    // assertInvalid('invalid start.0.wasm', 'start/start.0.wasm', 'unknown function');
-    // assertInvalid('invalid start.1.wasm', 'start/start.1.wasm', 'start function');
-    // assertInvalid('invalid start.2.wasm', 'start/start.2.wasm', 'start function');
+    // assertInvalid('invalid start.0.wasm', 'start/start.0.wasm', 'unknown function', registered);
+    // assertInvalid('invalid start.1.wasm', 'start/start.1.wasm', 'start function', registered);
+    // assertInvalid('invalid start.2.wasm', 'start/start.2.wasm', 'start function', registered);
 
     group('start.3.wasm', () {
       late ModuleDefinition def;
@@ -81,7 +81,7 @@ void main() {
       });
     });
 
-    // assertUninstantiable('uninstantiable start.8.wasm');
+    // assertUninstantiable('uninstantiable start.8.wasm', 'start/start.8.wasm', 'unreachable', registered);
     // assertMalformed('malformed start.9.wat');
   });
 }

@@ -274,8 +274,18 @@ class Module {
     if (!_hasStarted) {
       _hasStarted = true;
 
-      if (definition.startFunctionIndex != null) {
-        functions[definition.startFunctionIndex!].invoke();
+      final index = definition.startFunctionIndex;
+      if (index != null) {
+        if (index < 0 || index >= functions.length) {
+          throw Trap('unknown function');
+        }
+
+        final fn = functions[index];
+        if (fn.args.isNotEmpty || fn.returns.isNotEmpty) {
+          throw Trap('start function');
+        }
+
+        invokeByIndex(index);
       }
     }
   }
@@ -840,7 +850,7 @@ class CompiledFn {
       f64 value = stack[--sp] as double;
       i32 index = stack[--sp] as int;
       try {
-        memory!.data.setFloat64(index + code.i0, value, Endian.little);
+        memory!.data.setFloat64(index + code.i1, value, Endian.little);
       } on RangeError {
         throw Trap('out of bounds memory access');
       }

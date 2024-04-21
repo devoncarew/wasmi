@@ -1663,8 +1663,8 @@ void main() {
           $f64('FFF8000000000000'));
     });
 
-    // assertInvalid('invalid f64_bitwise.1.wasm', 'f64_bitwise/f64_bitwise.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_bitwise.2.wasm', 'f64_bitwise/f64_bitwise.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f64_bitwise.3.wasm', 'f64_bitwise/f64_bitwise.3.wasm', 'type mismatch');
+    // assertInvalid('invalid f64_bitwise.1.wasm', 'f64_bitwise/f64_bitwise.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_bitwise.2.wasm', 'f64_bitwise/f64_bitwise.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64_bitwise.3.wasm', 'f64_bitwise/f64_bitwise.3.wasm', 'type mismatch', registered);
   });
 }

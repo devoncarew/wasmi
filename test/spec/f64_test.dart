@@ -10809,17 +10809,17 @@ void main() {
           double.nan);
     });
 
-    // assertInvalid('invalid f64.1.wasm', 'f64/f64.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.2.wasm', 'f64/f64.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.3.wasm', 'f64/f64.3.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.4.wasm', 'f64/f64.4.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.5.wasm', 'f64/f64.5.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.6.wasm', 'f64/f64.6.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.7.wasm', 'f64/f64.7.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.8.wasm', 'f64/f64.8.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.9.wasm', 'f64/f64.9.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.10.wasm', 'f64/f64.10.wasm', 'type mismatch');
-    // assertInvalid('invalid f64.11.wasm', 'f64/f64.11.wasm', 'type mismatch');
+    // assertInvalid('invalid f64.1.wasm', 'f64/f64.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.2.wasm', 'f64/f64.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.3.wasm', 'f64/f64.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.4.wasm', 'f64/f64.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.5.wasm', 'f64/f64.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.6.wasm', 'f64/f64.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.7.wasm', 'f64/f64.7.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.8.wasm', 'f64/f64.8.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.9.wasm', 'f64/f64.9.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.10.wasm', 'f64/f64.10.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f64.11.wasm', 'f64/f64.11.wasm', 'type mismatch', registered);
     // assertMalformed('malformed f64.12.wat');
     // assertMalformed('malformed f64.13.wat');
   });

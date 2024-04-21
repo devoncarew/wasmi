@@ -52,6 +52,6 @@ void main() {
       returns('corner_0', () => m.$('corner', []), 1);
     });
 
-    // assertInvalid('invalid switch.1.wasm', 'switch/switch.1.wasm', 'unknown label');
+    // assertInvalid('invalid switch.1.wasm', 'switch/switch.1.wasm', 'unknown label', registered);
   });
 }

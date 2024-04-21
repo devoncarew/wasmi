@@ -99,7 +99,7 @@ void main() {
       returns('size_5', () => m.$('size', []), 8);
     });
 
-    // assertInvalid('invalid memory_size.4.wasm', 'memory_size/memory_size.4.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_size.5.wasm', 'memory_size/memory_size.5.wasm', 'type mismatch');
+    // assertInvalid('invalid memory_size.4.wasm', 'memory_size/memory_size.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_size.5.wasm', 'memory_size/memory_size.5.wasm', 'type mismatch', registered);
   });
 }

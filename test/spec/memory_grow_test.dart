@@ -190,12 +190,12 @@ void main() {
       returns('as_memory_grow_size_0', () => m.$('as-memory.grow-size', []), 1);
     });
 
-    // assertInvalid('invalid memory_grow.5.wasm', 'memory_grow/memory_grow.5.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.6.wasm', 'memory_grow/memory_grow.6.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.7.wasm', 'memory_grow/memory_grow.7.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.8.wasm', 'memory_grow/memory_grow.8.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.9.wasm', 'memory_grow/memory_grow.9.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.10.wasm', 'memory_grow/memory_grow.10.wasm', 'type mismatch');
-    // assertInvalid('invalid memory_grow.11.wasm', 'memory_grow/memory_grow.11.wasm', 'type mismatch');
+    // assertInvalid('invalid memory_grow.5.wasm', 'memory_grow/memory_grow.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.6.wasm', 'memory_grow/memory_grow.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.7.wasm', 'memory_grow/memory_grow.7.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.8.wasm', 'memory_grow/memory_grow.8.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.9.wasm', 'memory_grow/memory_grow.9.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.10.wasm', 'memory_grow/memory_grow.10.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.11.wasm', 'memory_grow/memory_grow.11.wasm', 'type mismatch', registered);
   });
 }

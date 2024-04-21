@@ -374,6 +374,11 @@ Bytecode _translate(Instruction instr) {
       return Bytecode(Bytecode.i64_store16,
           i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
     case Opcode.i64_store32:
+      // // todo:
+      // final align = instr.immediate_0 as int;
+      // if (align > 3) {
+      //   throw FormatException('alignment must not be larger than natural');
+      // }
       return Bytecode(Bytecode.i64_store32,
           i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
     case Opcode.memory_size:

@@ -51,8 +51,8 @@ void main() {
       returns('redefinition_0', () => m.$('redefinition', []), 5);
     });
 
-    // assertInvalid('invalid labels.1.wasm', 'labels/labels.1.wasm', 'type mismatch');
-    // assertInvalid('invalid labels.2.wasm', 'labels/labels.2.wasm', 'type mismatch');
-    // assertInvalid('invalid labels.3.wasm', 'labels/labels.3.wasm', 'type mismatch');
+    // assertInvalid('invalid labels.1.wasm', 'labels/labels.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid labels.2.wasm', 'labels/labels.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid labels.3.wasm', 'labels/labels.3.wasm', 'type mismatch', registered);
   });
 }

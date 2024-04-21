@@ -5181,17 +5181,17 @@ void main() {
           'nearest_19', () => m.$('nearest', [$f32('7FA00000')]), double.nan);
     });
 
-    // assertInvalid('invalid f32.1.wasm', 'f32/f32.1.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.2.wasm', 'f32/f32.2.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.3.wasm', 'f32/f32.3.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.4.wasm', 'f32/f32.4.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.5.wasm', 'f32/f32.5.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.6.wasm', 'f32/f32.6.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.7.wasm', 'f32/f32.7.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.8.wasm', 'f32/f32.8.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.9.wasm', 'f32/f32.9.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.10.wasm', 'f32/f32.10.wasm', 'type mismatch');
-    // assertInvalid('invalid f32.11.wasm', 'f32/f32.11.wasm', 'type mismatch');
+    // assertInvalid('invalid f32.1.wasm', 'f32/f32.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.2.wasm', 'f32/f32.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.3.wasm', 'f32/f32.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.4.wasm', 'f32/f32.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.5.wasm', 'f32/f32.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.6.wasm', 'f32/f32.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.7.wasm', 'f32/f32.7.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.8.wasm', 'f32/f32.8.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.9.wasm', 'f32/f32.9.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.10.wasm', 'f32/f32.10.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid f32.11.wasm', 'f32/f32.11.wasm', 'type mismatch', registered);
     // assertMalformed('malformed f32.12.wat');
     // assertMalformed('malformed f32.13.wat');
   });

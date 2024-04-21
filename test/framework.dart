@@ -70,16 +70,53 @@ void traps(
 }
 
 @isTest
-void assertInvalid(String testName, String filePath, String text) {
+void assertInvalid(
+  String testName,
+  String filePath,
+  String text,
+  Map<String, ImportModule> registered,
+) {
   test(testName, () {
     try {
       final definition =
           def.ModuleDefinition.parse(File('test/spec/$filePath'));
-      // ignore: unused_local_variable
-      final module = Module(definition);
+      final module = Module(
+        definition,
+        imports: {'spectest': specTestModule(), ...registered},
+      );
+      module.start();
 
       fail('Expected: $text');
     } on FormatException catch (e) {
+      expect(e.message, text);
+    } on Trap catch (e) {
+      expect(e.message, text);
+    }
+  });
+}
+
+@isTest
+void assertUninstantiable(
+  String testName,
+  String filePath,
+  String text,
+  Map<String, ImportModule> registered,
+) {
+  test(testName, () {
+    try {
+      final definition =
+          def.ModuleDefinition.parse(File('test/spec/$filePath'));
+
+      final module = Module(
+        definition,
+        imports: {'spectest': specTestModule(), ...registered},
+      );
+      module.start();
+
+      fail('Expected: $text');
+    } on FormatException catch (e) {
+      expect(e.message, text);
+    } on Trap catch (e) {
       expect(e.message, text);
     }
   });

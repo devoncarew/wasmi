@@ -71,14 +71,14 @@ void main() {
           'out of bounds table access');
     });
 
-    // assertInvalid('invalid table_fill.1.wasm', 'table_fill/table_fill.1.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.2.wasm', 'table_fill/table_fill.2.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.3.wasm', 'table_fill/table_fill.3.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.4.wasm', 'table_fill/table_fill.4.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.5.wasm', 'table_fill/table_fill.5.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.6.wasm', 'table_fill/table_fill.6.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.7.wasm', 'table_fill/table_fill.7.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.8.wasm', 'table_fill/table_fill.8.wasm', 'type mismatch');
-    // assertInvalid('invalid table_fill.9.wasm', 'table_fill/table_fill.9.wasm', 'type mismatch');
+    // assertInvalid('invalid table_fill.1.wasm', 'table_fill/table_fill.1.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.2.wasm', 'table_fill/table_fill.2.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.3.wasm', 'table_fill/table_fill.3.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.4.wasm', 'table_fill/table_fill.4.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.5.wasm', 'table_fill/table_fill.5.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.6.wasm', 'table_fill/table_fill.6.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.7.wasm', 'table_fill/table_fill.7.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.8.wasm', 'table_fill/table_fill.8.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_fill.9.wasm', 'table_fill/table_fill.9.wasm', 'type mismatch', registered);
   });
 }

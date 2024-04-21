@@ -96,8 +96,8 @@ void main() {
       returns('as_compare_operand_0', () => m.$('as-compare-operand', []), 1);
     });
 
-    // assertInvalid('invalid global.1.wasm', 'global/global.1.wasm', 'global is immutable');
-    // assertInvalid('invalid global.2.wasm', 'global/global.2.wasm', 'global is immutable');
+    // assertInvalid('invalid global.1.wasm', 'global/global.1.wasm', 'global is immutable', registered);
+    // assertInvalid('invalid global.2.wasm', 'global/global.2.wasm', 'global is immutable', registered);
 
     group('global.3.wasm', () {
       late ModuleDefinition def;
@@ -119,24 +119,24 @@ void main() {
       });
     });
 
-    // assertInvalid('invalid global.5.wasm', 'global/global.5.wasm', 'constant expression required');
-    // assertInvalid('invalid global.6.wasm', 'global/global.6.wasm', 'constant expression required');
-    // assertInvalid('invalid global.7.wasm', 'global/global.7.wasm', 'constant expression required');
-    // assertInvalid('invalid global.8.wasm', 'global/global.8.wasm', 'constant expression required');
-    // assertInvalid('invalid global.9.wasm', 'global/global.9.wasm', 'constant expression required');
-    // assertInvalid('invalid global.10.wasm', 'global/global.10.wasm', 'constant expression required');
-    // assertInvalid('invalid global.11.wasm', 'global/global.11.wasm', 'type mismatch');
-    // assertInvalid('invalid global.12.wasm', 'global/global.12.wasm', 'type mismatch');
-    // assertInvalid('invalid global.13.wasm', 'global/global.13.wasm', 'type mismatch');
-    // assertInvalid('invalid global.14.wasm', 'global/global.14.wasm', 'type mismatch');
-    // assertInvalid('invalid global.15.wasm', 'global/global.15.wasm', 'type mismatch');
-    // assertInvalid('invalid global.16.wasm', 'global/global.16.wasm', 'type mismatch');
-    // assertInvalid('invalid global.17.wasm', 'global/global.17.wasm', 'unknown global');
-    // assertInvalid('invalid global.18.wasm', 'global/global.18.wasm', 'unknown global');
-    // assertInvalid('invalid global.19.wasm', 'global/global.19.wasm', 'unknown global');
-    // assertInvalid('invalid global.20.wasm', 'global/global.20.wasm', 'unknown global');
-    // assertInvalid('invalid global.21.wasm', 'global/global.21.wasm', 'unknown global');
-    // assertInvalid('invalid global.22.wasm', 'global/global.22.wasm', 'constant expression required');
+    // assertInvalid('invalid global.5.wasm', 'global/global.5.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.6.wasm', 'global/global.6.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.7.wasm', 'global/global.7.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.8.wasm', 'global/global.8.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.9.wasm', 'global/global.9.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.10.wasm', 'global/global.10.wasm', 'constant expression required', registered);
+    // assertInvalid('invalid global.11.wasm', 'global/global.11.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.12.wasm', 'global/global.12.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.13.wasm', 'global/global.13.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.14.wasm', 'global/global.14.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.15.wasm', 'global/global.15.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.16.wasm', 'global/global.16.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.17.wasm', 'global/global.17.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.18.wasm', 'global/global.18.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.19.wasm', 'global/global.19.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.20.wasm', 'global/global.20.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.21.wasm', 'global/global.21.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.22.wasm', 'global/global.22.wasm', 'constant expression required', registered);
 
     group('global.23.wasm', () {
       late ModuleDefinition def;
@@ -163,26 +163,26 @@ void main() {
 
     // assertMalformed('malformed global.27.wasm');
     // assertMalformed('malformed global.28.wasm');
-    // assertInvalid('invalid global.29.wasm', 'global/global.29.wasm', 'unknown global');
-    // assertInvalid('invalid global.30.wasm', 'global/global.30.wasm', 'unknown global');
-    // assertInvalid('invalid global.31.wasm', 'global/global.31.wasm', 'unknown global');
-    // assertInvalid('invalid global.32.wasm', 'global/global.32.wasm', 'unknown global');
-    // assertInvalid('invalid global.33.wasm', 'global/global.33.wasm', 'unknown global');
-    // assertInvalid('invalid global.34.wasm', 'global/global.34.wasm', 'unknown global');
-    // assertInvalid('invalid global.35.wasm', 'global/global.35.wasm', 'unknown global');
-    // assertInvalid('invalid global.36.wasm', 'global/global.36.wasm', 'unknown global');
-    // assertInvalid('invalid global.37.wasm', 'global/global.37.wasm', 'type mismatch');
-    // assertInvalid('invalid global.38.wasm', 'global/global.38.wasm', 'type mismatch');
-    // assertInvalid('invalid global.39.wasm', 'global/global.39.wasm', 'type mismatch');
-    // assertInvalid('invalid global.40.wasm', 'global/global.40.wasm', 'type mismatch');
-    // assertInvalid('invalid global.41.wasm', 'global/global.41.wasm', 'type mismatch');
-    // assertInvalid('invalid global.42.wasm', 'global/global.42.wasm', 'type mismatch');
-    // assertInvalid('invalid global.43.wasm', 'global/global.43.wasm', 'type mismatch');
-    // assertInvalid('invalid global.44.wasm', 'global/global.44.wasm', 'type mismatch');
-    // assertInvalid('invalid global.45.wasm', 'global/global.45.wasm', 'type mismatch');
-    // assertInvalid('invalid global.46.wasm', 'global/global.46.wasm', 'type mismatch');
-    // assertInvalid('invalid global.47.wasm', 'global/global.47.wasm', 'type mismatch');
-    // assertInvalid('invalid global.48.wasm', 'global/global.48.wasm', 'type mismatch');
+    // assertInvalid('invalid global.29.wasm', 'global/global.29.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.30.wasm', 'global/global.30.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.31.wasm', 'global/global.31.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.32.wasm', 'global/global.32.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.33.wasm', 'global/global.33.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.34.wasm', 'global/global.34.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.35.wasm', 'global/global.35.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.36.wasm', 'global/global.36.wasm', 'unknown global', registered);
+    // assertInvalid('invalid global.37.wasm', 'global/global.37.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.38.wasm', 'global/global.38.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.39.wasm', 'global/global.39.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.40.wasm', 'global/global.40.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.41.wasm', 'global/global.41.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.42.wasm', 'global/global.42.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.43.wasm', 'global/global.43.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.44.wasm', 'global/global.44.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.45.wasm', 'global/global.45.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.46.wasm', 'global/global.46.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.47.wasm', 'global/global.47.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid global.48.wasm', 'global/global.48.wasm', 'type mismatch', registered);
     // assertMalformed('malformed global.49.wat');
     // assertMalformed('malformed global.50.wat');
     // assertMalformed('malformed global.51.wat');

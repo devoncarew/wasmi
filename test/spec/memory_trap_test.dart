@@ -150,23 +150,17 @@ void main() {
       traps('f64_store_7', () => m.$('f64.store', [0xFFF9, $f64('0')]),
           'out of bounds memory access');
       traps(
-        'f64_store_8',
-        () => m.$('f64.store', [$i32('FFFFFFFF'), $f64('0')]),
-        'out of bounds memory access',
-        skip: 'failed',
-      );
+          'f64_store_8',
+          () => m.$('f64.store', [$i32('FFFFFFFF'), $f64('0')]),
+          'out of bounds memory access');
       traps(
-        'f64_store_9',
-        () => m.$('f64.store', [$i32('FFFFFFFE'), $f64('0')]),
-        'out of bounds memory access',
-        skip: 'failed',
-      );
+          'f64_store_9',
+          () => m.$('f64.store', [$i32('FFFFFFFE'), $f64('0')]),
+          'out of bounds memory access');
       traps(
-        'f64_store_10',
-        () => m.$('f64.store', [$i32('FFFFFFFD'), $f64('0')]),
-        'out of bounds memory access',
-        skip: 'failed',
-      );
+          'f64_store_10',
+          () => m.$('f64.store', [$i32('FFFFFFFD'), $f64('0')]),
+          'out of bounds memory access');
       traps(
           'f64_store_11',
           () => m.$('f64.store', [$i32('FFFFFFFC'), $f64('0')]),
@@ -406,11 +400,7 @@ void main() {
       returns('i64_load_16', () => m.$('i64.load', [0xFFF8]),
           $i64('6867666564636261'));
       returns(
-        'i64_load_17',
-        () => m.$('i64.load', [0]),
-        $i64('6867666564636261'),
-        skip: 'failed',
-      );
+          'i64_load_17', () => m.$('i64.load', [0]), $i64('6867666564636261'));
       returns(
           'i64_store_16', () => m.$('i64.store', [0xFFF8, 0]), null /*void*/);
       traps('i32_store_8', () => m.$('i32.store', [0xFFFD, $i32('12345678')]),
