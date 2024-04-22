@@ -60,10 +60,10 @@ const Set<String> allowList = {
   'memory_fill.wast',
   'memory_grow.wast',
   'memory_init.wast',
-  // 'memory_redundancy.wast',
+  'memory_redundancy.wast',
   'memory_size.wast',
   'memory_trap.wast',
-  // 'names.wast',
+  'names.wast',
   'nop.wast',
   'obsolete-keywords.wast',
   'ref_func.wast',
@@ -71,7 +71,7 @@ const Set<String> allowList = {
   'ref_null.wast',
   'return.wast',
   'select.wast',
-  // 'skip-stack-guard-page.wast',
+  'skip-stack-guard-page.wast',
   'stack.wast',
   'start.wast',
   'store.wast',
@@ -86,7 +86,7 @@ const Set<String> allowList = {
   'table_set.wast',
   'table_size.wast',
   'token.wast',
-  // 'traps.wast',
+  'traps.wast',
   'type.wast',
   'unreachable.wast',
   'unreached-invalid.wast',
@@ -469,24 +469,20 @@ Map<String, String> readExpectedFails() {
   return results;
 }
 
-final RegExp identifierChars = RegExp(r'[a-zA-Z0-9_]+');
+final RegExp regularChars = RegExp(r'[a-zA-Z0-9_\-\.]');
 
 String safeStrRef(String str) {
-  return "'$str'";
+  final buf = StringBuffer();
 
-  // // If str contains other than [a-zA-Z0-9_], then render using unicode.
+  for (final rune in str.runes) {
+    final s = String.fromCharCode(rune);
+    if (regularChars.matchAsPrefix(s) != null) {
+      buf.write(s);
+    } else {
+      final hex = rune.toRadixString(16).padLeft(4, '0');
+      buf.write('\\u{$hex}');
+    }
+  }
 
-  // final match = identifierChars.stringMatch(str) ?? '';
-  // if (match.length != str.length) {
-  //   final chars = str.runes.map((r) {
-  //     if (r < (256 * 256)) {
-  //       return '\\x${r.toRadixString(16).padLeft(4, '0')}';
-  //     } else {
-  //       return '\\u${r.toRadixString(16).padLeft(8, '0')}';
-  //     }
-  //   }).join();
-  //   return "'$chars'";
-  // } else {
-  //   return "'$str'";
-  // }
+  return "'$buf'";
 }

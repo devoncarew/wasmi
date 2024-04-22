@@ -310,8 +310,7 @@ class Module {
   Global? global(String name) => exports.globals[name];
 
   Object? invoke(String methodName, [List<Object?> args = const []]) {
-    // TODO: throw an exception if there is no such method
-    // TODO: figure out why we're not seeing test exports here
+    // TODO: Throw an exception if there is no such method.
     var func = exports.functions[methodName]!;
 
     if (!_hasStarted) start();
