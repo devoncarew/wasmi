@@ -32,7 +32,16 @@ class Module {
   final Set<int> _droppedDataSegments = {};
   bool _hasStarted = false;
 
-  Module(this.definition, {this.imports = const {}}) {
+  Module(
+    this.definition, {
+    this.imports = const {},
+    bool compileAll = true,
+  }) {
+    // Run this first so that definition errors are thrown before runtime errors.
+    if (compileAll) {
+      _compileAll();
+    }
+
     // init imports
     _initImports();
 
@@ -40,7 +49,6 @@ class Module {
     _initMemories();
 
     // functions
-    // todo:
     for (var fn in definition.definedFunctions) {
       functions.add(DefinedFunction(this, fn));
     }
@@ -270,6 +278,15 @@ class Module {
     }
   }
 
+  void _compileAll() {
+    for (final fn in functions.whereType<DefinedFunction>()) {
+      fn.compile();
+    }
+
+    // TODO: Also compile global initializers, and table and segment instruction
+    // sequences.
+  }
+
   void start() {
     if (!_hasStarted) {
       _hasStarted = true;
@@ -311,9 +328,9 @@ class Module {
   Object? _evaluateExpression(List<Instruction> expr, ValueType type) {
     final tempFunction = def.DefinedFunction(definition, 0)
       ..instructions = expr;
-    final func =
-        compile(this, tempFunction, fnTypeOverride: FunctionType([], [type]));
-    return func.invoke();
+    final fn = compileFunction(this, tempFunction,
+        fnTypeOverride: FunctionType([], [type]));
+    return fn.invoke();
   }
 }
 
@@ -422,9 +439,16 @@ class DefinedFunction extends WasmFunction {
   @override
   List<ValueType> get returns => definedFunction.functionType!.resultTypes;
 
+  bool get compiled => _compiledFn != null;
+
+  void compile() {
+    _compiledFn ??= compileFunction(module, definedFunction);
+  }
+
   @override
   Object? invoke([List<Object?> args = const []]) {
-    _compiledFn ??= compile(module, definedFunction);
+    if (!compiled) compile();
+
     return _compiledFn!.invoke(args);
   }
 }
@@ -2467,6 +2491,7 @@ class DefinedGlobal extends Global {
 
   @override
   set value(Object? v) {
+    // TOOD: We may not need to check here if checks are done at compile time.
     if (!mutable) throw Trap('value not mutable');
 
     _value = v;
