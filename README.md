@@ -19,10 +19,6 @@ You need to have the wabt tools (wat2wasm, wasm2wat, ...) installed locally.
 dart tool/gen_tests.dart
 ```
 
-## Benchmarking
-
-todo:
-
 ### Updating the spec files
 
 - `git submodule update`
