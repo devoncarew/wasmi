@@ -482,7 +482,6 @@ class ModuleDefinition {
       var sectionType = r.leb128();
       late SegmentKind segmentKind;
       ValueType? elementKind;
-      // todo: make this nullable
       int tableIndex = 0;
       List<Instruction>? offsetInstrs;
       List<int>? functionIndexs;

@@ -441,7 +441,6 @@ enum ImmediateType {
   any;
 
   String get dartType {
-    // todo:
     switch (this) {
       case u32:
       case i32:

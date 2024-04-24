@@ -155,7 +155,7 @@ CompiledFn compileFunction(
         return Bytecode(Bytecode.i64_store16,
             i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
       case Opcode.i64_store32:
-        // // todo:
+        // // TODO:
         // final align = instr.immediate_0 as int;
         // if (align > 3) {
         //   throw FormatException('alignment must not be larger than natural');
@@ -522,9 +522,6 @@ CompiledFn compileFunction(
       final type = module.functionTypes[typeIndex];
       stackHeight += type.resultTypes.length - type.parameterTypes.length;
     }
-
-    // TODO: verify correct stackHeight calculation for the variable stack
-    // operations
 
     // Update the max stack height.
     maxHeight = math.max(maxHeight, stackHeight);

@@ -3,7 +3,7 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:convert';
-import 'dart:math';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -329,7 +329,11 @@ class Module {
       ..instructions = expr;
     final fn = compileFunction(this, tempFunction,
         fnTypeOverride: FunctionType([], [type]));
-    return fn.invoke();
+
+    final stack = List<Object?>.filled(fn.stackHeight, null);
+    var sp = 0;
+    sp = fn.invokeUsingStack(stack, sp);
+    return stack[--sp];
   }
 }
 
@@ -448,7 +452,37 @@ class DefinedFunction extends WasmFunction {
   Object? invoke([List<Object?> args = const []]) {
     if (!compiled) compile();
 
-    return _compiledFn!.invoke(args);
+    final paramTypes = definedFunction.functionType!.parameterTypes;
+    if (args.length != paramTypes.length) {
+      throw StateError(
+        'wrong number of args: expected '
+        '${paramTypes.length}, got ${args.length}',
+      );
+    }
+
+    final stack = List<Object?>.filled(math.max(128, args.length), null);
+    int sp = 0;
+    for (int i = 0; i < args.length; i++) {
+      stack[sp++] = args[i];
+    }
+
+    sp = _compiledFn!.invokeUsingStack(stack, sp);
+
+    final returnTypes = definedFunction.functionType!.resultTypes;
+
+    if (returnTypes.length == 1) {
+      return stack[--sp];
+    } else if (returnTypes.length > 1) {
+      return stack.sublist(sp - returnTypes.length, sp);
+    } else {
+      return null;
+    }
+  }
+
+  int invokeUsingStack(List<Object?> stack, int sp) {
+    if (!compiled) compile();
+
+    return _compiledFn!.invokeUsingStack(stack, sp);
   }
 }
 
@@ -479,25 +513,30 @@ class CompiledFn {
 
   Set<int> get droppedDataSegments => module._droppedDataSegments;
 
-  Object? invoke([List<Object?> args = const []]) {
+  int invokeUsingStack(List<Object?> stack, int sp) {
     final paramTypes = functionType.parameterTypes;
-    if (args.length != paramTypes.length) {
-      throw StateError(
-        'wrong number of args: expected '
-        '${paramTypes.length}, got ${args.length}',
-      );
+
+    // Grow stack if necessary.
+    if (stack.length < sp + stackHeight) {
+      stack.length += math.max(128, stackHeight);
     }
 
-    final List<Object?> locals = <Object?>[];
-    locals.addAll(args);
-    for (final local in function.locals) {
-      locals.add(local.defaultValue);
+    // Copy the function args from the stack to the locals.
+    final localTypes = function.locals;
+    final List<Object?> locals =
+        List<Object?>.filled(paramTypes.length + localTypes.length, null);
+    for (int i = 0; i < paramTypes.length; i++) {
+      locals[i] = stack[sp + i - paramTypes.length];
+    }
+    sp -= paramTypes.length;
+
+    // Init the remaining locals to their type's default values.
+    for (int i = 0; i < localTypes.length; i++) {
+      locals[i + paramTypes.length] = localTypes[i].defaultValue;
     }
 
     final ByteData reinterpretData = ByteData(8);
 
-    final List<Object?> stack = List<Object?>.filled(stackHeight, null);
-    int sp = 0;
     int pc = 0;
 
     final bytecodes = this.bytecodes;
@@ -534,9 +573,7 @@ class CompiledFn {
     }
 
     void end(Bytecode code) {
-      // todo: implement?
-
-      // throw 'unimplemented: end';
+      // nothing to do
     }
 
     void br(Bytecode $code) {
@@ -584,26 +621,25 @@ class CompiledFn {
     }
 
     void call(Bytecode code) {
-      // TODO: switch to invoking using the same stack
+      final func = functions[code.i0];
 
-      i32 index = code.i0;
-      final function = functions[index];
+      if (func is DefinedFunction) {
+        sp = func.invokeUsingStack(stack, sp);
+      } else {
+        // get args
+        final len = func.args.length;
+        final args = stack.sublist(sp - len, sp);
+        sp -= len;
 
-      // get args
-      final len = function.args.length;
-      final args = stack.sublist(sp - len, sp);
-      sp -= len;
+        final result = func.invoke(args);
 
-      final func = functions[index];
-      final result = func.invoke(args);
-
-      if (function.returns.length > 1) {
-        // TODO: Refactor once we start sharing the stack for functions.
-        for (final item in (result as List)) {
-          stack[sp++] = item;
+        if (func.returns.length > 1) {
+          for (final item in (result as List)) {
+            stack[sp++] = item;
+          }
+        } else if (func.returns.length == 1) {
+          stack[sp++] = result;
         }
-      } else if (function.returns.length == 1) {
-        stack[sp++] = result;
       }
     }
 
@@ -631,6 +667,7 @@ class CompiledFn {
       final args = stack.sublist(sp - len, sp);
       sp -= len;
 
+      // todo: compile if necessary
       final result = func.invoke(args);
 
       if (func.returns.length > 1) {
@@ -1566,7 +1603,7 @@ class CompiledFn {
 
     void f32_sqrt(Bytecode code) {
       f32 arg0 = stack[--sp] as double;
-      stack[sp++] = sqrt(arg0);
+      stack[sp++] = math.sqrt(arg0);
     }
 
     void f32_add(Bytecode code) {
@@ -1596,13 +1633,13 @@ class CompiledFn {
     void f32_min(Bytecode code) {
       f32 arg1 = stack[--sp] as double;
       f32 arg0 = stack[--sp] as double;
-      stack[sp++] = min(arg0, arg1);
+      stack[sp++] = math.min(arg0, arg1);
     }
 
     void f32_max(Bytecode code) {
       f32 arg1 = stack[--sp] as double;
       f32 arg0 = stack[--sp] as double;
-      stack[sp++] = max(arg0, arg1);
+      stack[sp++] = math.max(arg0, arg1);
     }
 
     void f32_copysign(Bytecode code) {
@@ -1643,7 +1680,7 @@ class CompiledFn {
 
     void f64_sqrt(Bytecode code) {
       f64 arg0 = stack[--sp] as double;
-      stack[sp++] = sqrt(arg0);
+      stack[sp++] = math.sqrt(arg0);
     }
 
     void f64_add(Bytecode code) {
@@ -1673,13 +1710,13 @@ class CompiledFn {
     void f64_min(Bytecode code) {
       f64 arg1 = stack[--sp] as double;
       f64 arg0 = stack[--sp] as double;
-      stack[sp++] = min(arg0, arg1);
+      stack[sp++] = math.min(arg0, arg1);
     }
 
     void f64_max(Bytecode code) {
       f64 arg1 = stack[--sp] as double;
       f64 arg0 = stack[--sp] as double;
-      stack[sp++] = max(arg0, arg1);
+      stack[sp++] = math.max(arg0, arg1);
     }
 
     void f64_copysign(Bytecode code) {
@@ -1959,42 +1996,36 @@ class CompiledFn {
 
     void i32_trunc_sat_f32_s(Bytecode code) {
       // f32 => i32
-      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f32_u(Bytecode code) {
       // f32 => i32
-      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f64_s(Bytecode code) {
       // f64 => i32
-      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i32_trunc_sat_f64_u(Bytecode code) {
       // f64 => i32
-      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt() & _mask32;
     }
 
     void i64_trunc_sat_f32_s(Bytecode code) {
       // f32 => i64
-      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt();
     }
 
     void i64_trunc_sat_f32_u(Bytecode code) {
       // f32 => i64
-      // TODO: verify this logic
       f32 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt();
     }
@@ -2006,7 +2037,6 @@ class CompiledFn {
 
     void i64_trunc_sat_f64_u(Bytecode code) {
       // f64 => i64
-      // TODO: verify this logic
       f64 arg0 = stack[--sp] as double;
       stack[sp++] = arg0.toInt();
     }
@@ -2329,20 +2359,14 @@ class CompiledFn {
     final len = bytecodes.length;
 
     while (pc < len) {
+      // Get the next bytecode.
       final code = bytecodes[pc++];
 
       // Call the implementation method for the given bytecode.
-      final impl = dispatch[code.code];
-      impl(code);
+      dispatch[code.code](code);
     }
 
-    if (functionType.resultTypes.length == 1) {
-      return stack[--sp];
-    } else if (functionType.resultTypes.length > 1) {
-      return stack.sublist(sp - functionType.resultTypes.length, sp);
-    } else {
-      return null;
-    }
+    return sp;
   }
 }
 
