@@ -11,6 +11,3 @@ updates:
     groups:
        dependencies:
           patterns: ["*"]
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
