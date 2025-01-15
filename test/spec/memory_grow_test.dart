@@ -190,12 +190,58 @@ void main() {
       returns('as_memory_grow_size_0', () => m.$('as-memory.grow-size', []), 1);
     });
 
-    // assertInvalid('invalid memory_grow.5.wasm', 'memory_grow/memory_grow.5.wasm', 'type mismatch', registered);
-    // assertInvalid('invalid memory_grow.6.wasm', 'memory_grow/memory_grow.6.wasm', 'type mismatch', registered);
-    // assertInvalid('invalid memory_grow.7.wasm', 'memory_grow/memory_grow.7.wasm', 'type mismatch', registered);
+    group('memory_grow.5.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/memory_grow/memory_grow.5.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Mgm'] = m;
+      });
+
+      action('register-grown-memory',
+          () => registered['grown-memory'] = importModuleFrom(m));
+      returns('grow_0', () => named[r'$Mgm']!.$('grow', []), 1);
+    });
+
+    group('memory_grow.6.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/memory_grow/memory_grow.6.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Mgim1'] = m;
+      });
+
+      action('register-grown-imported-memory',
+          () => registered['grown-imported-memory'] = importModuleFrom(m));
+      returns('grow_0', () => named[r'$Mgim1']!.$('grow', []), 2);
+    });
+
+    group('memory_grow.7.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/memory_grow/memory_grow.7.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Mgim2'] = m;
+      });
+
+      returns('size_0', () => named[r'$Mgim2']!.$('size', []), 3);
+    });
+
     // assertInvalid('invalid memory_grow.8.wasm', 'memory_grow/memory_grow.8.wasm', 'type mismatch', registered);
     // assertInvalid('invalid memory_grow.9.wasm', 'memory_grow/memory_grow.9.wasm', 'type mismatch', registered);
     // assertInvalid('invalid memory_grow.10.wasm', 'memory_grow/memory_grow.10.wasm', 'type mismatch', registered);
     // assertInvalid('invalid memory_grow.11.wasm', 'memory_grow/memory_grow.11.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.12.wasm', 'memory_grow/memory_grow.12.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.13.wasm', 'memory_grow/memory_grow.13.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid memory_grow.14.wasm', 'memory_grow/memory_grow.14.wasm', 'type mismatch', registered);
   });
 }

@@ -240,5 +240,24 @@ void main() {
     // assertMalformed('malformed memory.31.wat');
     // assertMalformed('malformed memory.32.wat');
     // assertMalformed('malformed memory.33.wat');
+
+    group('memory.34.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/memory/memory.34.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('load_0', () => m.$('load', [0]), 0);
+      returns('load_1', () => m.$('load', [0x2710]), 0);
+      returns('load_2', () => m.$('load', [0x4E20]), 0);
+      returns('load_3', () => m.$('load', [0x7530]), 0);
+      returns('load_4', () => m.$('load', [0x9C40]), 0);
+      returns('load_5', () => m.$('load', [0xC350]), 0);
+      returns('load_6', () => m.$('load', [0xEA60]), 0);
+      returns('load_7', () => m.$('load', [0xFFFF]), 0);
+    });
   });
 }

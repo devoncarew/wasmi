@@ -314,17 +314,19 @@ void main() {
     // assertInvalid('invalid call_indirect.29.wasm', 'call_indirect/call_indirect.29.wasm', 'type mismatch', registered);
     // assertInvalid('invalid call_indirect.30.wasm', 'call_indirect/call_indirect.30.wasm', 'type mismatch', registered);
     // assertInvalid('invalid call_indirect.31.wasm', 'call_indirect/call_indirect.31.wasm', 'type mismatch', registered);
-    // assertInvalid('invalid call_indirect.32.wasm', 'call_indirect/call_indirect.32.wasm', 'unknown type', registered);
+    // assertInvalid('invalid call_indirect.32.wasm', 'call_indirect/call_indirect.32.wasm', 'type mismatch', registered);
     // assertInvalid('invalid call_indirect.33.wasm', 'call_indirect/call_indirect.33.wasm', 'unknown type', registered);
-    // assertInvalid('invalid call_indirect.34.wasm', 'call_indirect/call_indirect.34.wasm', 'unknown function', registered);
+    // assertInvalid('invalid call_indirect.34.wasm', 'call_indirect/call_indirect.34.wasm', 'unknown type', registered);
+    // assertInvalid('invalid call_indirect.35.wasm', 'call_indirect/call_indirect.35.wasm', 'unknown type', registered);
+    // assertInvalid('invalid call_indirect.36.wasm', 'call_indirect/call_indirect.36.wasm', 'unknown function', registered);
 
-    group('call_indirect.35.wasm', () {
+    group('call_indirect.37.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/call_indirect/call_indirect.35.wasm'));
+            File('test/spec/call_indirect/call_indirect.37.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
