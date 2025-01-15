@@ -138,20 +138,13 @@ String returnType(FunctionType functionType) {
 
 extension on ValueType {
   String get dartType {
-    switch (this) {
-      case ValueType.i32:
-      case ValueType.i64:
-        return 'int';
-      case ValueType.f32:
-      case ValueType.f64:
-        return 'double';
-      case ValueType.v128:
-        return 'vector';
-      case ValueType.funcref:
-        return 'Function';
-      case ValueType.externref:
-        return 'Object?';
-    }
+    return switch (this) {
+      ValueType.i32 || ValueType.i64 => 'int',
+      ValueType.f32 || ValueType.f64 => 'double',
+      ValueType.v128 => 'vector',
+      ValueType.funcref => 'Function',
+      ValueType.externref => 'Object?'
+    };
   }
 }
 
