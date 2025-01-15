@@ -479,9 +479,6 @@ CompiledFn compileFunction(
             return Bytecode(Bytecode.table_size, i0: instr.immediate_0 as int);
           case OverflowOpcode.table_fill:
             return Bytecode(Bytecode.table_fill, i0: instr.immediate_0 as int);
-
-          default:
-            throw 'unhandled overflow ${instr.opcode2}';
         }
 
       case Opcode.vector:
