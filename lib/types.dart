@@ -32,22 +32,15 @@ enum ValueType {
   const ValueType(this.code);
 
   Object? get defaultValue {
-    switch (this) {
-      case i32:
-        return 0;
-      case i64:
-        return 0;
-      case f32:
-        return 0.0;
-      case f64:
-        return 0.0;
-      case v128:
-        throw FormatException('unsupported: $v128');
-      case funcref:
-        return null;
-      case externref:
-        return null;
-    }
+    return switch (this) {
+      i32 => 0,
+      i64 => 0,
+      f32 => 0.0,
+      f64 => 0.0,
+      v128 => throw FormatException('unsupported: $v128'),
+      funcref => null,
+      externref => null
+    };
   }
 
   bool get refType => this == funcref || this == externref;

@@ -390,40 +390,40 @@ class Instruction {
     final opcode2 = OverflowOpcode.from(code);
     if (opcode2 == null) return null;
 
-    switch (opcode2) {
+    return switch (opcode2) {
       // 0xFC 0x00
-      case OverflowOpcode.i32_trunc_sat_f32_s:
-      case OverflowOpcode.i32_trunc_sat_f32_u:
-      case OverflowOpcode.i32_trunc_sat_f64_s:
-      case OverflowOpcode.i32_trunc_sat_f64_u:
-      case OverflowOpcode.i64_trunc_sat_f32_s:
-      case OverflowOpcode.i64_trunc_sat_f32_u:
-      case OverflowOpcode.i64_trunc_sat_f64_s:
-      case OverflowOpcode.i64_trunc_sat_f64_u:
-        return Instruction(Opcode.overflow, [], opcode2);
-      case OverflowOpcode.memory_init:
-        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
-      case OverflowOpcode.data_drop:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
-      case OverflowOpcode.memory_copy:
-        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
-      case OverflowOpcode.memory_fill:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
-      case OverflowOpcode.table_init:
-        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
-      case OverflowOpcode.elem_drop:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
-      case OverflowOpcode.table_copy:
-        return Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2);
-      case OverflowOpcode.table_grow:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
+      OverflowOpcode.i32_trunc_sat_f32_s ||
+      OverflowOpcode.i32_trunc_sat_f32_u ||
+      OverflowOpcode.i32_trunc_sat_f64_s ||
+      OverflowOpcode.i32_trunc_sat_f64_u ||
+      OverflowOpcode.i64_trunc_sat_f32_s ||
+      OverflowOpcode.i64_trunc_sat_f32_u ||
+      OverflowOpcode.i64_trunc_sat_f64_s ||
+      OverflowOpcode.i64_trunc_sat_f64_u =>
+        Instruction(Opcode.overflow, [], opcode2),
+      OverflowOpcode.memory_init =>
+        Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2),
+      OverflowOpcode.data_drop =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2),
+      OverflowOpcode.memory_copy =>
+        Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2),
+      OverflowOpcode.memory_fill =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2),
+      OverflowOpcode.table_init =>
+        Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2),
+      OverflowOpcode.elem_drop =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2),
+      OverflowOpcode.table_copy =>
+        Instruction(Opcode.overflow, [r.u32(), r.u32()], opcode2),
+      OverflowOpcode.table_grow =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2),
 
       // 0xFC 0x10
-      case OverflowOpcode.table_size:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
-      case OverflowOpcode.table_fill:
-        return Instruction(Opcode.overflow, [r.u32()], opcode2);
-    }
+      OverflowOpcode.table_size =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2),
+      OverflowOpcode.table_fill =>
+        Instruction(Opcode.overflow, [r.u32()], opcode2)
+    };
   }
 
   int calcJumpTargetPc(List<Bytecode> bytecodes) {

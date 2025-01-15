@@ -441,17 +441,11 @@ enum ImmediateType {
   any;
 
   String get dartType {
-    switch (this) {
-      case u32:
-      case i32:
-      case i64:
-        return 'int';
-      case f32:
-      case f64:
-        return 'double';
-      default:
-        return name;
-    }
+    return switch (this) {
+      u32 || i32 || i64 => 'int',
+      f32 || f64 => 'double',
+      _ => name
+    };
   }
 
   static ImmediateType fromString(String str) {

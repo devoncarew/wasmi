@@ -438,48 +438,44 @@ CompiledFn compileFunction(
         return Bytecode(Bytecode.refFunc, i0: instr.immediate_0 as int);
 
       case Opcode.overflow:
-        switch (instr.opcode2!) {
-          case OverflowOpcode.i32_trunc_sat_f32_s:
-            return Bytecode(Bytecode.i32_trunc_sat_f32_s);
-          case OverflowOpcode.i32_trunc_sat_f32_u:
-            return Bytecode(Bytecode.i32_trunc_sat_f32_u);
-          case OverflowOpcode.i32_trunc_sat_f64_s:
-            return Bytecode(Bytecode.i32_trunc_sat_f64_s);
-          case OverflowOpcode.i32_trunc_sat_f64_u:
-            return Bytecode(Bytecode.i32_trunc_sat_f64_u);
-          case OverflowOpcode.i64_trunc_sat_f32_s:
-            return Bytecode(Bytecode.i64_trunc_sat_f32_s);
-          case OverflowOpcode.i64_trunc_sat_f32_u:
-            return Bytecode(Bytecode.i64_trunc_sat_f32_u);
-          case OverflowOpcode.i64_trunc_sat_f64_s:
-            return Bytecode(Bytecode.i64_trunc_sat_f64_s);
-          case OverflowOpcode.i64_trunc_sat_f64_u:
-            return Bytecode(Bytecode.i64_trunc_sat_f64_u);
-          case OverflowOpcode.memory_init:
-            return Bytecode(Bytecode.memory_init,
-                i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
-          case OverflowOpcode.data_drop:
-            return Bytecode(Bytecode.data_drop, i0: instr.immediate_0 as int);
-          case OverflowOpcode.memory_copy:
-            return Bytecode(Bytecode.memory_copy,
-                i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
-          case OverflowOpcode.memory_fill:
-            return Bytecode(Bytecode.memory_fill, i0: instr.immediate_0 as int);
-          case OverflowOpcode.table_init:
-            return Bytecode(Bytecode.table_init,
-                i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
-          case OverflowOpcode.elem_drop:
-            return Bytecode(Bytecode.elem_drop, i0: instr.immediate_0 as int);
-          case OverflowOpcode.table_copy:
-            return Bytecode(Bytecode.table_copy,
-                i0: instr.immediate_0 as int, i1: instr.immediate_1 as int);
-          case OverflowOpcode.table_grow:
-            return Bytecode(Bytecode.table_grow, i0: instr.immediate_0 as int);
-          case OverflowOpcode.table_size:
-            return Bytecode(Bytecode.table_size, i0: instr.immediate_0 as int);
-          case OverflowOpcode.table_fill:
-            return Bytecode(Bytecode.table_fill, i0: instr.immediate_0 as int);
-        }
+        return switch (instr.opcode2!) {
+          OverflowOpcode.i32_trunc_sat_f32_s =>
+            Bytecode(Bytecode.i32_trunc_sat_f32_s),
+          OverflowOpcode.i32_trunc_sat_f32_u =>
+            Bytecode(Bytecode.i32_trunc_sat_f32_u),
+          OverflowOpcode.i32_trunc_sat_f64_s =>
+            Bytecode(Bytecode.i32_trunc_sat_f64_s),
+          OverflowOpcode.i32_trunc_sat_f64_u =>
+            Bytecode(Bytecode.i32_trunc_sat_f64_u),
+          OverflowOpcode.i64_trunc_sat_f32_s =>
+            Bytecode(Bytecode.i64_trunc_sat_f32_s),
+          OverflowOpcode.i64_trunc_sat_f32_u =>
+            Bytecode(Bytecode.i64_trunc_sat_f32_u),
+          OverflowOpcode.i64_trunc_sat_f64_s =>
+            Bytecode(Bytecode.i64_trunc_sat_f64_s),
+          OverflowOpcode.i64_trunc_sat_f64_u =>
+            Bytecode(Bytecode.i64_trunc_sat_f64_u),
+          OverflowOpcode.memory_init => Bytecode(Bytecode.memory_init,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int),
+          OverflowOpcode.data_drop =>
+            Bytecode(Bytecode.data_drop, i0: instr.immediate_0 as int),
+          OverflowOpcode.memory_copy => Bytecode(Bytecode.memory_copy,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int),
+          OverflowOpcode.memory_fill =>
+            Bytecode(Bytecode.memory_fill, i0: instr.immediate_0 as int),
+          OverflowOpcode.table_init => Bytecode(Bytecode.table_init,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int),
+          OverflowOpcode.elem_drop =>
+            Bytecode(Bytecode.elem_drop, i0: instr.immediate_0 as int),
+          OverflowOpcode.table_copy => Bytecode(Bytecode.table_copy,
+              i0: instr.immediate_0 as int, i1: instr.immediate_1 as int),
+          OverflowOpcode.table_grow =>
+            Bytecode(Bytecode.table_grow, i0: instr.immediate_0 as int),
+          OverflowOpcode.table_size =>
+            Bytecode(Bytecode.table_size, i0: instr.immediate_0 as int),
+          OverflowOpcode.table_fill =>
+            Bytecode(Bytecode.table_fill, i0: instr.immediate_0 as int)
+        };
 
       case Opcode.vector:
         throw 'unhandled ${instr.opcode}';
