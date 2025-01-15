@@ -425,5 +425,12 @@ void main() {
           'out of bounds memory access');
       returns('load_0', () => m.$('load', [0xFFFC]), 0);
     });
+
+    // assertInvalid('invalid align.108.wasm', 'align/align.108.wasm', 'alignment must not be larger than natural', registered);
+    // assertMalformed('malformed align.109.wasm');
+    // assertMalformed('malformed align.110.wasm');
+    // assertMalformed('malformed align.111.wasm');
+    // assertMalformed('malformed align.112.wasm');
+    // assertMalformed('malformed align.113.wasm');
   });
 }

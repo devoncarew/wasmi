@@ -1634,6 +1634,66 @@ void main() {
           $f64('3FEFFFFFFFFFFFFF'));
       returns('f64_sqrt_31', () => m.$('f64.sqrt', [$f64('3FEFFFFFFFFFFFFD')]),
           $f64('3FEFFFFFFFFFFFFE'));
+      returns('f32_sqrt_21', () => m.$('f32.sqrt', [$f32('3E7FFFFF')]),
+          $f32('3EFFFFFF'));
+      returns('f32_sqrt_22', () => m.$('f32.sqrt', [$f32('3E800000')]),
+          $f32('3F000000'));
+      returns('f32_sqrt_23', () => m.$('f32.sqrt', [$f32('3E800001')]),
+          $f32('3F000000'));
+      returns('f32_sqrt_24', () => m.$('f32.sqrt', [$f32('3E800002')]),
+          $f32('3F000001'));
+      returns('f64_sqrt_32', () => m.$('f64.sqrt', [$f64('3FCFFFFFFFFFFFFF')]),
+          $f64('3FDFFFFFFFFFFFFF'));
+      returns('f64_sqrt_33', () => m.$('f64.sqrt', [$f64('3FD0000000000000')]),
+          $f64('3FE0000000000000'));
+      returns('f64_sqrt_34', () => m.$('f64.sqrt', [$f64('3FD0000000000001')]),
+          $f64('3FE0000000000000'));
+      returns('f64_sqrt_35', () => m.$('f64.sqrt', [$f64('3FD0000000000002')]),
+          $f64('3FE0000000000001'));
+      returns('f32_sqrt_25', () => m.$('f32.sqrt', [$f32('527DA0EA')]),
+          $f32('48FECFC0'));
+      returns('f64_sqrt_36', () => m.$('f64.sqrt', [$f64('424FB41D442EEB1B')]),
+          $f64('411FD9F808A0B68D'));
+      returns('f32_sqrt_26', () => m.$('f32.sqrt', [$f32('501E30D9')]),
+          $f32('47C93D00'));
+      returns('f32_sqrt_27', () => m.$('f32.sqrt', [$f32('592B5EA7')]),
+          $f32('4C517406'));
+      returns('f32_sqrt_28', () => m.$('f32.sqrt', [$f32('55B2F816')]),
+          $f32('4A975AA2'));
+      returns('f32_sqrt_29', () => m.$('f32.sqrt', [$f32('4E932C06')]),
+          $f32('4709406B'));
+      returns('f64_sqrt_37', () => m.$('f64.sqrt', [$f64('4203C61B11200000')]),
+          $f64('40F927A000000000'));
+      returns('f64_sqrt_38', () => m.$('f64.sqrt', [$f64('43256BD4E65C8548')]),
+          $f64('418A2E80D0000000'));
+      returns('f64_sqrt_39', () => m.$('f64.sqrt', [$f64('42B65F02CC93A100')]),
+          $f64('4152EB5440000000'));
+      returns('f64_sqrt_40', () => m.$('f64.sqrt', [$f64('41D26580B4C00000')]),
+          $f64('40E1280D62B818CF'));
+      returns('f32_sqrt_30', () => m.$('f32.sqrt', [$f32('3F040BFE')]),
+          $f32('3F37DBCF'));
+      returns('f32_sqrt_31', () => m.$('f32.sqrt', [$f32('3F00BDCC')]),
+          $f32('3F358AF7'));
+      returns('f64_sqrt_41', () => m.$('f64.sqrt', [$f64('3FE0817FC0000000')]),
+          $f64('3FE6FB79D0DFAFFA'));
+      returns('f64_sqrt_42', () => m.$('f64.sqrt', [$f64('3FE017B980000000')]),
+          $f64('3FE6B15ED0071B95'));
+      returns('f32_sqrt_32', () => m.$('f32.sqrt', [$f32('41100000')]),
+          $f32('40400000'));
+      returns('f32_sqrt_33', () => m.$('f32.sqrt', [$f32('43090000')]),
+          $f32('413B4673'));
+      returns('f32_sqrt_34', () => m.$('f32.sqrt', [$f32('3FE30AEF')]),
+          $f32('3FAA7968'));
+      returns('f32_sqrt_35', () => m.$('f32.sqrt', [$f32('447A0000')]),
+          $f32('41FCFB72'));
+      returns('f64_sqrt_43', () => m.$('f64.sqrt', [$f64('4022000000000000')]),
+          $f64('4008000000000000'));
+      returns('f64_sqrt_44', () => m.$('f64.sqrt', [$f64('4061200000000000')]),
+          $f64('402768CE6D3C11E0'));
+      returns('f64_sqrt_45', () => m.$('f64.sqrt', [$f64('3FFC615DF07A57D3')]),
+          $f64('3FF54F2D015ACF09'));
+      returns('f64_sqrt_46', () => m.$('f64.sqrt', [$f64('408F400000000000')]),
+          $f64('403F9F6E4990F227'));
       returns('f32_abs_0', () => m.$('f32.abs', [$f32('7F80F1E2')]),
           $f32('7F80F1E2'));
       returns('f32_abs_1', () => m.$('f32.abs', [$f32('FF80F1E2')]),

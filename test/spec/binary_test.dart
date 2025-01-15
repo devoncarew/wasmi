@@ -147,29 +147,21 @@ void main() {
     // assertMalformed('malformed binary.62.wasm');
     // assertMalformed('malformed binary.63.wasm');
     // assertMalformed('malformed binary.64.wasm');
-    // assertMalformed('malformed binary.65.wasm');
+
+    group('binary.65.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.65.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+    });
+
     // assertMalformed('malformed binary.66.wasm');
     // assertMalformed('malformed binary.67.wasm');
-
-    group('binary.68.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.68.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-    });
-
-    group('binary.69.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.69.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-    });
+    // assertMalformed('malformed binary.68.wasm');
+    // assertMalformed('malformed binary.69.wasm');
 
     group('binary.70.wasm', () {
       late ModuleDefinition def;
@@ -181,124 +173,132 @@ void main() {
       });
     });
 
-    // assertMalformed('malformed binary.71.wasm');
-    // assertMalformed('malformed binary.72.wasm');
-
-    group('binary.73.wasm', () {
+    group('binary.71.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.73.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.71.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
+    group('binary.72.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.72.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+    });
+
+    // assertMalformed('malformed binary.73.wasm');
     // assertMalformed('malformed binary.74.wasm');
-    // assertMalformed('malformed binary.75.wasm');
+
+    group('binary.75.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.75.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+    });
+
     // assertMalformed('malformed binary.76.wasm');
     // assertMalformed('malformed binary.77.wasm');
     // assertMalformed('malformed binary.78.wasm');
     // assertMalformed('malformed binary.79.wasm');
     // assertMalformed('malformed binary.80.wasm');
     // assertMalformed('malformed binary.81.wasm');
+    // assertMalformed('malformed binary.82.wasm');
+    // assertMalformed('malformed binary.83.wasm');
 
-    group('binary.82.wasm', () {
+    group('binary.84.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.82.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.84.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
-    // assertMalformed('malformed binary.83.wasm');
-    // assertMalformed('malformed binary.84.wasm');
     // assertMalformed('malformed binary.85.wasm');
     // assertMalformed('malformed binary.86.wasm');
+    // assertMalformed('malformed binary.87.wasm');
+    // assertMalformed('malformed binary.88.wasm');
 
-    group('binary.87.wasm', () {
+    group('binary.89.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.87.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.89.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
-    // assertMalformed('malformed binary.88.wasm');
-    // assertMalformed('malformed binary.89.wasm');
     // assertMalformed('malformed binary.90.wasm');
     // assertMalformed('malformed binary.91.wasm');
     // assertMalformed('malformed binary.92.wasm');
-
-    group('binary.93.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.93.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-    });
-
+    // assertMalformed('malformed binary.93.wasm');
     // assertMalformed('malformed binary.94.wasm');
-    // assertMalformed('malformed binary.95.wasm');
 
-    group('binary.96.wasm', () {
+    group('binary.95.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.96.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.95.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
+    // assertMalformed('malformed binary.96.wasm');
     // assertMalformed('malformed binary.97.wasm');
-    // assertMalformed('malformed binary.98.wasm');
 
-    group('binary.99.wasm', () {
+    group('binary.98.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.99.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.98.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
+    // assertMalformed('malformed binary.99.wasm');
     // assertMalformed('malformed binary.100.wasm');
-    // assertMalformed('malformed binary.101.wasm');
-    // assertMalformed('malformed binary.102.wasm');
 
-    group('binary.103.wasm', () {
+    group('binary.101.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.103.wasm'));
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.101.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
     });
 
+    // assertMalformed('malformed binary.102.wasm');
+    // assertMalformed('malformed binary.103.wasm');
     // assertMalformed('malformed binary.104.wasm');
-    // assertMalformed('malformed binary.105.wasm');
+
+    group('binary.105.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.105.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+    });
+
     // assertMalformed('malformed binary.106.wasm');
     // assertMalformed('malformed binary.107.wasm');
-
-    group('binary.108.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(File('test/spec/binary/binary.108.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-    });
-
+    // assertMalformed('malformed binary.108.wasm');
     // assertMalformed('malformed binary.109.wasm');
 
     group('binary.110.wasm', () {
@@ -312,5 +312,39 @@ void main() {
     });
 
     // assertMalformed('malformed binary.111.wasm');
+
+    group('binary.112.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(File('test/spec/binary/binary.112.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+    });
+
+    // assertMalformed('malformed binary.113.wasm');
+    // assertMalformed('malformed binary.114.wasm');
+    // assertMalformed('malformed binary.115.wasm');
+    // assertMalformed('malformed binary.116.wasm');
+    // assertMalformed('malformed binary.117.wasm');
+    // assertMalformed('malformed binary.118.wasm');
+    // assertMalformed('malformed binary.119.wasm');
+    // assertMalformed('malformed binary.120.wasm');
+    // assertMalformed('malformed binary.121.wasm');
+    // assertMalformed('malformed binary.122.wasm');
+    // assertMalformed('malformed binary.123.wasm');
+    // assertMalformed('malformed binary.124.wasm');
+    // assertMalformed('malformed binary.125.wasm');
+    // assertMalformed('malformed binary.126.wasm');
+    // assertMalformed('malformed binary.127.wasm');
+    // assertMalformed('malformed binary.128.wasm');
+    // assertMalformed('malformed binary.129.wasm');
+    // assertMalformed('malformed binary.130.wasm');
+    // assertMalformed('malformed binary.131.wasm');
+    // assertMalformed('malformed binary.132.wasm');
+    // assertMalformed('malformed binary.133.wasm');
+    // assertMalformed('malformed binary.134.wasm');
+    // assertMalformed('malformed binary.135.wasm');
   });
 }

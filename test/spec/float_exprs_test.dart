@@ -1871,6 +1871,31 @@ void main() {
           () => m.$('no_demote_mixed_sub',
               [$f64('40DA7498DCA3FDB7'), $f32('477690E4')]),
           $f32('C70CBE81'));
+      returns(
+          'no_demote_mixed_sub_commuted_0',
+          () => m.$('no_demote_mixed_sub_commuted',
+              [$f32('5E62D67C'), $f64('451A0A183220E9B1')]),
+          $f32('E8D050BA'));
+      returns(
+          'no_demote_mixed_sub_commuted_1',
+          () => m.$('no_demote_mixed_sub_commuted',
+              [$f32('486A4652'), $f64('C1D6E2C5AC39F63E')]),
+          $f32('4EB71D80'));
+      returns(
+          'no_demote_mixed_sub_commuted_2',
+          () => m.$('no_demote_mixed_sub_commuted',
+              [$f32('39CEB4DE'), $f64('C0598C74350DDE6A')]),
+          $f32('42CC63D5'));
+      returns(
+          'no_demote_mixed_sub_commuted_3',
+          () => m.$('no_demote_mixed_sub_commuted',
+              [$f32('1C30D684'), $f64('3C90459F34091DBF')]),
+          $f32('A4822CA1'));
+      returns(
+          'no_demote_mixed_sub_commuted_4',
+          () => m.$('no_demote_mixed_sub_commuted',
+              [$f32('477690E4'), $f64('40DA7498DCA3FDB7')]),
+          $f32('470CBE81'));
     });
 
     group('float_exprs.39.wasm', () {
@@ -1880,6 +1905,130 @@ void main() {
       setUpAll(() {
         def = ModuleDefinition.parse(
             File('test/spec/float_exprs/float_exprs.39.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns(
+          'no_demote_mixed_mul_0',
+          () => m.$('no_demote_mixed_mul',
+              [$f64('335A19789E5AA475'), $f32('7842C65F')]),
+          $f32('139EDC36'));
+      returns(
+          'no_demote_mixed_mul_1',
+          () => m.$('no_demote_mixed_mul',
+              [$f64('48B8F0E6A5A53F15'), $f32('A177C13')]),
+          $f32('506C22E9'));
+      returns(
+          'no_demote_mixed_mul_2',
+          () => m.$('no_demote_mixed_mul',
+              [$f64('4AFF03AA769E296C'), $f32('235492A8')]),
+          $f32('7BCE066D'));
+      returns(
+          'no_demote_mixed_mul_3',
+          () => m.$('no_demote_mixed_mul',
+              [$f64('4DC9CD70B636BC52'), $f32('29F9D63')]),
+          $f32('7180B3B0'));
+      returns(
+          'no_demote_mixed_mul_4',
+          () => m.$('no_demote_mixed_mul',
+              [$f64('355C56B4C2991A3C'), $f32('578D6921')]),
+          $f32('2FA764C'));
+      returns(
+          'no_demote_mixed_mul_commuted_0',
+          () => m.$('no_demote_mixed_mul_commuted',
+              [$f32('7842C65F'), $f64('335A19789E5AA475')]),
+          $f32('139EDC36'));
+      returns(
+          'no_demote_mixed_mul_commuted_1',
+          () => m.$('no_demote_mixed_mul_commuted',
+              [$f32('A177C13'), $f64('48B8F0E6A5A53F15')]),
+          $f32('506C22E9'));
+      returns(
+          'no_demote_mixed_mul_commuted_2',
+          () => m.$('no_demote_mixed_mul_commuted',
+              [$f32('235492A8'), $f64('4AFF03AA769E296C')]),
+          $f32('7BCE066D'));
+      returns(
+          'no_demote_mixed_mul_commuted_3',
+          () => m.$('no_demote_mixed_mul_commuted',
+              [$f32('29F9D63'), $f64('4DC9CD70B636BC52')]),
+          $f32('7180B3B0'));
+      returns(
+          'no_demote_mixed_mul_commuted_4',
+          () => m.$('no_demote_mixed_mul_commuted',
+              [$f32('578D6921'), $f64('355C56B4C2991A3C')]),
+          $f32('2FA764C'));
+    });
+
+    group('float_exprs.40.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.40.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns(
+          'no_demote_mixed_div_0',
+          () => m.$('no_demote_mixed_div',
+              [$f64('49540D0B55D4CEE1'), $f32('73363A4B')]),
+          $f32('56E158AC'));
+      returns(
+          'no_demote_mixed_div_1',
+          () => m.$('no_demote_mixed_div',
+              [$f64('366402750F34CD98'), $f32('169EDC70')]),
+          $f32('1C00FAC3'));
+      returns(
+          'no_demote_mixed_div_2',
+          () => m.$('no_demote_mixed_div',
+              [$f64('3DA3F7ECE1A790A7'), $f32('34ACA4')]),
+          $f32('6CC21868'));
+      returns(
+          'no_demote_mixed_div_3',
+          () => m.$('no_demote_mixed_div',
+              [$f64('3755171328E16885'), $f32('138831B5')]),
+          $f32('269E91E7'));
+      returns(
+          'no_demote_mixed_div_4',
+          () => m.$('no_demote_mixed_div',
+              [$f64('449D3A380FC986CC'), $f32('6BF84ADB')]),
+          $f32('387113E2'));
+      returns(
+          'no_demote_mixed_div_commuted_0',
+          () => m.$('no_demote_mixed_div_commuted',
+              [$f32('1AEBC6EE'), $f64('3D52C57E125069E2')]),
+          $f32('2FC8F76B'));
+      returns(
+          'no_demote_mixed_div_commuted_1',
+          () => m.$('no_demote_mixed_div_commuted',
+              [$f32('4CBED912'), $f64('49E1C291EC609ED4')]),
+          $f32('157DF'));
+      returns(
+          'no_demote_mixed_div_commuted_2',
+          () => m.$('no_demote_mixed_div_commuted',
+              [$f32('2BF3D412'), $f64('376F4BDB25FF00FC')]),
+          $f32('6FF94F91'));
+      returns(
+          'no_demote_mixed_div_commuted_3',
+          () => m.$('no_demote_mixed_div_commuted',
+              [$f32('67B985C0'), $f64('4D1880FB331A64CA')]),
+          $f32('79238'));
+      returns(
+          'no_demote_mixed_div_commuted_4',
+          () => m.$('no_demote_mixed_div_commuted',
+              [$f32('1B3B8AFE'), $f64('3396FEB1FA66F11B')]),
+          $f32('7E027E5B'));
+    });
+
+    group('float_exprs.41.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.41.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -1976,11 +2125,9 @@ void main() {
           () => m.$('f32.i64.no_fold_trunc_s_convert_u', [$f32('3FC00000')]),
           $f32('3F800000'));
       returns(
-        'f32_i64_no_fold_trunc_s_convert_u_1',
-        () => m.$('f32.i64.no_fold_trunc_s_convert_u', [$f32('BFC00000')]),
-        $f32('5F800000'),
-        skip: 'failed',
-      );
+          'f32_i64_no_fold_trunc_s_convert_u_1',
+          () => m.$('f32.i64.no_fold_trunc_s_convert_u', [$f32('BFC00000')]),
+          $f32('5F800000'));
       returns(
           'f32_i64_no_fold_trunc_u_convert_u_0',
           () => m.$('f32.i64.no_fold_trunc_u_convert_u', [$f32('3FC00000')]),
@@ -2015,12 +2162,10 @@ void main() {
               'f64.i64.no_fold_trunc_s_convert_u', [$f64('3FF8000000000000')]),
           $f64('3FF0000000000000'));
       returns(
-        'f64_i64_no_fold_trunc_s_convert_u_1',
-        () => m
-            .$('f64.i64.no_fold_trunc_s_convert_u', [$f64('BFF8000000000000')]),
-        $f64('43F0000000000000'),
-        skip: 'failed',
-      );
+          'f64_i64_no_fold_trunc_s_convert_u_1',
+          () => m.$(
+              'f64.i64.no_fold_trunc_s_convert_u', [$f64('BFF8000000000000')]),
+          $f64('43F0000000000000'));
       returns(
           'f64_i64_no_fold_trunc_u_convert_u_0',
           () => m.$(
@@ -2033,13 +2178,13 @@ void main() {
           $f64('0'));
     });
 
-    group('float_exprs.40.wasm', () {
+    group('float_exprs.42.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.40.wasm'));
+            File('test/spec/float_exprs/float_exprs.42.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2058,13 +2203,13 @@ void main() {
       returns('check_7', () => m.$('check', [0xC]), $f32('40A44444'));
     });
 
-    group('float_exprs.41.wasm', () {
+    group('float_exprs.43.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.41.wasm'));
+            File('test/spec/float_exprs/float_exprs.43.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2083,13 +2228,13 @@ void main() {
       returns('check_7', () => m.$('check', [0x18]), $f64('4014888888888889'));
     });
 
-    group('float_exprs.42.wasm', () {
+    group('float_exprs.44.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.42.wasm'));
+            File('test/spec/float_exprs/float_exprs.44.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2207,13 +2352,13 @@ void main() {
           1);
     });
 
-    group('float_exprs.43.wasm', () {
+    group('float_exprs.45.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.43.wasm'));
+            File('test/spec/float_exprs/float_exprs.45.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2363,13 +2508,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.44.wasm', () {
+    group('float_exprs.46.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.44.wasm'));
+            File('test/spec/float_exprs/float_exprs.46.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2503,13 +2648,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.45.wasm', () {
+    group('float_exprs.47.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.45.wasm'));
+            File('test/spec/float_exprs/float_exprs.47.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2635,13 +2780,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.46.wasm', () {
+    group('float_exprs.48.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.46.wasm'));
+            File('test/spec/float_exprs/float_exprs.48.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2759,39 +2904,6 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.47.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.47.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns(
-        'f32_incorrect_correction_0',
-        () => m.$('f32.incorrect_correction', []),
-        $f32('34000000'),
-        skip: 'failed',
-      );
-      returns('f64_incorrect_correction_0',
-          () => m.$('f64.incorrect_correction', []), $f64('BCB0000000000000'));
-    });
-
-    group('float_exprs.48.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.48.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns('calculate_0', () => m.$('calculate', []), $f32('C3E976A3'));
-    });
-
     group('float_exprs.49.wasm', () {
       late ModuleDefinition def;
       late Module m;
@@ -2802,8 +2914,10 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns(
-          'calculate_0', () => m.$('calculate', []), $f64('C07D2ED4D0218C93'));
+      returns('f32_incorrect_correction_0',
+          () => m.$('f32.incorrect_correction', []), $f32('34000000'));
+      returns('f64_incorrect_correction_0',
+          () => m.$('f64.incorrect_correction', []), $f64('BCB0000000000000'));
     });
 
     group('float_exprs.50.wasm', () {
@@ -2816,8 +2930,7 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns('llvm_pr26746_0', () => m.$('llvm_pr26746', [$f32('80000000')]),
-          $f32('0'));
+      returns('calculate_0', () => m.$('calculate', []), $f32('C3E976A3'));
     });
 
     group('float_exprs.51.wasm', () {
@@ -2830,8 +2943,8 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns('llvm_pr27153_0', () => m.$('llvm_pr27153', [$i32('2000002')]),
-          $f32('4BC00000'));
+      returns(
+          'calculate_0', () => m.$('calculate', []), $f64('C07D2ED4D0218C93'));
     });
 
     group('float_exprs.52.wasm', () {
@@ -2844,10 +2957,8 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns(
-          'llvm_pr27036_0',
-          () => m.$('llvm_pr27036', [$i32('FE81FFCB'), $i32('E40000')]),
-          $f32('CB1A0034'));
+      returns('llvm_pr26746_0', () => m.$('llvm_pr26746', [$f32('80000000')]),
+          $f32('0'));
     });
 
     group('float_exprs.53.wasm', () {
@@ -2857,6 +2968,36 @@ void main() {
       setUpAll(() {
         def = ModuleDefinition.parse(
             File('test/spec/float_exprs/float_exprs.53.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('llvm_pr27153_0', () => m.$('llvm_pr27153', [$i32('2000002')]),
+          $f32('4BC00000'));
+    });
+
+    group('float_exprs.54.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.54.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns(
+          'llvm_pr27036_0',
+          () => m.$('llvm_pr27036', [$i32('FE81FFCB'), $i32('E40000')]),
+          $f32('CB1A0034'));
+    });
+
+    group('float_exprs.55.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.55.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2884,13 +3025,13 @@ void main() {
           $f32('800000'));
     });
 
-    group('float_exprs.54.wasm', () {
+    group('float_exprs.56.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.54.wasm'));
+            File('test/spec/float_exprs/float_exprs.56.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2898,13 +3039,13 @@ void main() {
           $f32('3C2AAAAB'));
     });
 
-    group('float_exprs.55.wasm', () {
+    group('float_exprs.57.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.55.wasm'));
+            File('test/spec/float_exprs/float_exprs.57.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2914,13 +3055,13 @@ void main() {
           () => m.$('f64_sqrt_minus_2', [$f64('4010000000000000')]), $f64('0'));
     });
 
-    group('float_exprs.56.wasm', () {
+    group('float_exprs.58.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.56.wasm'));
+            File('test/spec/float_exprs/float_exprs.58.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -2994,13 +3135,13 @@ void main() {
           $f64('7FF0000000000000'));
     });
 
-    group('float_exprs.57.wasm', () {
+    group('float_exprs.59.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.57.wasm'));
+            File('test/spec/float_exprs/float_exprs.59.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3056,13 +3197,13 @@ void main() {
           $f64('4E398B72DBF7BF72'));
     });
 
-    group('float_exprs.58.wasm', () {
+    group('float_exprs.60.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.58.wasm'));
+            File('test/spec/float_exprs/float_exprs.60.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3118,43 +3259,6 @@ void main() {
           $f64('22542E43156BD1B8'));
     });
 
-    group('float_exprs.59.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.59.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns('f32_simple_x4_sum_0',
-          () => m.$('f32.simple_x4_sum', [0, 0x10, 0x20]), null /*void*/);
-      returns('f32_load_0', () => m.$('f32.load', [0x20]), $f32('2'));
-      returns('f32_load_1', () => m.$('f32.load', [0x24]), $f32('0'));
-      returns('f32_load_2', () => m.$('f32.load', [0x28]), $f32('1'));
-      returns('f32_load_3', () => m.$('f32.load', [0x2C]), $f32('80000001'));
-    });
-
-    group('float_exprs.60.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.60.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns('f64_simple_x4_sum_0',
-          () => m.$('f64.simple_x4_sum', [0, 0x20, 0x40]), null /*void*/);
-      returns('f64_load_0', () => m.$('f64.load', [0x40]), $f64('2'));
-      returns('f64_load_1', () => m.$('f64.load', [0x48]), $f64('0'));
-      returns('f64_load_2', () => m.$('f64.load', [0x50]), $f64('1'));
-      returns('f64_load_3', () => m.$('f64.load', [0x58]),
-          $f64('8000000000000001'));
-    });
-
     group('float_exprs.61.wasm', () {
       late ModuleDefinition def;
       late Module m;
@@ -3165,18 +3269,12 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns(
-        'f32_kahan_sum_0',
-        () => m.$('f32.kahan_sum', [0, 0x100]),
-        $f32('F3880D0D'),
-        skip: 'failed',
-      );
-      returns(
-        'f32_plain_sum_0',
-        () => m.$('f32.plain_sum', [0, 0x100]),
-        $f32('F3501A1D'),
-        skip: 'failed',
-      );
+      returns('f32_simple_x4_sum_0',
+          () => m.$('f32.simple_x4_sum', [0, 0x10, 0x20]), null /*void*/);
+      returns('f32_load_0', () => m.$('f32.load', [0x20]), $f32('2'));
+      returns('f32_load_1', () => m.$('f32.load', [0x24]), $f32('0'));
+      returns('f32_load_2', () => m.$('f32.load', [0x28]), $f32('1'));
+      returns('f32_load_3', () => m.$('f32.load', [0x2C]), $f32('80000001'));
     });
 
     group('float_exprs.62.wasm', () {
@@ -3189,10 +3287,13 @@ void main() {
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
-      returns('f64_kahan_sum_0', () => m.$('f64.kahan_sum', [0, 0x100]),
-          $f64('7E5DD7CB2A5FFC88'));
-      returns('f64_plain_sum_0', () => m.$('f64.plain_sum', [0, 0x100]),
-          $f64('7E5DD7CB2A63FC87'));
+      returns('f64_simple_x4_sum_0',
+          () => m.$('f64.simple_x4_sum', [0, 0x20, 0x40]), null /*void*/);
+      returns('f64_load_0', () => m.$('f64.load', [0x40]), $f64('2'));
+      returns('f64_load_1', () => m.$('f64.load', [0x48]), $f64('0'));
+      returns('f64_load_2', () => m.$('f64.load', [0x50]), $f64('1'));
+      returns('f64_load_3', () => m.$('f64.load', [0x58]),
+          $f64('8000000000000001'));
     });
 
     group('float_exprs.63.wasm', () {
@@ -3202,6 +3303,38 @@ void main() {
       setUpAll(() {
         def = ModuleDefinition.parse(
             File('test/spec/float_exprs/float_exprs.63.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('f32_kahan_sum_0', () => m.$('f32.kahan_sum', [0, 0x100]),
+          $f32('F3880D0D'));
+      returns('f32_plain_sum_0', () => m.$('f32.plain_sum', [0, 0x100]),
+          $f32('F3501A1D'));
+    });
+
+    group('float_exprs.64.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.64.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('f64_kahan_sum_0', () => m.$('f64.kahan_sum', [0, 0x100]),
+          $f64('7E5DD7CB2A5FFC88'));
+      returns('f64_plain_sum_0', () => m.$('f64.plain_sum', [0, 0x100]),
+          $f64('7E5DD7CB2A63FC87'));
+    });
+
+    group('float_exprs.65.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.65.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3243,13 +3376,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.64.wasm', () {
+    group('float_exprs.66.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.64.wasm'));
+            File('test/spec/float_exprs/float_exprs.66.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3291,13 +3424,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.65.wasm', () {
+    group('float_exprs.67.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.65.wasm'));
+            File('test/spec/float_exprs/float_exprs.67.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3339,13 +3472,13 @@ void main() {
           $f64('8000000000000000'));
     });
 
-    group('float_exprs.66.wasm', () {
+    group('float_exprs.68.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.66.wasm'));
+            File('test/spec/float_exprs/float_exprs.68.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3373,13 +3506,13 @@ void main() {
           double.nan);
     });
 
-    group('float_exprs.67.wasm', () {
+    group('float_exprs.69.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.67.wasm'));
+            File('test/spec/float_exprs/float_exprs.69.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3425,13 +3558,13 @@ void main() {
           $f64('CEC2BDD4055DB01F'));
     });
 
-    group('float_exprs.68.wasm', () {
+    group('float_exprs.70.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.68.wasm'));
+            File('test/spec/float_exprs/float_exprs.70.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3441,33 +3574,25 @@ void main() {
               [$f32('E6FB8114'), $f32('B7FDE309'), $f32('C4C61BC8')]),
           $f32('E923DA1E'));
       returns(
-        'f32_no_fold_div_div_1',
-        () => m.$('f32.no_fold_div_div',
-            [$f32('1CE94E97'), $f32('76F9D0BF'), $f32('87B26A08')]),
-        $f32('80000000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_div_div_1',
+          () => m.$('f32.no_fold_div_div',
+              [$f32('1CE94E97'), $f32('76F9D0BF'), $f32('87B26A08')]),
+          $f32('80000000'));
       returns(
-        'f32_no_fold_div_div_2',
-        () => m.$('f32.no_fold_div_div',
-            [$f32('55433FCC'), $f32('B18567E'), $f32('7471086C')]),
-        $f32('7F800000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_div_div_2',
+          () => m.$('f32.no_fold_div_div',
+              [$f32('55433FCC'), $f32('B18567E'), $f32('7471086C')]),
+          $f32('7F800000'));
       returns(
-        'f32_no_fold_div_div_3',
-        () => m.$('f32.no_fold_div_div',
-            [$f32('B8E2000D'), $f32('FDCDF5B6'), $f32('AA3A79A6')]),
-        $f32('8FC0CC3A'),
-        skip: 'failed',
-      );
+          'f32_no_fold_div_div_3',
+          () => m.$('f32.no_fold_div_div',
+              [$f32('B8E2000D'), $f32('FDCDF5B6'), $f32('AA3A79A6')]),
+          $f32('8FC0CC3A'));
       returns(
-        'f32_no_fold_div_div_4',
-        () => m.$('f32.no_fold_div_div',
-            [$f32('56ED8737'), $f32('5BAAF751'), $f32('FDF989A0')]),
-        $f32('80005B38'),
-        skip: 'failed',
-      );
+          'f32_no_fold_div_div_4',
+          () => m.$('f32.no_fold_div_div',
+              [$f32('56ED8737'), $f32('5BAAF751'), $f32('FDF989A0')]),
+          $f32('80005B38'));
       returns(
           'f64_no_fold_div_div_0',
           () => m.$('f64.no_fold_div_div', [
@@ -3510,13 +3635,13 @@ void main() {
           $f64('36587A7BD89C586C'));
     });
 
-    group('float_exprs.69.wasm', () {
+    group('float_exprs.71.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.69.wasm'));
+            File('test/spec/float_exprs/float_exprs.71.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3548,16 +3673,14 @@ void main() {
               ]),
           $f32('46267A8E'));
       returns(
-        'f32_no_fold_mul_divs_3',
-        () => m.$('f32.no_fold_mul_divs', [
-          $f32('F67AB45E'),
-          $f32('2EECCB18'),
-          $f32('379BD43D'),
-          $f32('66D0A925')
-        ]),
-        $f32('FF800000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_mul_divs_3',
+          () => m.$('f32.no_fold_mul_divs', [
+                $f32('F67AB45E'),
+                $f32('2EECCB18'),
+                $f32('379BD43D'),
+                $f32('66D0A925')
+              ]),
+          $f32('FF800000'));
       returns(
           'f32_no_fold_mul_divs_4',
           () => m.$('f32.no_fold_mul_divs', [
@@ -3614,13 +3737,13 @@ void main() {
           $f64('935E6286970B31BF'));
     });
 
-    group('float_exprs.70.wasm', () {
+    group('float_exprs.72.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.70.wasm'));
+            File('test/spec/float_exprs/float_exprs.72.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3691,13 +3814,13 @@ void main() {
           $f64('96CD9A9B1C2F5623'));
     });
 
-    group('float_exprs.71.wasm', () {
+    group('float_exprs.73.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.71.wasm'));
+            File('test/spec/float_exprs/float_exprs.73.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3706,29 +3829,19 @@ void main() {
           () => m.$('f32.no_fold_sqrt_square', [$f32('9EAE598B')]),
           $f32('1EAE5991'));
       returns(
-        'f32_no_fold_sqrt_square_1',
-        () => m.$('f32.no_fold_sqrt_square', [$f32('9B587CF2')]),
-        $f32('1B5908D9'),
-        skip: 'failed',
-      );
+          'f32_no_fold_sqrt_square_1',
+          () => m.$('f32.no_fold_sqrt_square', [$f32('9B587CF2')]),
+          $f32('1B5908D9'));
       returns(
-        'f32_no_fold_sqrt_square_2',
-        () => m.$('f32.no_fold_sqrt_square', [$f32('9C6F20BE')]),
-        $f32('1C6F32DC'),
-        skip: 'failed',
-      );
+          'f32_no_fold_sqrt_square_2',
+          () => m.$('f32.no_fold_sqrt_square', [$f32('9C6F20BE')]),
+          $f32('1C6F32DC'));
+      returns('f32_no_fold_sqrt_square_3',
+          () => m.$('f32.no_fold_sqrt_square', [$f32('14B26439')]), $f32('0'));
       returns(
-        'f32_no_fold_sqrt_square_3',
-        () => m.$('f32.no_fold_sqrt_square', [$f32('14B26439')]),
-        $f32('0'),
-        skip: 'failed',
-      );
-      returns(
-        'f32_no_fold_sqrt_square_4',
-        () => m.$('f32.no_fold_sqrt_square', [$f32('75F0CCF2')]),
-        $f32('7F800000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_sqrt_square_4',
+          () => m.$('f32.no_fold_sqrt_square', [$f32('75F0CCF2')]),
+          $f32('7F800000'));
       returns(
           'f64_no_fold_sqrt_square_0',
           () => m.$('f64.no_fold_sqrt_square', [$f64('1EE1759D657203FD')]),
@@ -3751,13 +3864,13 @@ void main() {
           $f64('7FF0000000000000'));
     });
 
-    group('float_exprs.72.wasm', () {
+    group('float_exprs.74.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.72.wasm'));
+            File('test/spec/float_exprs/float_exprs.74.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3813,13 +3926,13 @@ void main() {
           $f64('50C0E16AEBE203B3'));
     });
 
-    group('float_exprs.73.wasm', () {
+    group('float_exprs.75.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.73.wasm'));
+            File('test/spec/float_exprs/float_exprs.75.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3875,30 +3988,26 @@ void main() {
           $f64('9C0948539781E92'));
     });
 
-    group('float_exprs.74.wasm', () {
+    group('float_exprs.76.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.74.wasm'));
+            File('test/spec/float_exprs/float_exprs.76.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
       returns(
-        'f32_no_fold_mul_sqrt_div_0',
-        () => m.$(
-            'f32.no_fold_mul_sqrt_div', [$f32('E87A53E5'), $f32('6DE04D6F')]),
-        $f32('FF800000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_mul_sqrt_div_0',
+          () => m.$(
+              'f32.no_fold_mul_sqrt_div', [$f32('E87A53E5'), $f32('6DE04D6F')]),
+          $f32('FF800000'));
       returns(
-        'f32_no_fold_mul_sqrt_div_1',
-        () => m
-            .$('f32.no_fold_mul_sqrt_div', [$f32('83C85F8E'), $f32('F46DF44')]),
-        $f32('80000000'),
-        skip: 'failed',
-      );
+          'f32_no_fold_mul_sqrt_div_1',
+          () => m.$(
+              'f32.no_fold_mul_sqrt_div', [$f32('83C85F8E'), $f32('F46DF44')]),
+          $f32('80000000'));
       returns(
           'f32_no_fold_mul_sqrt_div_2',
           () => m.$(
@@ -3941,13 +4050,13 @@ void main() {
           $f64('2C24468072F54294'));
     });
 
-    group('float_exprs.75.wasm', () {
+    group('float_exprs.77.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.75.wasm'));
+            File('test/spec/float_exprs/float_exprs.77.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -3966,13 +4075,13 @@ void main() {
           $f64('10000000000000'));
     });
 
-    group('float_exprs.76.wasm', () {
+    group('float_exprs.78.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.76.wasm'));
+            File('test/spec/float_exprs/float_exprs.78.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4028,23 +4137,21 @@ void main() {
           $f32('2C6450E'));
     });
 
-    group('float_exprs.77.wasm', () {
+    group('float_exprs.79.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.77.wasm'));
+            File('test/spec/float_exprs/float_exprs.79.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
       returns(
-        'f32_no_extended_precision_div_0',
-        () => m.$('f32.no_extended_precision_div',
-            [$f32('40400000'), $f32('40E00000'), $f32('3EDB6DB7')]),
-        1,
-        skip: 'failed',
-      );
+          'f32_no_extended_precision_div_0',
+          () => m.$('f32.no_extended_precision_div',
+              [$f32('40400000'), $f32('40E00000'), $f32('3EDB6DB7')]),
+          1);
       returns(
           'f64_no_extended_precision_div_0',
           () => m.$('f64.no_extended_precision_div', [
@@ -4055,13 +4162,13 @@ void main() {
           1);
     });
 
-    group('float_exprs.78.wasm', () {
+    group('float_exprs.80.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.78.wasm'));
+            File('test/spec/float_exprs/float_exprs.80.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4073,13 +4180,13 @@ void main() {
           $f64('0'));
     });
 
-    group('float_exprs.79.wasm', () {
+    group('float_exprs.81.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.79.wasm'));
+            File('test/spec/float_exprs/float_exprs.81.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4159,13 +4266,13 @@ void main() {
           $f64('4001E3778509A5A3'));
     });
 
-    group('float_exprs.80.wasm', () {
+    group('float_exprs.82.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.80.wasm'));
+            File('test/spec/float_exprs/float_exprs.82.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4180,23 +4287,21 @@ void main() {
           $f64('4000000000000000'));
     });
 
-    group('float_exprs.81.wasm', () {
+    group('float_exprs.83.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.81.wasm'));
+            File('test/spec/float_exprs/float_exprs.83.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
       returns(
-        'f32_no_fold_sub1_mul_add_0',
-        () => m.$(
-            'f32.no_fold_sub1_mul_add', [$f32('2F800000'), $f32('3F800000')]),
-        $f32('0'),
-        skip: 'failed',
-      );
+          'f32_no_fold_sub1_mul_add_0',
+          () => m.$(
+              'f32.no_fold_sub1_mul_add', [$f32('2F800000'), $f32('3F800000')]),
+          $f32('0'));
       returns(
           'f64_no_fold_sub1_mul_add_0',
           () => m.$('f64.no_fold_sub1_mul_add',
@@ -4204,13 +4309,13 @@ void main() {
           $f64('0'));
     });
 
-    group('float_exprs.82.wasm', () {
+    group('float_exprs.84.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.82.wasm'));
+            File('test/spec/float_exprs/float_exprs.84.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4239,13 +4344,13 @@ void main() {
           0);
     });
 
-    group('float_exprs.83.wasm', () {
+    group('float_exprs.85.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.83.wasm'));
+            File('test/spec/float_exprs/float_exprs.85.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4267,46 +4372,6 @@ void main() {
           () => m.$('f64.not_ge', [$f64('7FF8000000000000'), $f64('0')]), 1);
     });
 
-    group('float_exprs.84.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.84.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns(
-        'f32_epsilon_0',
-        () => m.$('f32.epsilon', []),
-        $f32('B4000000'),
-        skip: 'failed',
-      );
-      returns('f64_epsilon_0', () => m.$('f64.epsilon', []),
-          $f64('3CB0000000000000'));
-    });
-
-    group('float_exprs.85.wasm', () {
-      late ModuleDefinition def;
-      late Module m;
-
-      setUpAll(() {
-        def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.85.wasm'));
-        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
-      });
-
-      returns(
-        'f32_epsilon_0',
-        () => m.$('f32.epsilon', []),
-        $f32('34000000'),
-        skip: 'failed',
-      );
-      returns('f64_epsilon_0', () => m.$('f64.epsilon', []),
-          $f64('3CB0000000000000'));
-    });
-
     group('float_exprs.86.wasm', () {
       late ModuleDefinition def;
       late Module m;
@@ -4314,6 +4379,36 @@ void main() {
       setUpAll(() {
         def = ModuleDefinition.parse(
             File('test/spec/float_exprs/float_exprs.86.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('f32_epsilon_0', () => m.$('f32.epsilon', []), $f32('B4000000'));
+      returns('f64_epsilon_0', () => m.$('f64.epsilon', []),
+          $f64('3CB0000000000000'));
+    });
+
+    group('float_exprs.87.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.87.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+      });
+
+      returns('f32_epsilon_0', () => m.$('f32.epsilon', []), $f32('34000000'));
+      returns('f64_epsilon_0', () => m.$('f64.epsilon', []),
+          $f64('3CB0000000000000'));
+    });
+
+    group('float_exprs.88.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/float_exprs/float_exprs.88.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4347,13 +4442,13 @@ void main() {
           0);
     });
 
-    group('float_exprs.87.wasm', () {
+    group('float_exprs.89.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.87.wasm'));
+            File('test/spec/float_exprs/float_exprs.89.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4385,27 +4480,21 @@ void main() {
               [$i32('FFC00000'), $i32('FFC00000')]),
           $i32('7FC00000'));
       returns(
-        'f32_nonarithmetic_nan_bitpattern_0',
-        () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('7FC03210')]),
-        $i32('FFC03210'),
-        skip: 'failed',
-      );
+          'f32_nonarithmetic_nan_bitpattern_0',
+          () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('7FC03210')]),
+          $i32('FFC03210'));
       returns(
           'f32_nonarithmetic_nan_bitpattern_1',
           () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('FFC03210')]),
           $i32('7FC03210'));
       returns(
-        'f32_nonarithmetic_nan_bitpattern_2',
-        () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('7F803210')]),
-        $i32('FF803210'),
-        skip: 'failed',
-      );
+          'f32_nonarithmetic_nan_bitpattern_2',
+          () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('7F803210')]),
+          $i32('FF803210'));
       returns(
-        'f32_nonarithmetic_nan_bitpattern_3',
-        () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('FF803210')]),
-        $i32('7F803210'),
-        skip: 'failed',
-      );
+          'f32_nonarithmetic_nan_bitpattern_3',
+          () => m.$('f32.nonarithmetic_nan_bitpattern', [$i32('FF803210')]),
+          $i32('7F803210'));
       returns(
           'f64_arithmetic_nan_bitpattern_0',
           () => m.$('f64.arithmetic_nan_bitpattern',
@@ -4504,20 +4593,18 @@ void main() {
           () => m.$('f64.no_fold_div_neg1', [$i64('7FF4000000000000')]),
           $i64('7FF8000000000000'));
       returns(
-        'no_fold_promote_demote_0',
-        () => m.$('no_fold_promote_demote', [$i32('7FA00000')]),
-        $i32('7FC00000'),
-        skip: 'failed',
-      );
+          'no_fold_promote_demote_0',
+          () => m.$('no_fold_promote_demote', [$i32('7FA00000')]),
+          $i32('7FC00000'));
     });
 
-    group('float_exprs.88.wasm', () {
+    group('float_exprs.90.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.88.wasm'));
+            File('test/spec/float_exprs/float_exprs.90.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4549,13 +4636,13 @@ void main() {
           $f64('4000000000000000'));
     });
 
-    group('float_exprs.89.wasm', () {
+    group('float_exprs.91.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.89.wasm'));
+            File('test/spec/float_exprs/float_exprs.91.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4588,23 +4675,21 @@ void main() {
           $f64('0'));
     });
 
-    group('float_exprs.90.wasm', () {
+    group('float_exprs.92.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.90.wasm'));
+            File('test/spec/float_exprs/float_exprs.92.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
       returns(
-        'f32_division_by_small_number_0',
-        () => m.$('f32.division_by_small_number',
-            [$f32('4CD59F80'), $f32('47C35000'), $f32('3A6BEDFA')]),
-        $f32('49590380'),
-        skip: 'failed',
-      );
+          'f32_division_by_small_number_0',
+          () => m.$('f32.division_by_small_number',
+              [$f32('4CD59F80'), $f32('47C35000'), $f32('3A6BEDFA')]),
+          $f32('49590380'));
       returns(
           'f64_division_by_small_number_0',
           () => m.$('f64.division_by_small_number', [
@@ -4615,13 +4700,13 @@ void main() {
           $f64('412B2071C71C7180'));
     });
 
-    group('float_exprs.91.wasm', () {
+    group('float_exprs.93.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.91.wasm'));
+            File('test/spec/float_exprs/float_exprs.93.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4640,13 +4725,13 @@ void main() {
           $f64('3FF9E3779B97F4A8'));
     });
 
-    group('float_exprs.92.wasm', () {
+    group('float_exprs.94.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.92.wasm'));
+            File('test/spec/float_exprs/float_exprs.94.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4686,13 +4771,13 @@ void main() {
           $f64('4014C53452546CFA'));
     });
 
-    group('float_exprs.93.wasm', () {
+    group('float_exprs.95.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.93.wasm'));
+            File('test/spec/float_exprs/float_exprs.95.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4703,13 +4788,13 @@ void main() {
           0);
     });
 
-    group('float_exprs.94.wasm', () {
+    group('float_exprs.96.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.94.wasm'));
+            File('test/spec/float_exprs/float_exprs.96.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 
@@ -4717,13 +4802,13 @@ void main() {
       returns('tau_1', () => m.$('tau', [0xB]), $f64('401921FB54442D18'));
     });
 
-    group('float_exprs.95.wasm', () {
+    group('float_exprs.97.wasm', () {
       late ModuleDefinition def;
       late Module m;
 
       setUpAll(() {
         def = ModuleDefinition.parse(
-            File('test/spec/float_exprs/float_exprs.95.wasm'));
+            File('test/spec/float_exprs/float_exprs.97.wasm'));
         m = Module(def, imports: {'spectest': specTestModule(), ...registered});
       });
 

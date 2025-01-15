@@ -118,12 +118,58 @@ void main() {
           'check_table_null_1', () => m.$('check-table-null', [0, 0x13]), null);
     });
 
-    // assertInvalid('invalid table_grow.5.wasm', 'table_grow/table_grow.5.wasm', 'type mismatch', registered);
-    // assertInvalid('invalid table_grow.6.wasm', 'table_grow/table_grow.6.wasm', 'type mismatch', registered);
-    // assertInvalid('invalid table_grow.7.wasm', 'table_grow/table_grow.7.wasm', 'type mismatch', registered);
+    group('table_grow.5.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/table_grow/table_grow.5.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Tgt'] = m;
+      });
+
+      action('register-grown-table',
+          () => registered['grown-table'] = importModuleFrom(m));
+      returns('grow_0', () => named[r'$Tgt']!.$('grow', []), 1);
+    });
+
+    group('table_grow.6.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/table_grow/table_grow.6.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Tgit1'] = m;
+      });
+
+      action('register-grown-imported-table',
+          () => registered['grown-imported-table'] = importModuleFrom(m));
+      returns('grow_0', () => named[r'$Tgit1']!.$('grow', []), 2);
+    });
+
+    group('table_grow.7.wasm', () {
+      late ModuleDefinition def;
+      late Module m;
+
+      setUpAll(() {
+        def = ModuleDefinition.parse(
+            File('test/spec/table_grow/table_grow.7.wasm'));
+        m = Module(def, imports: {'spectest': specTestModule(), ...registered});
+        named[r'$Tgit2'] = m;
+      });
+
+      returns('size_0', () => named[r'$Tgit2']!.$('size', []), 3);
+    });
+
     // assertInvalid('invalid table_grow.8.wasm', 'table_grow/table_grow.8.wasm', 'type mismatch', registered);
     // assertInvalid('invalid table_grow.9.wasm', 'table_grow/table_grow.9.wasm', 'type mismatch', registered);
     // assertInvalid('invalid table_grow.10.wasm', 'table_grow/table_grow.10.wasm', 'type mismatch', registered);
     // assertInvalid('invalid table_grow.11.wasm', 'table_grow/table_grow.11.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_grow.12.wasm', 'table_grow/table_grow.12.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_grow.13.wasm', 'table_grow/table_grow.13.wasm', 'type mismatch', registered);
+    // assertInvalid('invalid table_grow.14.wasm', 'table_grow/table_grow.14.wasm', 'type mismatch', registered);
   });
 }
