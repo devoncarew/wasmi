@@ -10,7 +10,6 @@ linter:
     - avoid_dynamic_calls
     - comment_references
     - directives_ordering
-    - library_annotations
     # - only_throw_errors
     - prefer_relative_imports
     - prefer_single_quotes
